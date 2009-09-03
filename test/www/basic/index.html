@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title tal:content="title | default">Pinoco Test</title>
+	</head>
+	<body>
+		<h1>Hello world</h1>
+		<p tal:content="title | default">Value of "title" registerd to autolocal would be shown here.</p>
+		
+		<h2>URL conversion</h2>
+		<ul>
+			<li>url: subpage.html = <span tal:content="url:subpage.html">url</span></li>
+			<li>url: subdir/index.html = <span tal:content="url:subdir/index.html">url</span></li>
+			<li>url: /abspath/index.html = <span tal:content="url:/abspath/index.html">url</span></li>
+			<li>url: /media/images/existing.jpg = <span tal:content="url:/media/images/existing.jpg">url</span></li>
+			<li>url: /media/images/missing.jpg = <span tal:content="url:/media/images/missing.jpg">url</span></li>
+			<li>url: action.php?param=will_be_alive = <span tal:content="url:action.php?param=will_be_alive">url</span></li>
+		</ul>
+		
+		<h2>Available variables of $this</h2>
+		<ul>
+			<li tal:repeat="item this">$this-&gt;<span tal:content="repeat/item/key">name</span> = <span tal:content="item">value</span></li>
+		</ul>
+		
+		<p>Sub contents
+		    <a href="sub/index.html" tal:attributes="href url:sub/">sub/</a>
+		    <a href="sub/index.html" tal:attributes="href url:sub/index.html">sub/index.html</a></p>
+		<p>Sub contents 2
+		    <a href="sub2/index.php" tal:attributes="href url:sub2/">sub2/</a>
+		    <a href="sub2/index.php" tal:attributes="href url:sub2/index.php">sub2/index.php</a></p>
+	</body>
+</html>

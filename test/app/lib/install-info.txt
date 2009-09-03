@@ -1,0 +1,3 @@
+NOTE: Installing PHPTAL
+If you still not install PHPTAL, you can put PHPTAL components here.
+
