@@ -197,7 +197,7 @@ class Pinoco extends Pinoco_Vars {
     public function default_page()
     {
         $fullpath = $this->_basedir . $this->_path;
-        $ext = pathinfo($this->_path, PATHINFO_EXTENSION);
+        $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
         if($ext && $this->_renderers->has($ext) && file_exists($fullpath)) {
             return $this->_path;
         }
@@ -266,6 +266,7 @@ class Pinoco extends Pinoco_Vars {
         foreach($incpathes as $p) {
             if(file_exists($p) && is_file($p)) {
                 include_once $p;
+                return;
             }
         }
         // default
@@ -391,7 +392,7 @@ class Pinoco extends Pinoco_Vars {
     
     public function resolve_path($path, $base=FALSE)
     {
-        if($path[0] != '/') {
+        if(strlen($path) > 0 && $path[0] != '/') {
             // make path absolute if relative
             $base = $base === FALSE ? $this->parent_path($this->_path) : $base;
             $bes = explode("/", rtrim($base, "/"));
@@ -517,6 +518,8 @@ class Pinoco extends Pinoco_Vars {
         $this->include_with_this($this->_script, $this->_autolocal->to_array());
     }
     
+    /*
+    NOT IN USE NOW!
     private function _hook_or_page_exists()
     {
         $hookbase = $this->_sysdir . "/hooks";
@@ -537,6 +540,7 @@ class Pinoco extends Pinoco_Vars {
         }
         return false;
     }
+    */
     
     public function run($output_buffering=TRUE)
     {
@@ -553,9 +557,12 @@ class Pinoco extends Pinoco_Vars {
                 $this->forbidden();
             }
             // preprocess notfound -- if handler or page is not exists
-            if(!$this->_hook_or_page_exists()){
-                $this->notfound();
-            }
+            
+            // NOT IN USE NOW!
+            //if(!$this->_hook_or_page_exists()){
+            //    $this->notfound();
+            //}
+            
             // unexpected request: non-html but existing
             $realfile = $this->_basedir . $this->_path;
             if(!$this->is_renderable_path($this->_path) && file_exists($realfile)) {
