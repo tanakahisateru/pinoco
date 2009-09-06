@@ -415,7 +415,9 @@ class Pinoco extends Pinoco_Vars {
     public function set_url_modifier($callable) { $this->_url_modifier = $callable; }
     
     /**
-     * (non-PHPdoc)
+     * 
+     * @param stirng $name
+     * @return mixed
      * @see src/Pinoco/Pinoco_Vars#get($name)
      */
     public function get($name)
@@ -434,7 +436,9 @@ class Pinoco extends Pinoco_Vars {
     }
 
     /**
-     * (non-PHPdoc)
+     *
+     * @param stirng $name
+     * @return bool
      * @see src/Pinoco/Pinoco_Vars#has($name)
      */
     public function has($name)
@@ -443,7 +447,8 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * (non-PHPdoc)
+     * 
+     * @return Pinoco_List
      * @see src/Pinoco/Pinoco_Vars#keys()
      */
     public function keys()
@@ -462,7 +467,9 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * (non-PHPdoc)
+     *
+     * @param string $name
+     * @param mixed $value
      * @see src/Pinoco/Pinoco_Vars#set($name, $value)
      */
     public function set($name, $value)

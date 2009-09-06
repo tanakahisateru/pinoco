@@ -17,9 +17,9 @@
  * Abstract HTML page renderer
  */
 abstract class Pinoco_Renderer {
-	/**
-	 * @var Pinoco
-	 */
+    /**
+     * @var Pinoco
+     */
     protected $_sysref;
     
     /**
@@ -63,14 +63,14 @@ abstract class Pinoco_Renderer {
  * Preferred HTML page renderer using PHPTAL
  */
 class Pinoco_TALRenderer extends Pinoco_Renderer {
-	
+    
     /**
      * 
      * @param string $page
      * @param array $extravars
      * @return void
      */
-	public function render($page, $extravars=array())
+    public function render($page, $extravars=array())
     {
         $this->_sysref->using('PHPTAL.php');
         $template = new PHPTAL($page);
@@ -134,14 +134,14 @@ function phptal_tales_url($src, $nothrow)
  * Default HTML page renderer using native PHP.
  */
 class Pinoco_NativeRenderer extends Pinoco_Renderer {
-	
+    
     /**
      * 
      * @param string $page
      * @param array $extravars
      * @return void
      */
-	public function render($page, $extravars=array())
+    public function render($page, $extravars=array())
     {
         $vars = $this->_sysref->autolocal->to_array();
         foreach($extravars as $k=>$v) {
@@ -162,7 +162,7 @@ class Pinoco_NullRenderer extends Pinoco_Renderer {
      * @param array $extravars
      * @return void
      */
-	public function render($page, $extravars=array())
+    public function render($page, $extravars=array())
     {
     }
 }
@@ -178,7 +178,7 @@ class Pinoco_PlainTextRenderer extends Pinoco_Renderer {
      * @param array $extravars
      * @return void
      */
-	public function render($page, $extravars=array())
+    public function render($page, $extravars=array())
     {
         echo $page;
     }

@@ -41,7 +41,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
      * @param string $title
      * @param string $message
      */
-	public function __construct($code, $title, $message)
+    public function __construct($code, $title, $message)
     {
         $this->code = $code;
         $this->title = $title;
@@ -78,11 +78,11 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
  * Flow control object
  */
 class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
-	/**
-	 * 
-	 * @param string $url
-	 * @param bool $external
-	 */
+    /**
+     * 
+     * @param string $url
+     * @param bool $external
+     */
     public function __construct($url, $external=FALSE)
     {
         $this->url = $url;
