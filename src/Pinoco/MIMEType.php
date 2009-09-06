@@ -219,6 +219,11 @@ class Pinoco_MIMEType {
         'ice'       => 'x-conference/x-cooltalk',
     );
     
+    /**
+     * 
+     * @param string $filename
+     * @return string
+     */
     public static function from_filename($filename)
     {
         $info = pathinfo($filename);

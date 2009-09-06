@@ -35,12 +35,24 @@ class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
  * Flow control object
  */
 class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
-    public function __construct($code, $title, $message)
+    /**
+     * 
+     * @param int $code
+     * @param string $title
+     * @param string $message
+     */
+	public function __construct($code, $title, $message)
     {
         $this->code = $code;
         $this->title = $title;
         $this->message = $message;
     }
+    
+    /**
+     * 
+     * @param Pinoco $pinoco
+     * @return void
+     */
     public function respond($pinoco)
     {
         $pref = $pinoco->sysdir . "/error/";
@@ -66,11 +78,22 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
  * Flow control object
  */
 class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
+	/**
+	 * 
+	 * @param string $url
+	 * @param bool $external
+	 */
     public function __construct($url, $external=FALSE)
     {
         $this->url = $url;
         $this->external = $external;
     }
+    
+    /**
+     * 
+     * @param Pinoco $pinoco
+     * @return void
+     */
     public function respond($pinoco)
     {
         $protocol = (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS']) ? "https" : "http";

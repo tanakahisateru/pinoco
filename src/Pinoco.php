@@ -24,6 +24,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  *
  * Install PHPTAL first, anyway.
  *
+ * @example
  * .htaccess
  * <code>
  * RewriteEngine On
@@ -46,6 +47,18 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * </code>
  *
  * And put hooks, lib, errors or any of else into your_app_dir.
+ * 
+ * @property-read string $baseuri
+ * @property-read string $basedir
+ * @property-read string $sysdir
+ * @property-read string $path
+ * @property-read string $script
+ * @property-read Pinoco_List $activity
+ * @property-read string $subpath
+ * @property string $page
+ * @property-read Pinoco_Vars $renderers
+ * @property-read Pinoco_Vars $autolocal
+ * @property callback $url_modifier
  */
 class Pinoco extends Pinoco_Vars {
     
@@ -60,7 +73,7 @@ class Pinoco extends Pinoco_Vars {
     private $_activity;  // R string
     private $_subpath;   // R string
     
-    private $_renderers; // R/W renderers
+    private $_renderers; // R/M renderers
     private $_page;      // R/W string
     
     private $_autolocal; // R/M vars
@@ -71,6 +84,12 @@ class Pinoco extends Pinoco_Vars {
     private $_manually_rendered;
     private static $_current_instance = null;
     
+    /**
+     * 
+     * @param string $sysdir
+     * @param array $options
+     * @return Pinoco
+     */
     public static function create($sysdir, $options=array())
     {
         // options
@@ -109,7 +128,11 @@ class Pinoco extends Pinoco_Vars {
         
         // base uri (gateway placed path)
         $uri = $_SERVER['REQUEST_URI'];
-        $seppos = min(strpos($uri, '?'), strpos($uri, '#'));
+        $seppos = strpos($uri, '?');
+        if($seppos !== FALSE) {
+            $uri = substr($uri, 0, $seppos);
+        }
+        $seppos = strpos($uri, '#');
         if($seppos !== FALSE) {
             $uri = substr($uri, 0, $seppos);
         }
@@ -128,6 +151,15 @@ class Pinoco extends Pinoco_Vars {
         return new self($baseuri, $dispatcher, $path, dirname($_SERVER['SCRIPT_FILENAME']), $sysdir, $directory_index);
     }
     
+    /**
+     * 
+     * @param string $baseuri
+     * @param string $dispatcher
+     * @param string $path
+     * @param string $basedir
+     * @param string $sysdir
+     * @param array $directory_index
+     */
     function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir, $directory_index="index.html index.php")
     {
         $this->_baseuri = $baseuri;
@@ -174,26 +206,12 @@ class Pinoco extends Pinoco_Vars {
         //chdir($this->_sysdir);
     }
     
-    public function __toString() { return __CLASS__ . " " . self::VERSION; } // TODO: dump vars name/values
+    public function __toString() { return __CLASS__ . " " . self::VERSION; }
     
-    private static function _credit_into_x_powerd_by()
-    {
-        $CREDIT_LOGO = __CLASS__ . "/" . self::VERSION;
-        if(!headers_sent()) {
-            $found = false;
-            foreach(headers_list() as $http_header) {
-                if(preg_match('/^X-Powered-By:/', $http_header)) {
-                    $found = true;
-                    header($http_header . " " . $CREDIT_LOGO);
-                    break;
-                }
-            }
-            if(!$found) {
-                header("X-Powered-By: " . $CREDIT_LOGO);
-            }
-        }
-    }
-    
+    /**
+     * 
+     * @return string|null
+     */
     public function default_page()
     {
         $fullpath = $this->_basedir . $this->_path;
@@ -208,26 +226,50 @@ class Pinoco extends Pinoco_Vars {
     
     // factory
 
+    /**
+     * @param mixed $init
+     * @return Pinoco_Vars
+     */
     public function newvars($init=array())
     {
         return Pinoco_Vars::from_array($init);
     }
     
+    /**
+     * 
+     * @param mixed $init
+     * @return Pinoco_List
+     */
     public function newlist($init=array())
     {
         return Pinoco_List::from_array($init);
     }
     
+    /**
+     * 
+     * @param array &$ref
+     * @return Pinoco_Vars
+     */
     public function wrapvars(&$ref)
     {
         return Pinoco_Vars::wrap($ref);
     }
     
+    /**
+     * 
+     * @param array &$ref
+     * @return Pinoco_List
+     */
     public function wraplist(&$ref)
     {
         return Pinoco_List::wrap($ref);
     }
     
+    /**
+     * 
+     * @param string $class
+     * @return object|null
+     */
     public function newobj($class)
     {
         $seppos = strrpos($class, '/');
@@ -255,6 +297,11 @@ class Pinoco extends Pinoco_Vars {
         }
     }
     
+    /**
+     * 
+     * @param string $script_path
+     * @return void
+     */
     public function using($script_path)
     {
         $incpathes = array(
@@ -270,9 +317,15 @@ class Pinoco extends Pinoco_Vars {
             }
         }
         // default
-        include_once $script_path;
+        @include_once $script_path;
     }
     
+    /**
+     * 
+     * @param string $abspath
+     * @param array $localvars
+     * @return void
+     */
     public function include_with_this($abspath, $localvars=array())
     {
         extract($localvars);
@@ -280,25 +333,91 @@ class Pinoco extends Pinoco_Vars {
     }
     
     // reserved props
+    /**
+     * 
+     * @return string
+     */
     public function get_baseuri() { return $this->_baseuri; }
+    
+    /**
+     * 
+     * @return string
+     */
     public function get_basedir() { return $this->_basedir; }
+    
+    /**
+     * 
+     * @return string
+     */
     public function get_sysdir()  { return $this->_sysdir; }
     
+    /**
+     * 
+     * @return string
+     */
     public function get_path()    { return $this->_path; }
+    
+    /**
+     * 
+     * @return string
+     */
     public function get_script()  { return $this->_script; }
+        
+    /**
+     * 
+     * @return string
+     */
     public function get_activity(){ return $this->_activity; }
+        
+    /**
+     * 
+     * @return string
+     */
     public function get_subpath() { return $this->_subpath; }
+        
+    /**
+     * 
+     * @return string
+     */
     public function get_page()    { return $this->_page; }
+        
+    /**
+     * 
+     * @return string
+     */
     public function get_renderers(){ return $this->_renderers; }
     
+        
+    /**
+     * 
+     * @return string
+     */
     public function get_autolocal(){ return $this->_autolocal; }
+        
+    /**
+     * 
+     * @return string
+     */
     public function get_url_modifier(){ return $this->_url_modifier; }
     
+    /**
+     * 
+     * @param $page
+     * @return void
+     */
     public function set_page($page) { $this->_page = $this->resolve_path($page); }
+    
+    /**
+     * 
+     * @param $callable
+     * @return void
+     */
     public function set_url_modifier($callable) { $this->_url_modifier = $callable; }
     
-    
-    // Bag implementation
+    /**
+     * (non-PHPdoc)
+     * @see src/Pinoco/Pinoco_Vars#get($name)
+     */
     public function get($name)
     {
         if(method_exists($this, 'get_' . $name)) {
@@ -314,11 +433,19 @@ class Pinoco extends Pinoco_Vars {
         }
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see src/Pinoco/Pinoco_Vars#has($name)
+     */
     public function has($name)
     {
         return method_exists($this, 'get_' . $name) || parent::has($name);
     }
     
+    /**
+     * (non-PHPdoc)
+     * @see src/Pinoco/Pinoco_Vars#keys()
+     */
     public function keys()
     {
         $meths = get_class_methods($this);
@@ -334,7 +461,10 @@ class Pinoco extends Pinoco_Vars {
         return $ks;
     }
     
-    // Bag as mutable
+    /**
+     * (non-PHPdoc)
+     * @see src/Pinoco/Pinoco_Vars#set($name, $value)
+     */
     public function set($name, $value)
     {
         if(method_exists($this, 'set_' . $name)) {
@@ -348,40 +478,72 @@ class Pinoco extends Pinoco_Vars {
         }
     }
     
-    // flow control core
+    /**
+     * 
+     * @return void
+     */
     public function skip()
     {
         throw new Pinoco_FlowControlSkip();
     }
     
+    /**
+     * 
+     * @return void
+     */
     public function terminate()
     {
         throw new Pinoco_FlowControlTerminate();
     }
     
+    /**
+     * 
+     * @param int $code
+     * @param string $title
+     * @param string $message
+     * @return void
+     */
     public function error($code, $title="", $message="")
     {
         throw new Pinoco_FlowControlHttpError($code, $title, $message);
     }
 
+    /**
+     * 
+     * @param string $url
+     * @param bool $extrenal
+     * @return void
+     */
     public function redirect($url, $extrenal=FALSE)
     {
         throw new Pinoco_FlowControlHttpRedirect($url, $extrenal);
     }
     
+    /**
+     * 
+     * @return void
+     */
     public function notfound()
     {
         $this->error(404, "Not found",
             "The requested URL " . $_SERVER['REQUEST_URI'] . " is not availavle on this server.");
     }
     
+    /**
+     * 
+     * @return void
+     */
     public function forbidden()
     {
         $this->error(403, "Forbidden",
             "You don't have privileges to access this resource.");
     }
     
-    // utils
+    /**
+     * 
+     * @param string $path
+     * @return string
+     */
     public function parent_path($path)
     {
         $dn = dirname($path);
@@ -390,6 +552,12 @@ class Pinoco extends Pinoco_Vars {
         return $dn;
     }
     
+    /**
+     * 
+     * @param string $path
+     * @param string $base
+     * @return string
+     */
     public function resolve_path($path, $base=FALSE)
     {
         if(strlen($path) > 0 && $path[0] != '/') {
@@ -412,6 +580,11 @@ class Pinoco extends Pinoco_Vars {
         }
     }
     
+    /**
+     * 
+     * @param string $path
+     * @return bool
+     */
     public function is_renderable_path($path)
     {
         $sepp = strpos($path, "?");
@@ -422,6 +595,11 @@ class Pinoco extends Pinoco_Vars {
         return $ext && $this->_renderers->has($ext);
     }
     
+    /**
+     * 
+     * @param string $path
+     * @return string
+     */
     public function url($path='')
     {
         if($path != '') {
@@ -450,6 +628,11 @@ class Pinoco extends Pinoco_Vars {
         return $this->_url_modifier ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
     }
     
+    /**
+     * 
+     * @param string $page
+     * @return void
+     */
     public function render($page)
     {
         $page = $this->resolve_path($page);
@@ -461,6 +644,11 @@ class Pinoco extends Pinoco_Vars {
         $this->_manually_rendered = true;
     }
     
+    /**
+     * 
+     * @param string $filename
+     * @return string
+     */
     public function mime_type($filename)
     {
         if(file_exists($filename)) {
@@ -490,6 +678,10 @@ class Pinoco extends Pinoco_Vars {
         return Pinoco_MIMEType::from_filename($filename);
     }
     
+    /**
+     * 
+     * @return Pinoco
+     */
     public static function instance()
     {
         return self::$_current_instance;
@@ -513,6 +705,32 @@ class Pinoco extends Pinoco_Vars {
     */
     
     // runtime core
+    /**
+     * 
+     * @internal
+     */
+    private static function _credit_into_x_powerd_by()
+    {
+        $CREDIT_LOGO = __CLASS__ . "/" . self::VERSION;
+        if(!headers_sent()) {
+            $found = false;
+            foreach(headers_list() as $http_header) {
+                if(preg_match('/^X-Powered-By:/', $http_header)) {
+                    $found = true;
+                    header($http_header . " " . $CREDIT_LOGO);
+                    break;
+                }
+            }
+            if(!$found) {
+                header("X-Powered-By: " . $CREDIT_LOGO);
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @return void
+     */
     private function _run_script_in_infected_scope()
     {
         $this->include_with_this($this->_script, $this->_autolocal->to_array());
@@ -542,6 +760,11 @@ class Pinoco extends Pinoco_Vars {
     }
     */
     
+    /**
+     * 
+     * @param bool $output_buffering
+     * @return void
+     */
     public function run($output_buffering=TRUE)
     {
         // insert credit into X-Powered-By header
