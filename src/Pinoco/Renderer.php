@@ -15,6 +15,7 @@
 
 /**
  * Abstract HTML page renderer
+ * @property Pinoco_Vars $cfg
  */
 abstract class Pinoco_Renderer {
     /**
