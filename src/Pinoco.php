@@ -83,6 +83,7 @@ class Pinoco extends Pinoco_Vars {
     private $_dispatcher;
     private $_manually_rendered;
     private static $_current_instance = null;
+    private $_script_include_stack;
     
     /**
      * 
@@ -326,10 +327,17 @@ class Pinoco extends Pinoco_Vars {
      * @param array $localvars
      * @return void
      */
-    public function include_with_this($abspath, $localvars=array())
+    public function include_with_this($path, $localvars=array())
     {
         extract($localvars);
-        include($abspath);
+        unset($localvars);
+        
+        if(!is_array($this->_script_include_stack)) {
+            $this->_script_include_stack = array();
+        }
+        array_push($this->_script_include_stack, $path);
+        include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
+        array_pop($this->_script_include_stack);
     }
     
     // reserved props
@@ -734,15 +742,6 @@ class Pinoco extends Pinoco_Vars {
         }
     }
     
-    /**
-     * 
-     * @return void
-     */
-    private function _run_script_in_infected_scope()
-    {
-        $this->include_with_this($this->_script, $this->_autolocal->to_array());
-    }
-    
     /*
     NOT IN USE NOW!
     private function _hook_or_page_exists()
@@ -837,7 +836,7 @@ class Pinoco extends Pinoco_Vars {
                     if(file_exists($this->_script)) {
                         $this->_subpath = implode('/', $uris);
                         try {
-                            $this->_run_script_in_infected_scope();
+                            $this->include_with_this($this->_script, $this->_autolocal->to_array());
                         }
                         catch(Pinoco_FlowControlSkip $ex) { }
                         $this->_activity->push($this->_script);
@@ -851,7 +850,7 @@ class Pinoco extends Pinoco_Vars {
                         $_handler_available = true;
                         $this->_subpath = implode('/', $uris);
                         try {
-                            $this->_run_script_in_infected_scope();
+                            $this->include_with_this($this->_script, $this->_autolocal->to_array());
                         }
                         catch(Pinoco_FlowControlSkip $ex) { }
                         $this->_activity->push($this->_script);
@@ -868,7 +867,7 @@ class Pinoco extends Pinoco_Vars {
                         $_handler_available = true;
                         $this->_subpath = $fename;
                         try {
-                            $this->_run_script_in_infected_scope();
+                            $this->include_with_this($this->_script, $this->_autolocal->to_array());
                         }
                         catch(Pinoco_FlowControlSkip $ex) { }
                         $this->_activity->push($this->_script);
@@ -909,7 +908,7 @@ class Pinoco extends Pinoco_Vars {
             if(file_exists($this->_script)) {
                 $this->_subpath = implode("/", $uris);
                 try {
-                    $this->_run_script_in_infected_scope();
+                    $this->include_with_this($this->_script, $this->_autolocal->to_array());
                 }
                 catch(Pinoco_FlowControl $ex) { }
                 $this->_activity->push($this->_script);
