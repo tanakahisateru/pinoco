@@ -5,7 +5,12 @@
 class Pinoco_SmartyRenderer extends Pinoco_Renderer {
     public function render($page, $extravars=array())
     {
-        $smarty = $this->_sysref->newobj('Smarty/Smarty.class.php/Smarty');
+        if(!$this->_sysref->using('Smarty/Smarty.class.php')){
+            trigger_error("Smarty is not installed.");
+            return;
+        }
+        
+        $smarty = $this->_sysref->newobj('Smarty');
         
         //config
         $smarty->template_dir = $this->_sysref->basedir;

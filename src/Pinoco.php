@@ -277,7 +277,10 @@ class Pinoco extends Pinoco_Vars {
         if($seppos !== FALSE) {
             $srcfile = substr($class, 0, $seppos);
             $class = substr($class, $seppos + 1);
-            $this->using($srcfile);
+            if(!$this->using($srcfile)){
+                trigger_error($srcfile . " was not found.");
+                return null;
+            }
         }
         $argstr = array();
         for($i = 1; $i < func_num_args(); $i++) {
@@ -301,33 +304,51 @@ class Pinoco extends Pinoco_Vars {
     /**
      * 
      * @param string $script_path
-     * @return void
+     * @return bool
      */
     public function using($script_path)
     {
-        $incpathes = array(
-            // search into hook script dir
-            dirname($this->_script) . "/" . $script_path,
-            // "_system/lib" is a fallback script search path
-            $this->_sysdir . "/lib/" . $script_path
-        );
-        foreach($incpathes as $p) {
-            if(file_exists($p) && is_file($p)) {
-                include_once $p;
-                return;
+        $incpathes = array();
+        if($this->_script) {
+            array_push($incpathes,
+                $this->parent_path($this->_script));  // search from hook script dir
+        }
+        array_push($incpathes,
+            $this->_sysdir . "/lib/");  // "lib" in sysdir is a fallback script search path
+        $orig_include_path = ini_get('include_path');
+        $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
+        foreach(explode($sep, $orig_include_path) as $ip){
+            array_push($incpathes, realpath($ip));
+        };
+        
+        if(preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_path)){
+            if(!is_file($script_path)) {
+                return FALSE;
             }
         }
-        // default
-        @include_once $script_path;
+        $exists = FALSE;
+        foreach($incpathes as $p) {
+            if(is_file($p . "/" . $script_path)) {
+                $exists = TRUE;
+                break;
+            }
+        }
+        if(!$exists) {
+            return FALSE;
+        }
+        ini_set('include_path', implode($sep, $incpathes));
+        include_once $script_path;
+        ini_set('include_path', $orig_include_path);
+        return TRUE;
     }
     
     /**
      * 
-     * @param string $abspath
+     * @param string $script_abs_path
      * @param array $localvars
      * @return void
      */
-    public function include_with_this($path, $localvars=array())
+    public function include_with_this($script_abs_path, $localvars=array())
     {
         extract($localvars);
         unset($localvars);
@@ -335,7 +356,7 @@ class Pinoco extends Pinoco_Vars {
         if(!is_array($this->_script_include_stack)) {
             $this->_script_include_stack = array();
         }
-        array_push($this->_script_include_stack, $path);
+        array_push($this->_script_include_stack, $script_abs_path);
         include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
         array_pop($this->_script_include_stack);
     }
@@ -684,8 +705,7 @@ class Pinoco extends Pinoco_Vars {
                 }
             }
         }
-        @include_once 'MIME/Type.php';
-        if (class_exists('MIME_Type')) {
+        if ($this->using('MIME/Type.php')) {
             return MIME_Type::autoDetect($filename);
         }
         // final fallback process

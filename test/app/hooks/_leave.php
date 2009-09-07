@@ -1,8 +1,12 @@
 <?php
-if(0) {
-    echo "<h2>Activities</h2>";
+// How to show status after page rendering (buffering must be enabled)
+if($this->using('FirePHPCore/FirePHP.class.php')) {
+    $firephp = FirePHP::getInstance(true);
+    $firephp->group('Pinoco activity', array('Collapsed'=>1));
     foreach($this->activity as $act) {
-        echo "$act<br/>";
+        $firephp->log($act);
     }
-    echo $this->script;
+    $firephp->log($this->script);
+    $firephp->groupEnd();
 }
+
