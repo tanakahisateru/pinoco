@@ -723,8 +723,9 @@ class Pinoco extends Pinoco_Vars {
     /**
      * 
      * @internal
+     * @return void
      */
-    private static function _credit_into_x_powerd_by()
+    private function _credit_into_x_powerd_by()
     {
         $CREDIT_LOGO = __CLASS__ . "/" . self::VERSION;
         if(!headers_sent()) {
@@ -768,42 +769,65 @@ class Pinoco extends Pinoco_Vars {
     
     /**
      * 
+     * @param string $script
+     * @param string $subpath
+     * @return bool
+     * @internal
+     */
+    private function _run_hook_if_exists($script, $subpath) {
+        if(file_exists($script)) {
+            $this->_script = $script;
+            $this->_subpath = $subpath;
+            try {
+                $this->include_with_this($this->_script, $this->_autolocal->to_array());
+            }
+            catch(Pinoco_FlowControlSkip $ex) { }
+            $this->_activity->push($this->_script);
+            $this->_subpath = "";
+            $this->_script = null;
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * 
      * @param bool $output_buffering
      * @return void
      */
     public function run($output_buffering=TRUE)
     {
         // insert credit into X-Powered-By header
-        self::_credit_into_x_powerd_by();
+        $this->_credit_into_x_powerd_by();
         
         try {
             // No dispatcher indicates to force to use mod_rewrite.
             $with_rewite = strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) === FALSE;
             // and index.php/ or PATH_INFO= after index.php
             if($this->_dispatcher=="" && !$with_rewite) {
-                //$this->redirect($this->_baseuri);
-                //$this->notfound();
                 $this->forbidden();
             }
-            // preprocess notfound -- if handler or page is not exists
             
             // NOT IN USE NOW!
+            // preprocess notfound -- if handler or page is not exists
             //if(!$this->_hook_or_page_exists()){
             //    $this->notfound();
             //}
-            
-            // unexpected request: non-html but existing
-            $realfile = $this->_basedir . $this->_path;
-            if(!$this->is_renderable_path($this->_path) && file_exists($realfile)) {
-                header('Content-Type:' . $this->mime_type($realfile));
-                $st = stat($realfile);
-                header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
-                readfile($realfile);  // TODO : streaming
-                return;
-            }
         }
         catch(Pinoco_FlowControlHttpError $ex) {
             $ex->respond($this);
+            return;
+        }
+        
+        // non-html but existing => raw binary with mime-type header
+        $realfile = $this->_basedir . $this->_path;
+        if(!$this->is_renderable_path($this->_path) && file_exists($realfile)) {
+            header('Content-Type:' . $this->mime_type($realfile));
+            $st = stat($realfile);
+            header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
+            readfile($realfile);  // TODO : streaming
             return;
         }
         
@@ -832,48 +856,19 @@ class Pinoco extends Pinoco_Vars {
                         $this->notfound();
                     }
                     
-                    $this->_script = $hookbase . $dpath . "/_enter.php";
-                    if(file_exists($this->_script)) {
-                        $this->_subpath = implode('/', $uris);
-                        try {
-                            $this->include_with_this($this->_script, $this->_autolocal->to_array());
-                        }
-                        catch(Pinoco_FlowControlSkip $ex) { }
-                        $this->_activity->push($this->_script);
-                        $this->_subpath = "";
-                    }
-                    $this->_script = null;
+                    // enter
+                    $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
                     
-                    $this->_script = $hookbase . $dpath . "/" . $fename . ".php";
+                    // main script
                     $fallback_script = $hookbase . $dpath . "/_default.php";
-                    if(file_exists($this->_script)) {
-                        $_handler_available = true;
-                        $this->_subpath = implode('/', $uris);
-                        try {
-                            $this->include_with_this($this->_script, $this->_autolocal->to_array());
-                        }
-                        catch(Pinoco_FlowControlSkip $ex) { }
-                        $this->_activity->push($this->_script);
-                        $this->_subpath = "";
+                    if($this->_run_hook_if_exists($hookbase . $dpath . "/" . $fename . ".php", implode('/', $uris))) {
                         $proccessed = true;
-                        $this->_script = null;
                         break;
                     }
-                    $this->_script = null;
                 }
                 if(!$proccessed && isset($fallback_script)) {
-                    $this->_script = $fallback_script;
-                    if(file_exists($this->_script)) {
-                        $_handler_available = true;
-                        $this->_subpath = $fename;
-                        try {
-                            $this->include_with_this($this->_script, $this->_autolocal->to_array());
-                        }
-                        catch(Pinoco_FlowControlSkip $ex) { }
-                        $this->_activity->push($this->_script);
-                        $this->_subpath = "";
-                    }
-                    $this->_script = null;
+                    //fallback for the last missing main
+                    $this->_run_hook_if_exists($fallback_script, implode('/', $uris));
                 }
             }
             catch(Pinoco_FlowControlTerminate $ex) {
@@ -882,6 +877,7 @@ class Pinoco extends Pinoco_Vars {
                 $this->_subpath = "";
             }
             
+            //render
             if(!$this->_manually_rendered) {
                 $page = $this->_page ? $this->_page : $this->default_page();
                 if($page) {
@@ -904,17 +900,9 @@ class Pinoco extends Pinoco_Vars {
             $fename = array_pop($process);
             array_unshift($uris, $fename);
             $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
-            $this->_script = $hookbase . $dpath . "/_leave.php";
-            if(file_exists($this->_script)) {
-                $this->_subpath = implode("/", $uris);
-                try {
-                    $this->include_with_this($this->_script, $this->_autolocal->to_array());
-                }
-                catch(Pinoco_FlowControl $ex) { }
-                $this->_activity->push($this->_script);
-                $this->_subpath = "";
-            }
-            $this->_script = null;
+            
+            // leave
+            $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
         } while(count($process) > 0);
         
         if($output_buffering) {
