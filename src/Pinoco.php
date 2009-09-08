@@ -10,7 +10,8 @@
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  0.1.0-beta1
- * @link     
+ * @link     http://code.google.com/p/pinoco/
+ * @filesource
  */
 
 require_once dirname(__FILE__) . '/Pinoco/Vars.php';
@@ -22,10 +23,9 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * Pinoco web site environment
  * It makes existing static web site dynamic transparently.
  *
- * Install PHPTAL first, anyway.
- *
- * @example
- * .htaccess
+ * Install PHPTAL.
+ * Make your application directory anywhere.
+ * Put .htaccess in your site root.
  * <code>
  * RewriteEngine On
  * RewriteCond %{REQUEST_FILENAME} \.(html|php)$ [OR]
@@ -34,8 +34,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * RewriteRule ^(.*)$   _gateway.php/$1 [L,QSA]
  * #...or RewriteRule ^(.*)$   _gateway.php?PATH_INFO=$1 [L,QSA]
  * </code>
- *
- * _gateway.php
+ * Put _gateway.php in your site root.
  * <code>
  * require_once 'Pinoco.php';
  * Pinoco::create("*** your_app_dir ***", array(
@@ -45,9 +44,8 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * //    'directory_index'  => "index.html index.php", // string like DirectoryIndex directive default "index.html index.php"
  * ))->run();
  * </code>
- *
- * And put hooks, lib, errors or any of else into your_app_dir.
  * 
+ * @package Pinoco
  * @property-read string $baseuri
  * @property-read string $basedir
  * @property-read string $sysdir
@@ -269,7 +267,7 @@ class Pinoco extends Pinoco_Vars {
     /**
      * 
      * @param string $class
-     * @return object|null
+     * @return object
      */
     public function newobj($class)
     {
@@ -302,43 +300,69 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
+     *
+     * @return string
+     */
+    private function _extended_include_path() {
+        $incpathes = array();
+        
+        // search from hook script dir
+        if($this->_script) {
+            array_push($incpathes, realpath($this->parent_path($this->_script)));
+        }
+        
+        // "lib" in sysdir is a fallback script search path
+        array_push($incpathes, realpath($this->_sysdir . "/lib"));
+        
+        // append existing elements
+        $orig_incpath = ini_get('include_path');
+        $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
+        foreach(explode($sep, $orig_incpath) as $ip) {
+            $absip = realpath($ip);
+            if(!array_search($absip, $incpathes)) {
+                array_push($incpathes, $absip);
+            }
+        };
+        
+        return implode($sep, $incpathes);
+    }
+    
+    /**
+     *
+     * @param string $filename
+     * @param string $pathes
+     * @return bool
+     */
+    private function _file_exists_in_search_path($filename, $pathes) {
+        if(preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $filename)){
+            return is_file($filename);
+        }
+        else {
+            $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
+            foreach(explode($sep, $pathes) as $p) {
+                if(is_file($p . "/" . $filename)) {
+                    return TRUE;
+                }
+            }
+            return FALSE;
+        }
+    }
+    
+    /**
      * 
      * @param string $script_path
      * @return bool
      */
     public function using($script_path)
     {
-        $incpathes = array();
-        if($this->_script) {
-            array_push($incpathes,
-                $this->parent_path($this->_script));  // search from hook script dir
-        }
-        array_push($incpathes,
-            $this->_sysdir . "/lib/");  // "lib" in sysdir is a fallback script search path
-        $orig_include_path = ini_get('include_path');
-        $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
-        foreach(explode($sep, $orig_include_path) as $ip){
-            array_push($incpathes, realpath($ip));
-        };
-        
-        if(preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_path)){
-            if(!is_file($script_path)) {
-                return FALSE;
-            }
-        }
-        $exists = FALSE;
-        foreach($incpathes as $p) {
-            if(is_file($p . "/" . $script_path)) {
-                $exists = TRUE;
-                break;
-            }
-        }
-        if(!$exists) {
+        $extended_incpath = $this->_extended_include_path();
+        if(!$this->_file_exists_in_search_path($script_path, $extended_incpath)) {
             return FALSE;
         }
-        ini_set('include_path', implode($sep, $incpathes));
+        $orig_incpath = ini_get('include_path');
+        ini_set('include_path', $extended_incpath);
         include_once $script_path;
-        ini_set('include_path', $orig_include_path);
+        ini_set('include_path', $orig_incpath);
         return TRUE;
     }
     
@@ -346,19 +370,26 @@ class Pinoco extends Pinoco_Vars {
      * 
      * @param string $script_abs_path
      * @param array $localvars
-     * @return void
+     * @return bool
      */
     public function include_with_this($script_abs_path, $localvars=array())
     {
-        extract($localvars);
-        unset($localvars);
+        // script path must be absolute and exist.
+        if(!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
+            !is_file($script_abs_path)) {
+            return FALSE;
+        }
         
         if(!is_array($this->_script_include_stack)) {
             $this->_script_include_stack = array();
         }
         array_push($this->_script_include_stack, $script_abs_path);
+        unset($script_abs_path);
+        extract($localvars);
+        unset($localvars);
         include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
         array_pop($this->_script_include_stack);
+        return TRUE;
     }
     
     // reserved props

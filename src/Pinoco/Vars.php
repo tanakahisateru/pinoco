@@ -10,11 +10,13 @@
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  0.1.0-beta1
- * @link     
+ * @link     http://code.google.com/p/pinoco/
+ * @filesource
  */
 
 /**
  * Variable model
+ * @package Pinoco
  */
 class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     
@@ -259,6 +261,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
 
 /**
  * Iterator for Pinoco Variables
+ * @package Pinoco
  * @internal
  */
 class Pinoco_VarsIterator implements Iterator {

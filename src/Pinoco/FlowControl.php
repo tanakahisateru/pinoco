@@ -10,29 +10,34 @@
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  0.1.0-beta1
- * @link     
+ * @link     http://code.google.com/p/pinoco/
+ * @filesource
  */
 
 /**
  * Flow control object
+ * @package Pinoco
  */
 class Pinoco_FlowControl extends Exception {
 }
 
 /**
  * Flow control object
+ * @package Pinoco
  */
 class Pinoco_FlowControlSkip extends Pinoco_FlowControl {
 }
 
 /**
  * Flow control object
+ * @package Pinoco
  */
 class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
 }
 
 /**
  * Flow control object
+ * @package Pinoco
  */
 class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
     /**
@@ -76,6 +81,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
 
 /**
  * Flow control object
+ * @package Pinoco
  */
 class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
     /**

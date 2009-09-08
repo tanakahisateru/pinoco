@@ -10,12 +10,14 @@
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  0.1.0-beta1
- * @link     
+ * @link     http://code.google.com/p/pinoco/
+ * @filesource
  */
 
 /**
  * Fallback MIME-Type dict
- * (Thanks to MIME_Type package)
+ * (Thanks to MIME_Type package!)
+ * @package Pinoco
  */
 class Pinoco_MIMEType {
     private static $EXT2TYPE = array (

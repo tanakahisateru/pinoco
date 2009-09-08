@@ -10,11 +10,13 @@
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  0.1.0-beta1
- * @link     
+ * @link     http://code.google.com/p/pinoco/
+ * @filesource
  */
 
 /**
  * Abstract HTML page renderer
+ * @package Pinoco
  * @property Pinoco_Vars $cfg
  */
 abstract class Pinoco_Renderer {
@@ -62,6 +64,7 @@ abstract class Pinoco_Renderer {
 
 /**
  * Preferred HTML page renderer using PHPTAL
+ * @package Pinoco
  */
 class Pinoco_TALRenderer extends Pinoco_Renderer {
     

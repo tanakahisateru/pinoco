@@ -10,11 +10,13 @@
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  0.1.0-beta1
- * @link     
+ * @link     http://code.google.com/p/pinoco/
+ * @filesource
  */
 
 /**
  * List model
+ * @package Pinoco
  */
 class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     
@@ -360,6 +362,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
 
 /**
  * Iterator for Pinoco List
+ * @package Pinoco
  * @internal
  */
 class Pinoco_ListIterator implements Iterator {
