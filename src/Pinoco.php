@@ -166,7 +166,7 @@ class Pinoco extends Pinoco_Vars {
         $this->_baseuri = $baseuri;
         $this->_dispatcher = $dispatcher;
         $this->_path = $path;
-        $this->_basedir = $basedir;
+        $this->_basedir = realpath($basedir);
         $this->_sysdir = realpath($sysdir);
         if(!is_dir($this->_sysdir)) {
             trigger_error("Invalid system directory:" . $sysdir . " is not exists.");
