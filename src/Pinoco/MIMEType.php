@@ -228,8 +228,7 @@ class Pinoco_MIMEType {
      */
     public static function from_filename($filename)
     {
-        $info = pathinfo($filename);
-        $ext = $info['extension'];
-        return isset(self::$EXT2TYPE[$ext]) ? self::$EXT2TYPE[$ext] : "";
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        return $ext ? self::$EXT2TYPE[$ext] : "";
     }
 }
