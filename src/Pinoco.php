@@ -686,12 +686,11 @@ class Pinoco extends Pinoco_Vars {
             $path = $this->resolve_path($path);
         }
         // guess to use gateway script but not in use mod_rewrite.
-        if((
+        if($this->_dispatcher != "" && (
                 $this->is_renderable_path($path) ||
-                !file_exists($this->_basedir . $path) ||
+                !is_file($this->_basedir . $path) ||
                 is_dir($this->_basedir . $path)
-            ) && $this->_dispatcher != ""
-        ) {
+        )) {
             // join both url params of dispatcher and path if they have "?" commonly.
             $dqpos = strpos($this->_dispatcher, "?");
             $pqpos = strpos($path, "?");
@@ -867,7 +866,7 @@ class Pinoco extends Pinoco_Vars {
      * @internal
      */
     private function _run_hook_if_exists($script, $subpath) {
-        if(file_exists($script)) {
+        if(is_file($script)) {
             $this->_script = $script;
             $this->_subpath = $subpath;
             try {
