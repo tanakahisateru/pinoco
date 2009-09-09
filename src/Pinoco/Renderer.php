@@ -92,6 +92,16 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
             }
         }
         
+        //extra TALES definition
+        if(!function_exists("phptal_tales_url")) {
+            function phptal_tales_url($src, $nothrow)
+            {
+                $src = trim($src);
+                $src = preg_match('/^[A-Za-z0-9_]+:/', $src) ? phptal_tales($src, $nothrow) : "'" . $src . "'";
+                return '$ctx->this->url(' . $src . ')';
+            }
+        }
+        
         //extract vars
         foreach($this->_sysref->autolocal as $name=>$value) {
             $template->set($name, $value);
@@ -123,19 +133,6 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
         }
         //ob_end_flush();
     }
-}
-
-/**
- * 
- * @param string $src
- * @param bool $nothrow
- * @return string
- */
-function phptal_tales_url($src, $nothrow)
-{
-    $src = trim($src);
-    $src = preg_match('/^[A-Za-z0-9_]+:/', $src) ? phptal_tales($src, $nothrow) : "'" . $src . "'";
-    return '$ctx->this->url(' . $src . ')';
 }
 
 /**
