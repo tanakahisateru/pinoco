@@ -53,6 +53,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * @property-read string $script
  * @property-read Pinoco_List $activity
  * @property-read string $subpath
+ * @property string $directory_index
  * @property string $page
  * @property-read Pinoco_Vars $renderers
  * @property-read Pinoco_Vars $autolocal
@@ -70,6 +71,7 @@ class Pinoco extends Pinoco_Vars {
     private $_script;    // R string
     private $_activity;  // R string
     private $_subpath;   // R string
+    private $_directory_index;  // R/W string
     
     private $_renderers; // R/M renderers
     private $_page;      // R/W string
@@ -80,8 +82,9 @@ class Pinoco extends Pinoco_Vars {
     // hidden
     private $_dispatcher;
     private $_manually_rendered;
-    private static $_current_instance = null;
     private $_script_include_stack;
+    
+    private static $_current_instance = null;
     
     /**
      * 
@@ -95,7 +98,6 @@ class Pinoco extends Pinoco_Vars {
         $use_mod_rewrite  = isset($options['use_mod_rewrite'])  ? $options['use_mod_rewrite'] : TRUE;
         $use_path_info    = isset($options['use_path_info'])    ? $options['use_path_info'] : TRUE;
         $custom_path_info = isset($options['custom_path_info']) ? $options['custom_path_info'] : FALSE;
-        $directory_index  = isset($options['directory_index'])  ? $options['directory_index'] : "index.html index.php";
         
         // raw path info
         $pathinfo_name = ($custom_path_info !== FALSE) ? $custom_path_info : 'PATH_INFO';
@@ -147,7 +149,7 @@ class Pinoco extends Pinoco_Vars {
         $baseuri = substr($uri, 0, strlen($uri) - strlen($trailings));
         
         // build engine
-        return new self($baseuri, $dispatcher, $path, dirname($_SERVER['SCRIPT_FILENAME']), $sysdir, $directory_index);
+        return new self($baseuri, $dispatcher, $path, dirname($_SERVER['SCRIPT_FILENAME']), $sysdir);
     }
     
     /**
@@ -159,7 +161,7 @@ class Pinoco extends Pinoco_Vars {
      * @param string $sysdir
      * @param array $directory_index
      */
-    function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir, $directory_index="index.html index.php")
+    function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir)
     {
         $this->_baseuri = $baseuri;
         $this->_dispatcher = $dispatcher;
@@ -170,9 +172,14 @@ class Pinoco extends Pinoco_Vars {
             trigger_error("Invalid system directory:" . $sysdir . " is not exists.");
         }
         
-        if(is_dir($this->_basedir . $this->_path) && $this->_path[strlen($this->_path) - 1] != '/') {
+        if($this->_path[strlen($this->_path) - 1] != '/' &&
+            (is_dir($this->_basedir . $this->_path) || is_dir($this->_sysdir . "/hooks" . $this->_path))) {
             $this->_path .= '/';
         }
+        
+        $this->_directory_index = "index.html index.php"; // default index files
+        
+        /*
         if($this->_path[strlen($this->_path) - 1] == '/') {
             foreach(explode(" ", $directory_index) as $indexfile) {
                 if(file_exists($this->_basedir . $this->_path . $indexfile)) {
@@ -184,6 +191,7 @@ class Pinoco extends Pinoco_Vars {
         if($this->_path[strlen($this->_path) - 1] == '/') {
             $this->_path .= 'index.html';
         }
+        */
         
         $this->_script = null;
         $this->_activity = $this->newlist();
@@ -207,24 +215,7 @@ class Pinoco extends Pinoco_Vars {
     
     public function __toString() { return __CLASS__ . " " . self::VERSION; }
     
-    /**
-     * 
-     * @return string|null
-     */
-    public function default_page()
-    {
-        $fullpath = $this->_basedir . $this->_path;
-        $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
-        if($ext && $this->_renderers->has($ext) && file_exists($fullpath)) {
-            return $this->_path;
-        }
-        else {
-            return NULL;
-        }
-    }
-    
     // factory
-
     /**
      * @param mixed $init
      * @return Pinoco_Vars
@@ -422,32 +413,37 @@ class Pinoco extends Pinoco_Vars {
      * @return string
      */
     public function get_script()  { return $this->_script; }
-        
+    
     /**
      * 
      * @return string
      */
     public function get_activity(){ return $this->_activity; }
-        
+    
     /**
      * 
      * @return string
      */
     public function get_subpath() { return $this->_subpath; }
-        
+    
+    /**
+     * 
+     * @return string
+     */
+    public function get_directory_index() { return $this->_directory_index; }
+    
     /**
      * 
      * @return string
      */
     public function get_page()    { return $this->_page; }
-        
+    
     /**
      * 
      * @return string
      */
     public function get_renderers(){ return $this->_renderers; }
     
-        
     /**
      * 
      * @return string
@@ -466,6 +462,13 @@ class Pinoco extends Pinoco_Vars {
      * @return void
      */
     public function set_page($page) { $this->_page = $this->resolve_path($page); }
+    
+    /**
+     * 
+     * @param $files
+     * @return void
+     */
+    public function set_directory_index($files) { $this->_directory_index = $files; }
     
     /**
      * 
@@ -494,7 +497,7 @@ class Pinoco extends Pinoco_Vars {
             }
         }
     }
-
+    
     /**
      *
      * @param stirng $name
@@ -574,7 +577,7 @@ class Pinoco extends Pinoco_Vars {
     {
         throw new Pinoco_FlowControlHttpError($code, $title, $message);
     }
-
+    
     /**
      * 
      * @param string $url
@@ -640,6 +643,9 @@ class Pinoco extends Pinoco_Vars {
                     array_push($bes, $pe);
                 }
             }
+            if(count($bes) == 1) {
+                array_push($bes, '');
+            }
             return implode("/", $bes);
         }
         else {
@@ -697,6 +703,35 @@ class Pinoco extends Pinoco_Vars {
     
     /**
      * 
+     * @return string|null
+     */
+    public function default_page()
+    {
+        $page = $this->_path;
+        if($page[strlen($page) - 1] == "/") {
+            foreach(explode(" ", $this->_directory_index) as $idx) {
+                if(is_file($this->_basedir . $page . $idx)) {
+                    $page .= $idx;
+                    break;
+                }
+            }
+        }
+        if($page[strlen($page) - 1] == "/") {
+            return NULL;
+        }
+        
+        $fullpath = $this->_basedir . $page;
+        $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
+        if($ext && $this->_renderers->has($ext) && is_file($fullpath)) {
+            return $page;
+        }
+        else {
+            return NULL;
+        }
+    }
+    
+    /**
+     * 
      * @param string $page
      * @return void
      */
@@ -719,7 +754,6 @@ class Pinoco extends Pinoco_Vars {
     public function mime_type($filename)
     {
         if(file_exists($filename)) {
-
             if(function_exists('finfo_open'))
             {
                 $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -874,7 +908,7 @@ class Pinoco extends Pinoco_Vars {
         
         // non-html but existing => raw binary with mime-type header
         $realfile = $this->_basedir . $this->_path;
-        if(!$this->is_renderable_path($this->_path) && file_exists($realfile)) {
+        if(!$this->is_renderable_path($this->_path) && is_file($realfile)) {
             header('Content-Type:' . $this->mime_type($realfile));
             $st = stat($realfile);
             header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
@@ -891,8 +925,6 @@ class Pinoco extends Pinoco_Vars {
         try {
             $hookbase = $this->_sysdir . "/hooks";
             
-            $_handler_available = false;
-            
             $uris = explode("/", ltrim($this->_path, "/"));
             $process = array();
             $proccessed = false;
@@ -907,19 +939,33 @@ class Pinoco extends Pinoco_Vars {
                         $this->notfound();
                     }
                     
+                    // directory access : the last element is empty like "/foo/".
+                    if(count($uris) == 0 && $fename == "") {
+                        foreach(explode(" ", $this->_directory_index) as $idx) {
+                            if(is_file($hookbase . $dpath . "/" . $idx . ".php")) {
+                                $fename = $idx;
+                                break;
+                            }
+                        }
+                        if($fename == "") {
+                            $fename = "_default";
+                        }
+                    }
+                    
                     // enter
                     $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
                     
                     // main script
-                    $fallback_script = $hookbase . $dpath . "/_default.php";
                     if($this->_run_hook_if_exists($hookbase . $dpath . "/" . $fename . ".php", implode('/', $uris))) {
                         $proccessed = true;
                         break;
                     }
-                }
-                if(!$proccessed && isset($fallback_script)) {
-                    //fallback for the last missing main
-                    $this->_run_hook_if_exists($fallback_script, implode('/', $uris));
+                    else if(count($uris) == 0) {
+                        if($this->_run_hook_if_exists($hookbase . $dpath . "/_default.php", implode('/', $uris))) {
+                            $proccessed = true;
+                            break;
+                        }
+                    }
                 }
             }
             catch(Pinoco_FlowControlTerminate $ex) {
@@ -934,8 +980,13 @@ class Pinoco extends Pinoco_Vars {
                 if($page) {
                     $this->render($page);
                 }
-                else if(!$_handler_available) {
-                    $this->notfound();
+                else if(!$proccessed) {
+                    if($this->_path[strlen($this->_path) - 1] == "/") {
+                        $this->forbidden();
+                    }
+                    else {
+                        $this->notfound();
+                    }
                 }
             }
         }
@@ -963,5 +1014,4 @@ class Pinoco extends Pinoco_Vars {
         self::$_current_instance = null;
     }
 }
-
 
