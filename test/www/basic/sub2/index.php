@@ -22,6 +22,6 @@
         <?php endforeach; ?>
         </ul>
         
-        <p><a href="../index.html" tal:attributes="href url:../">Back</a></p>
+        <p><a href="<?php echo $this->url("../index.html"); ?>">Back</a></p>
     </body>
 </html>
