@@ -315,6 +315,12 @@ class Pinoco extends Pinoco_Vars {
             }
         };
         
+        // add pinoco installed directory for preset libs.
+        $pinoco_install = dirname(__FILE__);
+        if(!array_search($pinoco_install, $incpathes)) {
+            array_push($incpathes, $pinoco_install);
+        }
+        
         return implode($sep, $incpathes);
     }
     
