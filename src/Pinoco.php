@@ -638,7 +638,11 @@ class Pinoco extends Pinoco_Vars {
     {
         if(strlen($path) > 0 && $path[0] != '/') {
             // make path absolute if relative
-            $base = $base === FALSE ? $this->parent_path($this->_path) : $base;
+            if($base === FALSE) {
+                $thispath = $this->_path;
+                $base = $thispath[strlen($thispath) - 1] != "/" ?
+                    $this->parent_path($thispath) : rtrim($thispath, "/");
+            }
             $bes = explode("/", rtrim($base, "/"));
             $pes = explode("/", $path);
             foreach($pes as $pe) {
@@ -648,9 +652,6 @@ class Pinoco extends Pinoco_Vars {
                 else if($pe != ".") {
                     array_push($bes, $pe);
                 }
-            }
-            if(count($bes) == 1) {
-                array_push($bes, '');
             }
             return implode("/", $bes);
         }
