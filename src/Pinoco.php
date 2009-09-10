@@ -14,8 +14,7 @@
  * @filesource
  */
 
-require_once dirname(__FILE__) . '/Pinoco/Vars.php';
-require_once dirname(__FILE__) . '/Pinoco/List.php';
+require_once dirname(__FILE__) . '/Pinoco/VarsList.php';
 require_once dirname(__FILE__) . '/Pinoco/Renderer.php';
 require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
 
