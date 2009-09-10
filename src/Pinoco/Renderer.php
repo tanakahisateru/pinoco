@@ -152,7 +152,10 @@ class Pinoco_NativeRenderer extends Pinoco_Renderer {
         foreach($extravars as $k=>$v) {
             $vars[$k] = $v;
         }
+        $orig_dir  = getcwd();
+        chdir($this->_sysref->parent_path($this->_sysref->basedir . "/" . $page));
         $this->_sysref->include_with_this($this->_sysref->basedir . "/" . $page, $vars);
+        chdir($orig_dir);
     }
 }
 
