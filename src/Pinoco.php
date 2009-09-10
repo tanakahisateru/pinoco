@@ -948,7 +948,8 @@ class Pinoco extends Pinoco_Vars {
                     // directory access : the last element is empty like "/foo/".
                     if(count($uris) == 0 && $fename == "") {
                         foreach(explode(" ", $this->_directory_index) as $idx) {
-                            if(is_file($hookbase . $dpath . "/" . $idx . ".php")) {
+                            if(is_file($this->_basedir . $dpath . "/" . $idx) &&    //base
+                                is_file($hookbase . $dpath . "/" . $idx . ".php")) { //sys
                                 $fename = $idx;
                                 break;
                             }
