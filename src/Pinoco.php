@@ -74,10 +74,12 @@ class Pinoco extends Pinoco_Vars {
     private $_directory_index;  // R/W string
     
     private $_renderers; // R/M renderers
-    private $_page;      // R/W string
+    private $_page;       // R/W string
     
     private $_autolocal; // R/M vars
-    private $_url_modifier; // R/W callable
+    
+    private $_url_modifier;  // R/W callable
+    private $_page_modifier; // R/W callable
     
     // hidden
     private $_dispatcher;
@@ -205,7 +207,9 @@ class Pinoco extends Pinoco_Vars {
         $this->_page = NULL;
         
         $this->_autolocal = $this->newvars();
+        
         $this->_url_modifier = NULL;
+        $this->_page_modifier = NULL;
         
         parent::__construct();
         
@@ -464,28 +468,41 @@ class Pinoco extends Pinoco_Vars {
     
     /**
      * 
-     * @param $page
+     * @return string
+     */
+    public function get_page_modifier(){ return $this->_page_modifier; }
+
+    /**
+     * 
+     * @param string $page
      * @return void
      */
     public function set_page($page) { $this->_page = $page; }
     
     /**
      * 
-     * @param $files
+     * @param string $files
      * @return void
      */
     public function set_directory_index($files) { $this->_directory_index = $files; }
     
     /**
      * 
-     * @param $callable
+     * @param callback $callable
      * @return void
      */
     public function set_url_modifier($callable) { $this->_url_modifier = $callable; }
     
     /**
      * 
-     * @param stirng $name
+     * @param callback $callable
+     * @return void
+     */
+    public function set_page_modifier($callable) { $this->_page_modifier = $callable; }
+    
+    /**
+     * 
+     * @param string $name
      * @return mixed
      * @see src/Pinoco/Pinoco_Vars#get($name)
      */
@@ -686,54 +703,49 @@ class Pinoco extends Pinoco_Vars {
             $path = $this->resolve_path($path);
         }
         // guess to use gateway script but not in use mod_rewrite.
-        if($this->_dispatcher != "" && (
+        if($this->_dispatcher != "") {
+            if(
                 $this->is_renderable_path($path) ||
                 !is_file($this->_basedir . $path) ||
                 is_dir($this->_basedir . $path)
-        )) {
-            // join both url params of dispatcher and path if they have "?" commonly.
-            $dqpos = strpos($this->_dispatcher, "?");
-            $pqpos = strpos($path, "?");
-            if($dqpos !== FALSE && $pqpos !== FALSE) {
-                $path = substr($path, 0, $pqpos) . "&" . substr($path, $pqpos + 1);
+            ) {
+                // join both url params of dispatcher and path if they have "?" commonly.
+                $dqpos = strpos($this->_dispatcher, "?");
+                $pqpos = strpos($path, "?");
+                if($dqpos !== FALSE && $pqpos !== FALSE) {
+                    $path = substr($path, 0, $pqpos) . "&" . substr($path, $pqpos + 1);
+                }
+                $url = rtrim($this->_baseuri, "/") . $this->_dispatcher . $path;
+                $renderable = TRUE;
             }
-            $url = rtrim($this->_baseuri, "/") . $this->_dispatcher . $path;
-            $renderable = TRUE;
+            else {
+                $url = rtrim($this->_baseuri, "/") . $path;
+                $renderable = FALSE;
+            }
         }
         else {
             $url = rtrim($this->_baseuri, "/") . $path;
-            $renderable = FALSE;
+            $renderable = TRUE;
         }
         return $this->_url_modifier ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
     }
     
     /**
      * 
-     * @return string|null
+     * @return string|false
      */
-    public function default_page()
+    public function _page_from_path_with_directory_index($path)
     {
-        $page = $this->_path;
-        if($page[strlen($page) - 1] == "/") {
-            foreach(explode(" ", $this->_directory_index) as $idx) {
-                if(is_file($this->_basedir . $page . $idx)) {
-                    $page .= $idx;
-                    break;
-                }
-            }
-        }
-        if($page[strlen($page) - 1] == "/") {
-            return NULL;
-        }
-        
-        $fullpath = $this->_basedir . $page;
-        $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
-        if($ext && $this->_renderers->has($ext) && is_file($fullpath)) {
+        $page = $path;
+        if($page[strlen($page) - 1] != "/") {
             return $page;
         }
-        else {
-            return NULL;
+        foreach(explode(" ", $this->_directory_index) as $idx) {
+            if(is_file($this->_basedir . $page . $idx)) {
+                return $page . $idx;
+            }
         }
+        return FALSE;
     }
     
     /**
@@ -745,9 +757,12 @@ class Pinoco extends Pinoco_Vars {
     {
         $page = $this->resolve_path($page);
         $ext = pathinfo($page, PATHINFO_EXTENSION);
-        if($ext && file_exists($this->_basedir . '/' . $page)) {
+        if($ext && file_exists($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
             $renderer = $this->_renderers[$ext];
             $renderer->render($page);
+        }
+        else {
+            trigger_error("File $page is not exists or not renderable.");
         }
         $this->_manually_rendered = true;
     }
@@ -872,7 +887,14 @@ class Pinoco extends Pinoco_Vars {
             try {
                 $this->include_with_this($this->_script, $this->_autolocal->to_array());
             }
-            catch(Pinoco_FlowControlSkip $ex) { }
+            catch(Pinoco_FlowControlSkip $ex) {
+            }
+            catch(Pinoco_FlowControl $ex) {
+                $this->_activity->push($this->_script);
+                $this->_subpath = "";
+                $this->_script = null;
+                throw $ex;
+            }
             $this->_activity->push($this->_script);
             $this->_subpath = "";
             $this->_script = null;
@@ -976,19 +998,26 @@ class Pinoco extends Pinoco_Vars {
                 }
             }
             catch(Pinoco_FlowControlTerminate $ex) {
-                $this->_activity->push($this->_script);
-                $this->_script = null;
-                $this->_subpath = "";
             }
             
             //render
             if(!$this->_manually_rendered) {
-                $page = $this->_page ? $this->resolve_path($this->_page) : $this->default_page();
-                if($page) {
-                    // TODO page_modifier
+                if($this->_page) {
+                    $page = $this->resolve_path($this->_page);
+                }
+                else {
+                    $page = $this->_page_from_path_with_directory_index($this->_path);
+                }
+                
+                if($this->_page_modifier) {
+                    $page = call_user_func($this->_page_modifier, $page, $this->_path);
+                }
+                
+                if($page && is_file($this->_basedir . $page)) {
                     $this->render($page);
                 }
                 else if(!$proccessed) {
+                    // no page and no tarminal hook indicates resource was not found or forbidden
                     if($this->_path[strlen($this->_path) - 1] == "/") {
                         $this->forbidden();
                     }
@@ -999,9 +1028,6 @@ class Pinoco extends Pinoco_Vars {
             }
         }
         catch(Pinoco_FlowControlHttpError $ex) { // contains Redirect
-            $this->_activity->push($this->_script);
-            $this->_script = null;
-            $this->_subpath = "";
             $ex->respond($this);
         }
         
