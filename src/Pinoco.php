@@ -467,7 +467,7 @@ class Pinoco extends Pinoco_Vars {
      * @param $page
      * @return void
      */
-    public function set_page($page) { $this->_page = $this->resolve_path($page); }
+    public function set_page($page) { $this->_page = $page; }
     
     /**
      * 
@@ -982,8 +982,9 @@ class Pinoco extends Pinoco_Vars {
             
             //render
             if(!$this->_manually_rendered) {
-                $page = $this->_page ? $this->_page : $this->default_page();
+                $page = $this->_page ? $this->resolve_path($this->_page) : $this->default_page();
                 if($page) {
+                    // TODO page_modifier
                     $this->render($page);
                 }
                 else if(!$proccessed) {
