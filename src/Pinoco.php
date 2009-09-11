@@ -570,6 +570,13 @@ class Pinoco extends Pinoco_Vars {
         }
     }
     
+    public function getIterator()
+    {
+        // to include reserved special vars
+        return new Pinoco_Iterator($this->to_array());
+    }
+    
+    // flow control
     /**
      * 
      * @return void

@@ -177,8 +177,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     
     public function getIterator()
     {
-        return new Pinoco_Iterator($this->to_array());
-        //return $this->_vars;
+        return new Pinoco_Iterator($this->_vars);
     }
     
     public function offsetSet($offset, $value)
@@ -600,7 +599,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     
     public function getIterator()
     {
-        return new Pinoco_Iterator($this->to_array());
+        return new Pinoco_Iterator($this->_arr);
     }
     
     public function __toString() { return __CLASS__; } // TODO: dump vars name/values

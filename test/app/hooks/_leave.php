@@ -1,6 +1,6 @@
 <?php
 // How to show status after page rendering (buffering must be enabled)
-if($this->using('FirePHPCore/FirePHP.class.php')) {
+if(0 && $this->using('FirePHPCore/FirePHP.class.php')) {
     $firephp = FirePHP::getInstance(true);
     $firephp->group('Pinoco activity', array('Collapsed'=>1));
     foreach($this->activity as $act) {
