@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
+<package version="1.0" packagerversion="1.8.1">
+ <name>Pinoco</name>
+ <summary>Pinoco web site environment</summary>
+ <description>Pinoco makes existing static web site dynamic transparently.
+ </description>
+ <maintainers>
+  <maintainer>
+   <user>tanakahisateru</user>
+   <name>Hisateru Tanaka</name>
+   <email>tanakahisateru@gmail.com</email>
+   <role>lead</role>
+  </maintainer>
+ </maintainers>
+ <release>
+  <version>0.1.0</version>
+  <date>2009-09-15</date>
+  <license>LGPL</license>
+  <state>beta</state>
+  <notes>The 1st package we released.</notes>
+  <provides type="class" name="Pinoco" />
+  <provides type="function" name="Pinoco::create" />
+  <deps>
+   <dep type="php" rel="ge" version="5.1.0"/>
+  </deps>
+  <filelist>
+   <file role="php" baseinstalldir="" name="Pinoco.php"/>
+   <dir name="Pinoco">
+    <file role="php" baseinstalldir="" name="VarsList.php"/>
+    <file role="php" baseinstalldir="" name="FlowControl.php"/>
+    <file role="php" baseinstalldir="" name="Renderer.php"/>
+    <file role="php" baseinstalldir="" name="MIMEType.php"/>
+   </dir>
+   <file role="doc" baseinstalldir="" name="COPYING"/>
+  </filelist>
+ </release>
+ <changelog>
+   <release>
+    <version>0.1.0</version>
+    <date>2009-09-15</date>
+    <license>LGPL</license>
+    <state>beta</state>
+    <notes>The 1st package we released.</notes>
+   </release>
+ </changelog>
+</package>

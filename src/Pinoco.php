@@ -9,7 +9,7 @@
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.1.0-beta1
+ * @version  0.1.0
  * @link     http://code.google.com/p/pinoco/
  * @filesource
  */
@@ -62,7 +62,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  */
 class Pinoco extends Pinoco_Vars {
     
-    const VERSION = "0.1.0-beta1";
+    const VERSION = "0.1.0";
     
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
