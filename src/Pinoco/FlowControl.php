@@ -5,7 +5,7 @@
  *
  * PHP Version 5
  *
- * @category Pinoco
+ * @category Framework
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
@@ -41,7 +41,7 @@ class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
  */
 class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
     /**
-     * 
+     * Constructor
      * @param int $code
      * @param string $title
      * @param string $message
@@ -54,7 +54,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
     }
     
     /**
-     * 
+     * HTTP error response implementation.
      * @param Pinoco $pinoco
      * @return void
      */
@@ -85,7 +85,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
  */
 class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
     /**
-     * 
+     * Constructor
      * @param string $url
      * @param bool $external
      */
@@ -96,7 +96,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
     }
     
     /**
-     * 
+     * Redirect response implementation.
      * @param Pinoco $pinoco
      * @return void
      */

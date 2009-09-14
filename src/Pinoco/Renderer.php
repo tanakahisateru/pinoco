@@ -5,7 +5,7 @@
  *
  * PHP Version 5
  *
- * @category Pinoco
+ * @category Framework
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
@@ -31,7 +31,7 @@ abstract class Pinoco_Renderer {
     protected $_cfg;
     
     /**
-     * 
+     * Constructor
      * @param Pinoco $sys
      */
     public function __construct(&$sys)
@@ -43,7 +43,7 @@ abstract class Pinoco_Renderer {
     public function __toString() { return __CLASS__; }
     
     /**
-     * 
+     * Protects read only property "cfg".
      * @param string $name
      * @return mixed
      */
@@ -54,7 +54,7 @@ abstract class Pinoco_Renderer {
     }
     
     /**
-     * 
+     * HTML page renderring implementation.
      * @param string $page
      * @param array $extravars
      * @return void
@@ -69,7 +69,6 @@ abstract class Pinoco_Renderer {
 class Pinoco_TALRenderer extends Pinoco_Renderer {
     
     /**
-     * 
      * @param string $page
      * @param array $extravars
      * @return void
@@ -137,11 +136,11 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
 
 /**
  * Default HTML page renderer using native PHP.
+ * @package Pinoco
  */
 class Pinoco_NativeRenderer extends Pinoco_Renderer {
     
     /**
-     * 
      * @param string $page
      * @param array $extravars
      * @return void
@@ -165,7 +164,6 @@ class Pinoco_NativeRenderer extends Pinoco_Renderer {
  */
 class Pinoco_NullRenderer extends Pinoco_Renderer {
     /**
-     * 
      * @param string $page
      * @param array $extravars
      * @return void
@@ -175,19 +173,3 @@ class Pinoco_NullRenderer extends Pinoco_Renderer {
     }
 }
 
-/**
- * Plain text output (experimental)
- * @package Pinoco
- */
-class Pinoco_PlainTextRenderer extends Pinoco_Renderer {
-    /**
-     * 
-     * @param string $page
-     * @param array $extravars
-     * @return void
-     */
-    public function render($page, $extravars=array())
-    {
-        echo $page;
-    }
-}

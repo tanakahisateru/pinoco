@@ -5,7 +5,7 @@
  *
  * PHP Version 5
  *
- * @category Pinoco
+ * @category Framework
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
@@ -222,7 +222,7 @@ class Pinoco_MIMEType {
     );
     
     /**
-     * 
+     * Returns MIME type string matches given file name.
      * @param string $filename
      * @return string
      */

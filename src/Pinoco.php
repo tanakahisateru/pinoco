@@ -5,7 +5,7 @@
  *
  * PHP Version 5
  *
- * @category Pinoco
+ * @category Framework
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
@@ -14,6 +14,8 @@
  * @filesource
  */
 
+/**
+ */
 require_once dirname(__FILE__) . '/Pinoco/VarsList.php';
 require_once dirname(__FILE__) . '/Pinoco/Renderer.php';
 require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
@@ -88,7 +90,7 @@ class Pinoco extends Pinoco_Vars {
     private static $_current_instance = null;
     
     /**
-     * 
+     * It provides a suitable Pinoco instance in regular usage.
      * @param string $sysdir
      * @param array $options
      * @return Pinoco
@@ -154,13 +156,14 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Pinoco constructor. 
      * @param string $baseuri
      * @param string $dispatcher
      * @param string $path
      * @param string $basedir
      * @param string $sysdir
      * @param array $directory_index
+     * @see src/Pinoco#create($sysdir, $options)
      */
     function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir)
     {
@@ -220,6 +223,7 @@ class Pinoco extends Pinoco_Vars {
     
     // factory
     /**
+     * It provides a new Vars object (that can be filled with existing Array).
      * @param mixed $init
      * @return Pinoco_Vars
      */
@@ -229,7 +233,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It provides a new List object (that can be filled with existing Array).
      * @param mixed $init
      * @return Pinoco_List
      */
@@ -239,7 +243,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It provides a Vars object as existing Array wrapper.
      * @param array &$ref
      * @return Pinoco_Vars
      */
@@ -249,7 +253,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It provides a List object as existing Array wrapper.
      * @param array &$ref
      * @return Pinoco_List
      */
@@ -259,8 +263,9 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It provides a new object by "path/to/src.php/ClassName" syntax.
      * @param string $class
+     * @param mixed $args,...
      * @return object
      */
     public function newobj($class)
@@ -294,7 +299,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     *
+     * Pinoco extended include_path expresion.
      * @return string
      */
     private function _extended_include_path() {
@@ -328,7 +333,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     *
+     * Confirmation of source file existence in every search pathes.
      * @param string $filename
      * @param string $pathes
      * @return bool
@@ -349,9 +354,10 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It imports another file which has classes or functions.
+     * Already loaded file is ignored.
      * @param string $script_path
-     * @return bool
+     * @return bool Success or not
      */
     public function using($script_path)
     {
@@ -367,8 +373,9 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
-     * @param string $script_abs_path
+     * It reads and executes another PHP file with any local variables.
+     * It can read already executed file.
+     * @param string $script_abs_path must be absolute pathe for local file system.
      * @param array $localvars
      * @return bool
      */
@@ -394,114 +401,116 @@ class Pinoco extends Pinoco_Vars {
     
     // reserved props
     /**
-     * 
+     * Web site root URI.
      * @return string
      */
     public function get_baseuri() { return $this->_baseuri; }
     
     /**
-     * 
+     * Web site root directory in local file system.
      * @return string
      */
     public function get_basedir() { return $this->_basedir; }
     
     /**
-     * 
+     * Application directory.
      * @return string
      */
     public function get_sysdir()  { return $this->_sysdir; }
     
     /**
-     * 
+     * Local resource path under base URI.
      * @return string
      */
     public function get_path()    { return $this->_path; }
     
     /**
-     * 
+     * Current hook script if it running.
      * @return string
      */
     public function get_script()  { return $this->_script; }
     
     /**
-     * 
+     * Hook scripts invocation log.
      * @return string
      */
     public function get_activity(){ return $this->_activity; }
     
     /**
-     * 
+     * Partial path under current script.
      * @return string
      */
     public function get_subpath() { return $this->_subpath; }
     
     /**
-     * 
+     * Default files (white space splitted) for directory access.
      * @return string
      */
     public function get_directory_index() { return $this->_directory_index; }
     
     /**
-     * 
+     * File name to override view.
      * @return string
      */
     public function get_page()    { return $this->_page; }
     
     /**
-     * 
+     * Page renderers repository.
+     * A renderer object is registerd to file extension as dictionary key.
      * @return string
      */
     public function get_renderers(){ return $this->_renderers; }
     
     /**
-     * 
+     * Automatically extracted variables for hooks and pages.
      * @return string
      */
     public function get_autolocal(){ return $this->_autolocal; }
         
     /**
-     * 
-     * @return string
+     * Special filter for url conversion.
+     * @return callback
      */
     public function get_url_modifier(){ return $this->_url_modifier; }
     
     /**
-     * 
-     * @return string
+     * Special filter for default view file.
+     * @return callback
      */
     public function get_page_modifier(){ return $this->_page_modifier; }
 
     /**
-     * 
+     * File name to override view.
      * @param string $page
      * @return void
      */
     public function set_page($page) { $this->_page = $page; }
     
     /**
-     * 
+     * Default files (white space splitted) for directory access.
      * @param string $files
      * @return void
      */
     public function set_directory_index($files) { $this->_directory_index = $files; }
     
     /**
-     * 
+     * Special filter for url conversion.
      * @param callback $callable
      * @return void
      */
     public function set_url_modifier($callable) { $this->_url_modifier = $callable; }
     
     /**
-     * 
+     * Special filter for default view file.
      * @param callback $callable
      * @return void
      */
     public function set_page_modifier($callable) { $this->_page_modifier = $callable; }
     
     /**
-     * 
+     * Returns a value or default by name.
      * @param string $name
+     * @param mixed $default
      * @return mixed
      * @see src/Pinoco/Pinoco_Vars#get($name)
      */
@@ -521,7 +530,8 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     *
+     * Checks if this object has certain property or not.
+     * If setloose is set true then it returns true always.
      * @param stirng $name
      * @return bool
      * @see src/Pinoco/Pinoco_Vars#has($name)
@@ -532,7 +542,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Returns all property names in this object.
      * @return Pinoco_List
      * @see src/Pinoco/Pinoco_Vars#keys()
      */
@@ -552,7 +562,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     *
+     * Propertry setter.
      * @param string $name
      * @param mixed $value
      * @see src/Pinoco/Pinoco_Vars#set($name, $value)
@@ -578,7 +588,7 @@ class Pinoco extends Pinoco_Vars {
     
     // flow control
     /**
-     * 
+     * Current hook proccess will be skipped and invoke the next hook script.
      * @return void
      */
     public function skip()
@@ -587,7 +597,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Whole hook stage before rendering is treminated and rendering phase is started immediately.
      * @return void
      */
     public function terminate()
@@ -596,7 +606,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It cancels hooks and rendering and respond HTTP error to browser.
      * @param int $code
      * @param string $title
      * @param string $message
@@ -608,7 +618,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Special error to let broeswr change the location to access.
      * @param string $url
      * @param bool $extrenal
      * @return void
@@ -619,7 +629,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Error for Not Found.
      * @return void
      */
     public function notfound()
@@ -629,7 +639,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Error for Forbidden.
      * @return void
      */
     public function forbidden()
@@ -639,7 +649,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Utility to get the parent path.
      * @param string $path
      * @return string
      */
@@ -652,7 +662,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * It makes relative path absolute.
      * @param string $path
      * @param string $base
      * @return string
@@ -684,7 +694,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Returns if the path can be rendered by registerd renderers.
      * @param string $path
      * @return bool
      */
@@ -699,7 +709,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Returns host based URI from site based or sub-path based relateve one.
      * @param string $path
      * @return string
      */
@@ -737,7 +747,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Returns default page file considerd with directory index.
      * @return string|false
      */
     public function _page_from_path_with_directory_index($path)
@@ -755,7 +765,8 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Invokes renderer with page file immediately.
+     * Default rendering will be canceled.
      * @param string $page
      * @return void
      */
@@ -774,7 +785,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * MIME type of file.
      * @param string $filename
      * @return string
      */
@@ -806,7 +817,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Returns currently running Pinoco instance.
      * @return Pinoco
      */
     public static function instance()
@@ -833,7 +844,7 @@ class Pinoco extends Pinoco_Vars {
     
     // runtime core
     /**
-     * 
+     * Writes Pinoco credit into HTTP header.
      * @internal
      * @return void
      */
@@ -880,7 +891,7 @@ class Pinoco extends Pinoco_Vars {
     */
     
     /**
-     * 
+     * Runs a hook script.
      * @param string $script
      * @param string $subpath
      * @return bool
@@ -912,7 +923,7 @@ class Pinoco extends Pinoco_Vars {
     }
     
     /**
-     * 
+     * Executes all process of Pinoco engine.
      * @param bool $output_buffering
      * @return void
      */
