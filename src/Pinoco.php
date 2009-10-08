@@ -753,12 +753,26 @@ class Pinoco extends Pinoco_Vars {
     public function _page_from_path_with_directory_index($path)
     {
         $page = $path;
-        if($page[strlen($page) - 1] != "/") {
+        // TODO: support deault for directory
+        
+        if($page[strlen($page) - 1] == "/") {
+            foreach(explode(" ", $this->_directory_index) as $idx) {
+                if(is_file($this->_basedir . $page . $idx)) {
+                    $page = $page . $idx;
+                    break;
+                }
+            }
+        }
+        if(is_file($this->_basedir . $page)) {
             return $page;
         }
-        foreach(explode(" ", $this->_directory_index) as $idx) {
-            if(is_file($this->_basedir . $page . $idx)) {
-                return $page . $idx;
+        else {
+            $ext = pathinfo($page, PATHINFO_EXTENSION);
+            if($ext && $this->_renderers->has($ext)) {
+                $default_page = $this->parent_path($page) . "/_default." . $ext;
+                if(is_file($this->_basedir . $default_page)) {
+                    return $default_page;
+                }
             }
         }
         return FALSE;
@@ -976,6 +990,9 @@ class Pinoco extends Pinoco_Vars {
             try {
                 while(count($uris) > 0) {
                     $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
+                    
+                    // TODO: support deault for directory
+                    
                     $fename = array_shift($uris);
                     array_push($process, $fename);
                     
@@ -984,7 +1001,7 @@ class Pinoco extends Pinoco_Vars {
                         $this->notfound();
                     }
                     
-                    // directory access : the last element is empty like "/foo/".
+                    // resolve index file for directory access(the last element is empty like "/foo/").
                     if(count($uris) == 0 && $fename == "") {
                         foreach(explode(" ", $this->_directory_index) as $idx) {
                             if(is_file($this->_basedir . $dpath . "/" . $idx) &&    //base
@@ -993,9 +1010,12 @@ class Pinoco extends Pinoco_Vars {
                                 break;
                             }
                         }
-                        if($fename == "") {
-                            $fename = "_default";
-                        }
+                    }
+                    
+                    // default script support for the last element(=file)
+                    if(count($uris) == 0 &&
+                        ($fename == "" || !is_file($hookbase . $dpath . "/" . $fename . ".php"))) {
+                        $fename = "_default";
                     }
                     
                     // enter
@@ -1005,12 +1025,6 @@ class Pinoco extends Pinoco_Vars {
                     if($this->_run_hook_if_exists($hookbase . $dpath . "/" . $fename . ".php", implode('/', $uris))) {
                         $proccessed = true;
                         break;
-                    }
-                    else if(count($uris) == 0) {
-                        if($this->_run_hook_if_exists($hookbase . $dpath . "/_default.php", implode('/', $uris))) {
-                            $proccessed = true;
-                            break;
-                        }
                     }
                 }
             }
