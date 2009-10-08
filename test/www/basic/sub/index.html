@@ -14,6 +14,14 @@
 	    all tests
         </div>
         
+        <p>Default pages
+            <a href="_default/index.html" tal:attributes="href url:01/">01/</a>
+            <a href="_default/index.html" tal:attributes="href url:02/">02/</a>
+            <a href="_default/_default.html" tal:attributes="href url:01/001.html">01/001.html</a>
+            <a href="_default/_default.html" tal:attributes="href url:02/002.html">02/002.html</a>
+            <a href="#" tal:attributes="href url:02/non_html">02/non_html (will not be found)</a>
+		</p>
+		
         <p><a href="../index.html" tal:attributes="href url:../">Back</a></p>
     </body>
 </html>

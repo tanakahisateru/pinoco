@@ -752,8 +752,22 @@ class Pinoco extends Pinoco_Vars {
      */
     public function _page_from_path_with_directory_index($path)
     {
-        $page = $path;
-        // TODO: support deault for directory
+        $page = "";
+        $pes = explode("/", $path);
+        array_shift($pes);
+        while(count($pes) > 1) {
+            $pe = array_shift($pes);
+            if(is_dir($this->_basedir . $page . '/' . $pe)) {
+                $page .= '/' . $pe;
+            }
+            else if(is_dir($this->_basedir . $page . '/_default')) {
+                $page .= '/_default';
+            }
+            else {
+                return FALSE;
+            }
+        }
+        $page .= '/' . $pes[0];
         
         if($page[strlen($page) - 1] == "/") {
             foreach(explode(" ", $this->_directory_index) as $idx) {
@@ -991,16 +1005,26 @@ class Pinoco extends Pinoco_Vars {
                 while(count($uris) > 0) {
                     $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
                     
-                    // TODO: support deault for directory
-                    
-                    $fename = array_shift($uris);
-                    array_push($process, $fename);
-                    
+                    $fename_orig = array_shift($uris);
                     // invisible file entry name.
-                    if(preg_match('/^_.*$/', $fename)) {
+                    if(preg_match('/^_.*$/', $fename_orig)) {
                         $this->notfound();
                     }
-                    
+                    // default dir
+                    if(count($uris) > 0) {
+                        if(is_dir($hookbase . $dpath . '/' . $fename_orig)) {
+                            $fename = $fename_orig;
+                        }
+                        else if(is_dir($hookbase . $dpath . '/_default')) {
+                            $fename = '_default';
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else {
+                        $fename = $fename_orig;
+                    }
                     // resolve index file for directory access(the last element is empty like "/foo/").
                     if(count($uris) == 0 && $fename == "") {
                         foreach(explode(" ", $this->_directory_index) as $idx) {
@@ -1011,11 +1035,19 @@ class Pinoco extends Pinoco_Vars {
                             }
                         }
                     }
+                    array_push($process, $fename);
                     
                     // default script support for the last element(=file)
-                    if(count($uris) == 0 &&
-                        ($fename == "" || !is_file($hookbase . $dpath . "/" . $fename . ".php"))) {
-                        $fename = "_default";
+                    if(count($uris) == 0) {
+                        if($fename == "" || !is_file($hookbase . $dpath . "/" . $fename . ".php")) {
+                            $ext = pathinfo($fename, PATHINFO_EXTENSION);
+                            if($ext && is_file($hookbase . $dpath . "/_default." . $ext . ".php")) {
+                                $fename = "_default." . $ext;
+                            }
+                            else {
+                                $fename = "_default";
+                            }
+                        }
                     }
                     
                     // enter

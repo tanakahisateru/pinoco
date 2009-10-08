@@ -7,13 +7,9 @@
         <title tal:content="title | default">Pinoco Test</title>
     </head>
     <body>
-        <h1>Hello World</h1>
-        <p>Sub contents</p>
-        
-        <div metal:use-macro="/_vardump.html/alltests">
-	    all tests
-        </div>
-        
+        <h1>Index page in _default dir</h1>
+        <p>This is index page for ${this/path}</p>
+        <p>Path element proccessed as _default : <span tal:content="this/curdir|default" tal:omit-tag="">UNDEFINED VALUE</span></p>
         <p><a href="../index.html" tal:attributes="href url:../">Back</a></p>
     </body>
 </html>
