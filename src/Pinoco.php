@@ -62,7 +62,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  */
 class Pinoco extends Pinoco_Vars {
     
-    const VERSION = "0.1.0";
+    const VERSION = "0.1.1";
     
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
