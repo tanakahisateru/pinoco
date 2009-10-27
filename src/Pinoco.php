@@ -770,12 +770,23 @@ class Pinoco extends Pinoco_Vars {
         $page .= '/' . $pes[0];
         
         if($page[strlen($page) - 1] == "/") {
+            $di = "";
             foreach(explode(" ", $this->_directory_index) as $idx) {
                 if(is_file($this->_basedir . $page . $idx)) {
-                    $page = $page . $idx;
+                    $di = $idx;
                     break;
                 }
             }
+            if($di == "") {
+                foreach(explode(" ", $this->_directory_index) as $idx) {
+                    $deffile = "_default." . pathinfo($idx, PATHINFO_EXTENSION);
+                    if(is_file($this->_basedir . $page . $deffile)) {
+                        $di = $deffile;
+                        break;
+                    }
+                }
+            }
+            $page .= $di;
         }
         if(is_file($this->_basedir . $page)) {
             return $page;
