@@ -14,7 +14,7 @@ $this->page_modifier = 'page_ext_html2tpl';
 function inject_lang_to_url($url, $renderable) {
     if($renderable) {
         $sep = (strpos($url, "?") === FALSE) ? "?" : "&";
-        return $url . $sep . htmlspecialchars("lang=ja");
+        return $url . $sep . htmlspecialchars("SESSID=1234567890");
     }
     else {
         return $url;

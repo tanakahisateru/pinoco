@@ -8,7 +8,7 @@
         <h1>Hello World</h1>
         <p>Sub contents using Smarty</p>
         
-        <h2>URL conversion</h2>
+        <h2>URL conversion (with fake session id by url_modifier)</h2>
         <ul>
             <li>url: subpage.html = <span>{'subpage.html'|url}</span></li>
             <li>url: subdir/index.html = <span>{'subdir/index.html'|url}</span></li>
