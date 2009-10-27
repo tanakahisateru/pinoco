@@ -70,11 +70,12 @@ class Pinoco extends Pinoco_Vars {
     
     private $_path;      // R string
     private $_script;    // R string
-    private $_activity;  // R string
+    private $_activity;  // R list
     private $_subpath;   // R string
+    private $_pathargs;  // R list
     private $_directory_index;  // R/W string
     
-    private $_renderers; // R/M renderers
+    private $_renderers; // R/M vars
     private $_page;       // R/W string
     
     private $_autolocal; // R/M vars
@@ -200,6 +201,7 @@ class Pinoco extends Pinoco_Vars {
         $this->_script = null;
         $this->_activity = $this->newlist();
         $this->_subpath = "";
+        $this->_pathargs = $this->newlist();
         
         $this->_renderers = $this->newvars();
         $this->_renderers->setdefault(new Pinoco_NullRenderer($this));
@@ -432,7 +434,7 @@ class Pinoco extends Pinoco_Vars {
     
     /**
      * Hook scripts invocation log.
-     * @return string
+     * @return Pinoco_List
      */
     public function get_activity(){ return $this->_activity; }
     
@@ -441,6 +443,12 @@ class Pinoco extends Pinoco_Vars {
      * @return string
      */
     public function get_subpath() { return $this->_subpath; }
+    
+    /**
+     * Partial path under current script.
+     * @return Pinoco_List
+     */
+    public function get_pathargs() { return $this->_pathargs; }
     
     /**
      * Default files (white space splitted) for directory access.
@@ -457,13 +465,13 @@ class Pinoco extends Pinoco_Vars {
     /**
      * Page renderers repository.
      * A renderer object is registerd to file extension as dictionary key.
-     * @return string
+     * @return Pinoco_Vars
      */
     public function get_renderers(){ return $this->_renderers; }
     
     /**
      * Automatically extracted variables for hooks and pages.
-     * @return string
+     * @return Pinoco_Vars
      */
     public function get_autolocal(){ return $this->_autolocal; }
         
@@ -1027,6 +1035,7 @@ class Pinoco extends Pinoco_Vars {
                             $fename = $fename_orig;
                         }
                         else if(is_dir($hookbase . $dpath . '/_default')) {
+                            $this->_pathargs->push($fename_orig);
                             $fename = '_default';
                         }
                         else {
@@ -1058,6 +1067,7 @@ class Pinoco extends Pinoco_Vars {
                             else {
                                 $fename = "_default";
                             }
+                            $this->_pathargs->push($fename_orig);
                         }
                     }
                     
