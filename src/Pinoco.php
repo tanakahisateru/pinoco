@@ -821,7 +821,7 @@ class Pinoco extends Pinoco_Vars {
     {
         $page = $this->resolve_path($page);
         $ext = pathinfo($page, PATHINFO_EXTENSION);
-        if($ext && file_exists($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
+        if($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
             $renderer = $this->_renderers[$ext];
             $renderer->render($page);
         }
