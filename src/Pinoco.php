@@ -445,7 +445,7 @@ class Pinoco extends Pinoco_Vars {
     public function get_subpath() { return $this->_subpath; }
     
     /**
-     * Partial path under current script.
+     * Path elements resolved by _default folders or files.
      * @return Pinoco_List
      */
     public function get_pathargs() { return $this->_pathargs; }
