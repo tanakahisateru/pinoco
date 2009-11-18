@@ -594,6 +594,18 @@ class Pinoco extends Pinoco_Vars {
         return new Pinoco_Iterator($this->to_array());
     }
     
+    public function __call($name, $args)
+    {
+        if(!$this->has($name)) {
+            trigger_error("Function Pinoco::" . $name . " is not defined.", E_USER_ERROR);
+        }
+        $func = $this->get($name);
+        if(!is_callable($func)) {
+            trigger_error("Function Pinoco::" . $name . " is not a function.", E_USER_ERROR);
+        }
+        return call_user_func_array($func, $args);
+    }
+    
     // flow control
     /**
      * Current hook proccess will be skipped and invoke the next hook script.
