@@ -597,11 +597,11 @@ class Pinoco extends Pinoco_Vars {
     public function __call($name, $args)
     {
         if(!$this->has($name)) {
-            trigger_error("Function Pinoco::" . $name . " is not defined.", E_USER_ERROR);
+            return;
         }
         $func = $this->get($name);
         if(!is_callable($func)) {
-            trigger_error("Function Pinoco::" . $name . " is not a function.", E_USER_ERROR);
+            return;
         }
         return call_user_func_array($func, $args);
     }

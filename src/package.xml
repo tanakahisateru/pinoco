@@ -31,6 +31,8 @@
     <file role="php" baseinstalldir="" name="FlowControl.php"/>
     <file role="php" baseinstalldir="" name="Renderer.php"/>
     <file role="php" baseinstalldir="" name="MIMEType.php"/>
+    <file role="php" baseinstalldir="" name="PDOWrapper.php"/>
+    <file role="php" baseinstalldir="" name="ActionDelegate.php"/>
    </dir>
    <file role="doc" baseinstalldir="" name="COPYING"/>
   </filelist>
