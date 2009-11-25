@@ -282,13 +282,12 @@ class Pinoco extends Pinoco_Vars {
             }
         }
         if(class_exists($class)) {
+            $argsvals = func_get_args();
+            array_shift($argsvals);
             $argsvars = array();
-            $argsvals = array();
-            for($i = 1; $i < func_num_args(); $i++) {
-                array_push($argsvars, '$_arg_'. $i);
-                $argsvals['_arg_'. $i] = func_get_arg($i);
+            for($i = 0; $i < count($argsvals); $i++) {
+                $argsvars[$i] = '$argsvals[' . $i . ']';
             }
-            extract($argsvals);
             eval(sprintf('$object = new %s(%s);', $class, implode(', ', $argsvars)));
             return $object;
         }
