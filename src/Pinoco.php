@@ -199,26 +199,25 @@ class Pinoco extends Pinoco_DynamicVars {
         */
         
         $this->_script = null;
-        $this->_activity = $this->newlist();
+        $this->_activity = self::newlist();
         $this->_subpath = "";
-        $this->_pathargs = $this->newlist();
+        $this->_pathargs = self::newlist();
         
-        $this->_renderers = $this->newvars();
+        $this->_renderers = self::newvars();
         $this->_renderers->setdefault(new Pinoco_NullRenderer($this));
         $this->_renderers->html = new Pinoco_TALRenderer($this);
         $this->_renderers->php  = new Pinoco_NativeRenderer($this);
         
         $this->_page = NULL;
         
-        $this->_autolocal = $this->newvars();
+        $this->_autolocal = self::newvars();
         
         $this->_url_modifier = NULL;
         $this->_page_modifier = NULL;
         
         parent::__construct();
         
-        // fix current directory here!!
-        //chdir($this->_sysdir);
+        // chdir($this->_sysdir);
     }
     
     public function __toString() { return __CLASS__ . " " . self::VERSION; }
@@ -229,7 +228,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $init
      * @return Pinoco_Vars
      */
-    public function newvars($init=array())
+    public static function newvars($init=array())
     {
         return Pinoco_Vars::from_array($init);
     }
@@ -239,7 +238,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $init
      * @return Pinoco_List
      */
-    public function newlist($init=array())
+    public static function newlist($init=array())
     {
         return Pinoco_List::from_array($init);
     }
@@ -249,7 +248,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param array &$ref
      * @return Pinoco_Vars
      */
-    public function wrapvars(&$ref)
+    public static function wrapvars(&$ref)
     {
         return Pinoco_Vars::wrap($ref);
     }
@@ -259,7 +258,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param array &$ref
      * @return Pinoco_List
      */
-    public function wraplist(&$ref)
+    public static function wraplist(&$ref)
     {
         return Pinoco_List::wrap($ref);
     }
@@ -311,7 +310,7 @@ class Pinoco extends Pinoco_DynamicVars {
         
         // search from hook script dir
         if($this->_script) {
-            array_push($incpathes, realpath($this->parent_path($this->_script)));
+            array_push($incpathes, realpath(self::parent_path($this->_script)));
         }
         
         // "lib" in sysdir is a fallback script search path
@@ -342,7 +341,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $pathes
      * @return bool
      */
-    private function _file_exists_in_search_path($filename, $pathes) {
+    private static function _file_exists_in_search_path($filename, $pathes) {
         if(preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $filename)){
             return is_file($filename);
         }
@@ -366,7 +365,7 @@ class Pinoco extends Pinoco_DynamicVars {
     public function using($script_path)
     {
         $extended_incpath = $this->_extended_include_path();
-        if(!$this->_file_exists_in_search_path($script_path, $extended_incpath)) {
+        if(!self::_file_exists_in_search_path($script_path, $extended_incpath)) {
             return FALSE;
         }
         $orig_incpath = ini_get('include_path');
@@ -522,7 +521,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * Current hook proccess will be skipped and invoke the next hook script.
      * @return void
      */
-    public function skip()
+    public static function skip()
     {
         throw new Pinoco_FlowControlSkip();
     }
@@ -531,7 +530,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * Whole hook stage before rendering is treminated and rendering phase is started immediately.
      * @return void
      */
-    public function terminate()
+    public static function terminate()
     {
         throw new Pinoco_FlowControlTerminate();
     }
@@ -543,7 +542,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $message
      * @return void
      */
-    public function error($code, $title="", $message="")
+    public static function error($code, $title="", $message="")
     {
         throw new Pinoco_FlowControlHttpError($code, $title, $message);
     }
@@ -554,7 +553,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param bool $extrenal
      * @return void
      */
-    public function redirect($url, $extrenal=FALSE)
+    public static function redirect($url, $extrenal=FALSE)
     {
         throw new Pinoco_FlowControlHttpRedirect($url, $extrenal);
     }
@@ -563,9 +562,9 @@ class Pinoco extends Pinoco_DynamicVars {
      * Error for Not Found.
      * @return void
      */
-    public function notfound()
+    public static function notfound()
     {
-        $this->error(404, "Not found",
+        self::error(404, "Not found",
             "The requested URL " . $_SERVER['REQUEST_URI'] . " is not availavle on this server.");
     }
     
@@ -573,9 +572,9 @@ class Pinoco extends Pinoco_DynamicVars {
      * Error for Forbidden.
      * @return void
      */
-    public function forbidden()
+    public static function forbidden()
     {
-        $this->error(403, "Forbidden",
+        self::error(403, "Forbidden",
             "You don't have privileges to access this resource.");
     }
     
@@ -584,7 +583,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $path
      * @return string
      */
-    public function parent_path($path)
+    public static function parent_path($path)
     {
         $dn = dirname($path);
         if($dn == "\\") { $dn = "/"; }
@@ -605,7 +604,7 @@ class Pinoco extends Pinoco_DynamicVars {
             if($base === FALSE) {
                 $thispath = $this->_path;
                 $base = $thispath[strlen($thispath) - 1] != "/" ?
-                    $this->parent_path($thispath) : rtrim($thispath, "/");
+                    self::parent_path($thispath) : rtrim($thispath, "/");
             }
             $bes = explode("/", rtrim($base, "/"));
             $pes = explode("/", $path);
@@ -725,7 +724,7 @@ class Pinoco extends Pinoco_DynamicVars {
         else {
             $ext = pathinfo($page, PATHINFO_EXTENSION);
             if($ext && $this->_renderers->has($ext)) {
-                $default_page = $this->parent_path($page) . "/_default." . $ext;
+                $default_page = self::parent_path($page) . "/_default." . $ext;
                 if(is_file($this->_basedir . $default_page)) {
                     return $default_page;
                 }
@@ -759,7 +758,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $filename
      * @return string
      */
-    public function mime_type($filename)
+    public static function mime_type($filename)
     {
         if(file_exists($filename)) {
             if(function_exists('finfo_open'))
