@@ -2,7 +2,7 @@
 /**
  * Custom renderer example for Pinoco implemented by Smarty
  */
-class Pinoco_SmartyRenderer extends Pinoco_Renderer {
+class SmartyRenderer extends Pinoco_Renderer {
     public function render($page, $extravars=array())
     {
         if(!$this->_sysref->using('Smarty/Smarty.class.php')){
