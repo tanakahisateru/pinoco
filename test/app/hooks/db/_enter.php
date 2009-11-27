@@ -1,5 +1,5 @@
 <?php
-$this->db = $this->newobj('Pinoco/PDOWrapper.php/Pinoco_PDOWrapper', 'sqlite::memory:');
+$this->db = $this->newobj('PDOWrapper.php/PDOWrapper', 'sqlite::memory:');
 
 $schema = <<<EOT
 create table foo (

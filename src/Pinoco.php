@@ -60,7 +60,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * @property-read Pinoco_Vars $autolocal
  * @property callback $url_modifier
  */
-class Pinoco extends Pinoco_Vars {
+class Pinoco extends Pinoco_DynamicVars {
     
     const VERSION = "0.1.2";
     
@@ -516,97 +516,6 @@ class Pinoco extends Pinoco_Vars {
      * @return void
      */
     public function set_page_modifier($callable) { $this->_page_modifier = $callable; }
-    
-    /**
-     * Returns a value or default by name.
-     * @param string $name
-     * @param mixed $default
-     * @return mixed
-     * @see src/Pinoco/Pinoco_Vars#get($name)
-     */
-    public function get($name)
-    {
-        if(method_exists($this, 'get_' . $name)) {
-            return call_user_func(array($this, 'get_' . $name));
-        }
-        else {
-            if(func_num_args() > 1) {
-                return parent::get($name, func_get_arg(1));
-            }
-            else {
-                return parent::get($name);
-            }
-        }
-    }
-    
-    /**
-     * Checks if this object has certain property or not.
-     * If setloose is set true then it returns true always.
-     * @param stirng $name
-     * @return bool
-     * @see src/Pinoco/Pinoco_Vars#has($name)
-     */
-    public function has($name)
-    {
-        return method_exists($this, 'get_' . $name) || parent::has($name);
-    }
-    
-    /**
-     * Returns all property names in this object.
-     * @return Pinoco_List
-     * @see src/Pinoco/Pinoco_Vars#keys()
-     */
-    public function keys()
-    {
-        $meths = get_class_methods($this);
-        $ks = array();
-        $m = array();
-        foreach($meths as $meth) {
-            if(preg_match("/^get_(.*)$/", $meth, $m)) {
-                array_push($ks, $m[1]);
-            }
-        }
-        $ks = Pinoco_List::from_array($ks);
-        $ks->concat(parent::keys());
-        return $ks;
-    }
-    
-    /**
-     * Propertry setter.
-     * @param string $name
-     * @param mixed $value
-     * @see src/Pinoco/Pinoco_Vars#set($name, $value)
-     */
-    public function set($name, $value)
-    {
-        if(method_exists($this, 'set_' . $name)) {
-            call_user_func(array($this, 'set_' . $name), $value);
-        }
-        else if(method_exists($this, 'get_' . $name)) {
-            trigger_error("Cannot reassign to ". $name . ".");
-        }
-        else {
-            parent::set($name, $value);
-        }
-    }
-    
-    public function getIterator()
-    {
-        // to include reserved special vars
-        return new Pinoco_Iterator($this->to_array());
-    }
-    
-    public function __call($name, $args)
-    {
-        if(!$this->has($name)) {
-            return;
-        }
-        $func = $this->get($name);
-        if(!is_callable($func)) {
-            return;
-        }
-        return call_user_func_array($func, $args);
-    }
     
     // flow control
     /**

@@ -1,24 +1,8 @@
 <?php
 /**
- * Pinoco web site environment
- * It makes existing static web site dynamic transparently.
- *
- * PHP Version 5
- *
- * @category Framework
- * @package  Pinoco
- * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
- * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.1.2
- * @link     http://code.google.com/p/pinoco/
- * @filesource
- */
-
-/**
  * PDO wrapper
- * @package Pinoco
  */
-class Pinoco_PDOWrapper {
+class PDOWrapper {
     private $_dsn;
     private $_un;
     private $_pw;
@@ -50,7 +34,7 @@ class Pinoco_PDOWrapper {
     
     function prepare($sql, $opts=array())
     {
-        return new Pinoco_PDOStatementWrapper(
+        return new PDOStatementWrapper(
             $this->get_connection()->prepare($sql, $opts)
         );
     }
@@ -63,7 +47,7 @@ class Pinoco_PDOWrapper {
     
     function query($sql)
     {
-        return new Pinoco_PDOStatementWrapper(
+        return new PDOStatementWrapper(
             $this->get_connection()->query($sql)
         );
     }
@@ -71,9 +55,8 @@ class Pinoco_PDOWrapper {
 
 /**
  * PDO Statement wrapper
- * @package Pinoco
  */
-class Pinoco_PDOStatementWrapper {
+class PDOStatementWrapper {
     private $_stmt;
     
     function __construct($stmt)
@@ -128,16 +111,16 @@ class Pinoco_PDOStatementWrapper {
     {
         //return $this->_stmt->fetch(PDO::FETCH_CLASS, $orientation, $offset);
         $r = $this->_stmt->fetch(PDO::FETCH_ASSOC, $orientation, $offset);
-        return $r !== FALSE ? Pinoco::newvars($r) : $r;
+        return $r !== FALSE ? Pinoco_Vars::wrap($r) : $r;
     }
     
     function fetchAll()
     {
         //return Pinoco::newlist($this->_stmt->fetchAll(PDO::FETCH_CLASS));
-        $rs = Pinoco::newlist();
-        $raw = $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach($raw as $r) {
-            $rs->push(Pinoco::newvars($r));
+        $rs = new Pinoco_List();
+        $rows = $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($rows as $r) {
+            $rs->push(Pinoco_Vars::wrap($r));
         }
         return $rs;
     }

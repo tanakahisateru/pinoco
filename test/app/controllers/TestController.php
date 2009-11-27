@@ -1,5 +1,5 @@
 <?php
-class TestController extends Pinoco_Delegate {
+class TestController {
     
     function __construct() {
         $this->data = Pinoco::newvars(array(
@@ -8,29 +8,21 @@ class TestController extends Pinoco_Delegate {
         ));
     }
     
-    function _empty() {
-        $this->index();
-    }
-    
-    function index() {
+    function index($pinoco) {
         // You can use "this" variable like as Pinoco instance here.
-        $this->items = $this->data;
-        $this->page = "_index.html";
+        $pinoco->items = $this->data;
+        $pinoco->page = "_index.html";
     }
     
-    function show() {
+    function show($pinoco) {
         $id = isset($_GET['id']) ? $_GET['id'] : "x";
         if($this->data->has($id)) {
-            $this->item = $this->data[$id];
+            $pinoco->item = $this->data[$id];
         }
         else {
-            $this->item = "no item for " . $id;
+            $pinoco->item = "no item for " . $id;
         }
-        $this->page = "_show.html";
-    }
-    
-    function _default() {
-        $this->notfound();
+        $pinoco->page = "_show.html";
     }
 }
 

@@ -1,8 +1,15 @@
 <?php
-$this->delegate = array($this->newobj(
-    'Pinoco/ActionDelegate.php/Pinoco_ActionDispatcher',
-    $this->sysdir . "/controllers"
-), 'run');
-// library loading should be earier tham here.
+$this->using($this->sysdir . "/controllers/TestController.php");
 
-$this->delegate('TestController', $this->pathargs[0]);
+switch($this->pathargs[0]) {
+case "":
+case "index":
+    $this->newobj('TestController')->index($this);
+    break;
+case "show":
+    $this->newobj('TestController')->show($this);
+    break;
+default:
+    $this->notfound($this);
+}
+
