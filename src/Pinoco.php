@@ -1043,8 +1043,12 @@ class Pinoco extends Pinoco_DynamicVars {
             array_unshift($uris, $fename);
             $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
             
-            // leave
-            $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
+            // leave (All flow control exceptions work as skip exception)
+            try {
+                $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
+            }
+            catch(Pinoco_FlowControl $ex) { }
+            
         } while(count($process) > 0);
         
         if($output_buffering) {
