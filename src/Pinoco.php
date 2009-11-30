@@ -68,6 +68,8 @@ class Pinoco extends Pinoco_DynamicVars {
     private $_basedir;   // R gateway index.php location on file system
     private $_sysdir;    // R base directory for scripts
     
+    private $_incdir;  // R/W include search directories
+    
     private $_path;      // R string
     private $_script;    // R string
     private $_activity;  // R list
@@ -84,6 +86,7 @@ class Pinoco extends Pinoco_DynamicVars {
     private $_page_modifier; // R/W callable
     
     // hidden
+    private $_system_incdir;
     private $_dispatcher;
     private $_manually_rendered;
     private $_script_include_stack;
@@ -177,6 +180,11 @@ class Pinoco extends Pinoco_DynamicVars {
             trigger_error("Invalid system directory:" . $sysdir . " is not exists.");
         }
         
+        $this->_incdir = self::newlist();
+        $this->_incdir->push($this->sysdir . "/lib"); // default lib dir
+        
+        $this->_system_incdir = ini_get('include_path');
+        
         if($this->_path[strlen($this->_path) - 1] != '/' &&
             (is_dir($this->_basedir . $this->_path) || is_dir($this->_sysdir . "/hooks" . $this->_path))) {
             $this->_path .= '/';
@@ -269,16 +277,13 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $args,...
      * @return object
      */
-    public function newobj($class)
+    public static function newobj($class)
     {
         $seppos = strrpos($class, '/');
         if($seppos !== FALSE) {
             $srcfile = substr($class, 0, $seppos);
             $class = substr($class, $seppos + 1);
-            if(!$this->using($srcfile)){
-                trigger_error($srcfile . " was not found.");
-                return null;
-            }
+            require_once $srcfile;
         }
         if(class_exists($class)) {
             $argsvals = func_get_args();
@@ -299,80 +304,6 @@ class Pinoco extends Pinoco_DynamicVars {
             }
             return null;
         }
-    }
-    
-    /**
-     * Pinoco extended include_path expresion.
-     * @return string
-     */
-    private function _extended_include_path() {
-        $incpathes = array();
-        
-        // search from hook script dir
-        if($this->_script) {
-            array_push($incpathes, realpath(self::parent_path($this->_script)));
-        }
-        
-        // "lib" in sysdir is a fallback script search path
-        array_push($incpathes, realpath($this->_sysdir . "/lib"));
-        
-        // append existing elements
-        $orig_incpath = ini_get('include_path');
-        $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
-        foreach(explode($sep, $orig_incpath) as $ip) {
-            $absip = realpath($ip);
-            if(!array_search($absip, $incpathes)) {
-                array_push($incpathes, $absip);
-            }
-        };
-        
-        // add pinoco installed directory for preset libs.
-        $pinoco_install = dirname(__FILE__);
-        if(!array_search($pinoco_install, $incpathes)) {
-            array_push($incpathes, $pinoco_install);
-        }
-        
-        return implode($sep, $incpathes);
-    }
-    
-    /**
-     * Confirmation of source file existence in every search pathes.
-     * @param string $filename
-     * @param string $pathes
-     * @return bool
-     */
-    private static function _file_exists_in_search_path($filename, $pathes) {
-        if(preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $filename)){
-            return is_file($filename);
-        }
-        else {
-            $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
-            foreach(explode($sep, $pathes) as $p) {
-                if(is_file($p . "/" . $filename)) {
-                    return TRUE;
-                }
-            }
-            return FALSE;
-        }
-    }
-    
-    /**
-     * It imports another file which has classes or functions.
-     * Already loaded file is ignored.
-     * @param string $script_path
-     * @return bool Success or not
-     */
-    public function using($script_path)
-    {
-        $extended_incpath = $this->_extended_include_path();
-        if(!self::_file_exists_in_search_path($script_path, $extended_incpath)) {
-            return FALSE;
-        }
-        $orig_incpath = ini_get('include_path');
-        ini_set('include_path', $extended_incpath);
-        include_once $script_path;
-        ini_set('include_path', $orig_incpath);
-        return TRUE;
     }
     
     /**
@@ -420,6 +351,12 @@ class Pinoco extends Pinoco_DynamicVars {
      * @return string
      */
     public function get_sysdir()  { return $this->_sysdir; }
+    
+    /**
+     * Include search directories.
+     * @return Pinoco_List
+     */
+    public function get_incdir() { return $this->_incdir; }
     
     /**
      * Local resource path under base URI.
@@ -487,7 +424,14 @@ class Pinoco extends Pinoco_DynamicVars {
      * @return callback
      */
     public function get_page_modifier(){ return $this->_page_modifier; }
-
+    
+    /**
+     * Include search directories.
+     * @param Pinoco_List $dirs
+     * @return void
+     */
+    public function set_incdir($dirs) { $this->_incdir = $dirs; }
+    
     /**
      * File name to override view.
      * @param string $page
@@ -777,7 +721,8 @@ class Pinoco extends Pinoco_DynamicVars {
                 }
             }
         }
-        if ($this->using('MIME/Type.php')) {
+        @include_once 'MIME/Type.php';
+        if (class_exists('MIME_Type')) {
             return MIME_Type::autoDetect($filename);
         }
         // final fallback process
@@ -860,17 +805,46 @@ class Pinoco extends Pinoco_DynamicVars {
     */
     
     /**
+     * Updates 'include_path' in php.ini by this->incdir.
+     */
+    public function update_incdir()
+    {
+        $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
+        $runinc = array();
+        
+        array_push($runinc, dirname($this->script));
+        
+        foreach($this->_incdir as $dir) {
+            $cwd = getcwd();
+            chdir($this->sysdir);
+            array_push($runinc, realpath($dir));
+            chdir($cwd);
+        }
+        
+        $sysinc = explode($sep, $this->_system_incdir);
+        foreach($sysinc as $dir) {
+            $cwd = getcwd();
+            chdir($this->basedir);
+            array_push($runinc, realpath($dir));
+            chdir($cwd);
+        }
+        
+        ini_set('include_path', implode($sep, $runinc));
+    }
+    /**
      * Runs a hook script.
      * @param string $script
      * @param string $subpath
      * @return bool
      * @internal
      */
-    private function _run_hook_if_exists($script, $subpath) {
+    private function _run_hook_if_exists($script, $subpath)
+    {
         if(is_file($script)) {
             $this->_script = $script;
             $this->_subpath = $subpath;
             try {
+                $this->update_incdir();
                 $this->include_with_this($this->_script, $this->_autolocal->to_array());
             }
             catch(Pinoco_FlowControlSkip $ex) {
@@ -931,10 +905,15 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         
         self::$_current_instance = $this;
+        
         //set_error_handler(array($this, "_exception_error_handler"));
+        
         if($output_buffering) {
             ob_start();
         }
+        
+        $this->_system_incdir = ini_get('include_path');
+        
         $this->_manually_rendered = false;
         try {
             $hookbase = $this->_sysdir . "/hooks";
@@ -1051,10 +1030,14 @@ class Pinoco extends Pinoco_DynamicVars {
             
         } while(count($process) > 0);
         
+        ini_set('include_path', $this->_system_incdir);
+        
         if($output_buffering) {
             ob_end_flush();
         }
+        
         //restore_error_handler();
+        
         self::$_current_instance = null;
     }
 }

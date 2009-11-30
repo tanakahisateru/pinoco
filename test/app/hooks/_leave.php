@@ -3,7 +3,9 @@
 if(!preg_match('/\sFirePHP\//', $_SERVER['HTTP_USER_AGENT'])) {
     $this->skip(); // cancel this script here
 }
-if($this->using('FirePHPCore/FirePHP.class.php')) {
+
+@include_once('FirePHPCore/FirePHP.class.php');
+if(class_exists('FirePHP')) {
     $firephp = FirePHP::getInstance(true);
     $firephp->group('Pinoco activity', array('Collapsed'=>1));
     foreach($this->activity as $act) {

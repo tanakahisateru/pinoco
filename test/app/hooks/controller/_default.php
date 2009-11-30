@@ -1,5 +1,8 @@
 <?php
-$this->using($this->sysdir . "/controllers/TestController.php");
+$this->incdir->push("controllers");
+$this->update_incdir();
+
+require_once "TestController.php";
 
 switch($this->pathargs[0]) {
 case "":
