@@ -177,7 +177,8 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->_basedir = realpath($basedir);
         $this->_sysdir = realpath($sysdir);
         if(!is_dir($this->_sysdir)) {
-            trigger_error("Invalid system directory:" . $sysdir . " is not exists.");
+            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
+            throw new $exclass("Invalid system directory:" . $sysdir . " does not exist.");
         }
         
         $this->_incdir = self::newlist();
@@ -296,11 +297,12 @@ class Pinoco extends Pinoco_DynamicVars {
             return $object;
         }
         else {
+            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
             if($seppos !== FALSE) {
-                trigger_error($class . " may not be defined on " . $srcfile . ".");
+                throw new $exclass($class . " may not be defined on " . $srcfile . ".");
             }
             else {
-                trigger_error($class . " is not defined.");
+                throw new $exclass($class . " is not defined.");
             }
             return null;
         }
@@ -692,7 +694,8 @@ class Pinoco extends Pinoco_DynamicVars {
             $renderer->render($page);
         }
         else {
-            trigger_error("File $page is not exists or not renderable.");
+            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
+            throw new $exclass("File $page is not exists or not renderable.");
         }
         $this->_manually_rendered = true;
     }
@@ -749,7 +752,8 @@ class Pinoco extends Pinoco_DynamicVars {
             return call_user_func_array(array($instance, $name), $arguments);
         }
         else {
-            trigger_error(__CLASS__ . " method called in invalid state", E_USER_WARNING);
+            $exclass = class_exists('BadMethodCallException') ? 'BadMethodCallException' : 'Exception';
+            throw new $exclass(__CLASS__ . " method called in invalid state");
         }
     }
     
@@ -900,7 +904,7 @@ class Pinoco extends Pinoco_DynamicVars {
             header('Content-Type:' . $this->mime_type($realfile));
             $st = stat($realfile);
             header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
-            readfile($realfile);  // TODO : streaming
+            readfile($realfile);  // TODO: streaming
             return;
         }
         

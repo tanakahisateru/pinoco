@@ -220,8 +220,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
             $srcarr = get_object_vars($src);
         }
         else {
-            trigger_error("Cannot to import from scalar variable.", E_USER_NOTICE);
-            return;
+            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
+            throw new $exclass("Can't import from scalar variable.");
         }
         $ks = $filter ? $filter : array_keys($srcarr);
         foreach($ks as $k) {
@@ -665,7 +665,8 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
             call_user_func(array($this, 'set_' . $name), $value);
         }
         else if(method_exists($this, 'get_' . $name)) {
-            trigger_error("Cannot reassign to ". $name . ".");
+            $exclass = class_exists('RuntimeException') ? 'RuntimeException' : 'Exception';
+            throw new $exclass("Cannot reassign to ". $name . ".");
         }
         else {
             parent::set($name, $value);

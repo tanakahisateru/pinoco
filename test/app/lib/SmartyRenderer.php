@@ -7,8 +7,8 @@ class SmartyRenderer extends Pinoco_Renderer {
     {
         include_once 'Smarty/Smarty.class.php';
         if(!class_exists('Smarty')){
-            trigger_error("Smarty is not installed.");
-            return;
+            $exclass = class_exists('RuntimeException') ? 'RuntimeException' : 'Exception';
+            throw new $exclass("Smarty is not installed.");
         }
         
         $smarty = new Smarty();

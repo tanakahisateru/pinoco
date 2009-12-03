@@ -76,9 +76,9 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
     public function render($page, $extravars=array())
     {
         include_once 'PHPTAL.php';
-        if(!class_exists('PHPTAL')){
-            trigger_error("PHPTAL is not installed.");
-            return;
+        if(!class_exists('PHPTAL')) {
+            $exclass = class_exists('RuntimeException') ? 'RuntimeException' : 'Exception';
+            throw new $exclass("PHPTAL is not installed.");
         }
         
         $template = new PHPTAL($page);
@@ -113,24 +113,7 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
         
         //exec
         //ob_start();
-        try {
-            echo $template->execute();
-        }
-        catch (Exception $e) {
-            //$dump = ob_get_clean();
-            if(!$e->getFile()) {
-                $msg = $e->getMessage();
-            }
-            if(!$e->getLine()) {
-                $msg = sprintf("%s(%s)", $e->getMessage(), $e->getFile());
-            }
-            else {
-                $msg = sprintf("%s(%s:%d)", $e->getMessage(), $e->getFile(), $e->getLine());
-            }
-            trigger_error($msg, E_USER_WARNING);
-            //throw $e;
-            //return;
-        }
+        echo $template->execute();
         //ob_end_flush();
     }
 }
