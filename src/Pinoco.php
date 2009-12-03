@@ -956,7 +956,7 @@ class Pinoco extends Pinoco_DynamicVars {
                     // resolve index file for directory access(the last element is empty like "/foo/").
                     if(count($uris) == 0 && $fename == "") {
                         foreach(explode(" ", $this->_directory_index) as $idx) {
-                            if(is_file($this->_basedir . $dpath . "/" . $idx) &&    //base
+                            if(is_file($this->_basedir . $dpath . "/" . $idx) ||    //base
                                 is_file($hookbase . $dpath . "/" . $idx . ".php")) { //sys
                                 $fename = $idx;
                                 break;
