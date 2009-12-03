@@ -1,6 +1,6 @@
 <?php
 // How to extend Pinoco page renderer.
-$this->renderers->tpl = $this->newobj('SmartyRenderer.php/SmartyRenderer', $this);
+$this->renderers->tpl = $this->newObj('SmartyRenderer.php/SmartyRenderer', $this);
 $this->renderers->tpl->cfg->compile_dir = $this->sysdir . "/tmp";
 session_start(); // avoid bug of Smarty under 2.6.25
 

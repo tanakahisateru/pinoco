@@ -2,7 +2,7 @@
 class TestController {
     
     function __construct() {
-        $this->data = Pinoco::newvars(array(
+        $this->data = Pinoco::newVars(array(
             "item00" => "foo",
             "item01" => "bar",
         ));

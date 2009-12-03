@@ -9,7 +9,7 @@ class PDOWrapper {
     private $_opts;
     private $_conn;
     
-    function __construct($dsn, $un="", $pw="", $opts=array())
+    public function __construct($dsn, $un="", $pw="", $opts=array())
     {
         $this->_dsn = $dsn;
         $this->_un = $un;
@@ -18,7 +18,7 @@ class PDOWrapper {
         $this->_conn = NULL;
     }
     
-    function get_connection()
+    public function getConnection()
     {
         if($this->_conn === NULL) {
             $this->_conn = new PDO($this->_dsn, $this->_un, $this->_pw, $this->_opts);
@@ -27,28 +27,28 @@ class PDOWrapper {
         return $this->_conn;
     }
     
-    function __call($name, $args)
+    public function __call($name, $args)
     {
-        return call_user_func_array(array($this->get_connection(), $name), $args);
+        return call_user_func_array(array($this->getConnection(), $name), $args);
     }
     
-    function prepare($sql, $opts=array())
+    public function prepare($sql, $opts=array())
     {
         return new PDOStatementWrapper(
-            $this->get_connection()->prepare($sql, $opts)
+            $this->getConnection()->prepare($sql, $opts)
         );
     }
     
-    function execute()
+    public function execute()
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'exec'), $args);
     }
     
-    function query($sql)
+    public function query($sql)
     {
         return new PDOStatementWrapper(
-            $this->get_connection()->query($sql)
+            $this->getConnection()->query($sql)
         );
     }
 }
@@ -59,18 +59,18 @@ class PDOWrapper {
 class PDOStatementWrapper {
     private $_stmt;
     
-    function __construct($stmt)
+    public function __construct($stmt)
     {
         $this->_stmt = $stmt;
         //$this->_stmt->setFetchMode(PDO::FETCH_CLASS, "Pinoco_Vars", array());
     }
     
-    function __call($name, $args)
+    public function __call($name, $args)
     {
         return call_user_func_array(array($this->_stmt, $name), $args);
     }
     
-    function execute()
+    public function execute()
     {
         if(func_num_args() == 0) {
             $args = array();
@@ -78,7 +78,7 @@ class PDOStatementWrapper {
         else if(func_num_args() == 1) {
             $a = func_get_arg(0);
             if($a instanceof Pinoco_Vars || $a instanceof Pinoco_List) {
-                $args = $a->to_array();
+                $args = $a->toArray();
             }
             else if(is_array($a)) {
                 $args = $a;
@@ -94,29 +94,29 @@ class PDOStatementWrapper {
         return $this->rowCount();
     }
     
-    function exec()
+    public function exec()
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'execute'), $args);
     }
     
-    function query()
+    public function query()
     {
         $args = func_get_args();
         call_user_func_array(array($this, 'execute'), $args);
         return $this;
     }
     
-    function fetch($orientation=PDO::FETCH_ORI_NEXT, $offset=0)
+    public function fetch($orientation=PDO::FETCH_ORI_NEXT, $offset=0)
     {
         //return $this->_stmt->fetch(PDO::FETCH_CLASS, $orientation, $offset);
         $r = $this->_stmt->fetch(PDO::FETCH_ASSOC, $orientation, $offset);
         return $r !== FALSE ? Pinoco_Vars::wrap($r) : $r;
     }
     
-    function fetchAll()
+    public function fetchAll()
     {
-        //return Pinoco::newlist($this->_stmt->fetchAll(PDO::FETCH_CLASS));
+        //return Pinoco::newList($this->_stmt->fetchAll(PDO::FETCH_CLASS));
         $rs = new Pinoco_List();
         $rows = $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach($rows as $r) {
@@ -125,7 +125,7 @@ class PDOStatementWrapper {
         return $rs;
     }
     
-    function fetchOne()
+    public function fetchOne()
     {
         $r = $this->fetch();
         try { $this->closeCursor(); } catch(PDOException $ex){ }

@@ -50,15 +50,18 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * @property-read string $baseuri
  * @property-read string $basedir
  * @property-read string $sysdir
+ * @property Pinoco_List $incdir
  * @property-read string $path
  * @property-read string $script
  * @property-read Pinoco_List $activity
  * @property-read string $subpath
+ * @property-read Pinoco_List $pathargs
  * @property string $directory_index
  * @property string $page
  * @property-read Pinoco_Vars $renderers
  * @property-read Pinoco_Vars $autolocal
  * @property callback $url_modifier
+ * @property callback $page_modifier
  */
 class Pinoco extends Pinoco_DynamicVars {
     
@@ -181,7 +184,7 @@ class Pinoco extends Pinoco_DynamicVars {
             throw new $exclass("Invalid system directory:" . $sysdir . " does not exist.");
         }
         
-        $this->_incdir = self::newlist();
+        $this->_incdir = self::newList();
         $this->_incdir->push($this->sysdir . "/lib"); // default lib dir
         
         $this->_system_incdir = ini_get('include_path');
@@ -208,18 +211,18 @@ class Pinoco extends Pinoco_DynamicVars {
         */
         
         $this->_script = null;
-        $this->_activity = self::newlist();
+        $this->_activity = self::newList();
         $this->_subpath = "";
-        $this->_pathargs = self::newlist();
+        $this->_pathargs = self::newList();
         
-        $this->_renderers = self::newvars();
-        $this->_renderers->setdefault(new Pinoco_NullRenderer($this));
+        $this->_renderers = self::newVars();
+        $this->_renderers->setDefault(new Pinoco_NullRenderer($this));
         $this->_renderers->html = new Pinoco_TALRenderer($this);
         $this->_renderers->php  = new Pinoco_NativeRenderer($this);
         
         $this->_page = NULL;
         
-        $this->_autolocal = self::newvars();
+        $this->_autolocal = self::newVars();
         
         $this->_url_modifier = NULL;
         $this->_page_modifier = NULL;
@@ -237,9 +240,9 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $init
      * @return Pinoco_Vars
      */
-    public static function newvars($init=array())
+    public static function newVars($init=array())
     {
-        return Pinoco_Vars::from_array($init);
+        return Pinoco_Vars::fromArray($init);
     }
     
     /**
@@ -247,9 +250,9 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $init
      * @return Pinoco_List
      */
-    public static function newlist($init=array())
+    public static function newList($init=array())
     {
-        return Pinoco_List::from_array($init);
+        return Pinoco_List::fromArray($init);
     }
     
     /**
@@ -257,7 +260,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param array &$ref
      * @return Pinoco_Vars
      */
-    public static function wrapvars(&$ref)
+    public static function wrapVars(&$ref)
     {
         return Pinoco_Vars::wrap($ref);
     }
@@ -267,7 +270,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param array &$ref
      * @return Pinoco_List
      */
-    public static function wraplist(&$ref)
+    public static function wrapList(&$ref)
     {
         return Pinoco_List::wrap($ref);
     }
@@ -278,7 +281,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $args,...
      * @return object
      */
-    public static function newobj($class)
+    public static function newObj($class)
     {
         $seppos = strrpos($class, '/');
         if($seppos !== FALSE) {
@@ -315,7 +318,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param array $localvars
      * @return bool
      */
-    public function include_with_this($script_abs_path, $localvars=array())
+    public function includeWithThis($script_abs_path, $localvars=array())
     {
         // script path must be absolute and exist.
         if(!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
@@ -529,7 +532,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $path
      * @return string
      */
-    public static function parent_path($path)
+    public static function parentPath($path)
     {
         $dn = dirname($path);
         if($dn == "\\") { $dn = "/"; }
@@ -543,14 +546,14 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $base
      * @return string
      */
-    public function resolve_path($path, $base=FALSE)
+    public function resolvePath($path, $base=FALSE)
     {
         if(strlen($path) > 0 && $path[0] != '/') {
             // make path absolute if relative
             if($base === FALSE) {
                 $thispath = $this->_path;
                 $base = $thispath[strlen($thispath) - 1] != "/" ?
-                    self::parent_path($thispath) : rtrim($thispath, "/");
+                    self::parentPath($thispath) : rtrim($thispath, "/");
             }
             $bes = explode("/", rtrim($base, "/"));
             $pes = explode("/", $path);
@@ -574,7 +577,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $path
      * @return bool
      */
-    public function is_renderable_path($path)
+    public function isRenderablePath($path)
     {
         $sepp = strpos($path, "?");
         if($sepp !== FALSE) { $path = substr($path, 0, $sepp); }
@@ -592,12 +595,12 @@ class Pinoco extends Pinoco_DynamicVars {
     public function url($path='')
     {
         if($path != '') {
-            $path = $this->resolve_path($path);
+            $path = $this->resolvePath($path);
         }
         // guess to use gateway script but not in use mod_rewrite.
         if($this->_dispatcher != "") {
             if(
-                $this->is_renderable_path($path) ||
+                $this->isRenderablePath($path) ||
                 !is_file($this->_basedir . $path) ||
                 is_dir($this->_basedir . $path)
             ) {
@@ -670,7 +673,7 @@ class Pinoco extends Pinoco_DynamicVars {
         else {
             $ext = pathinfo($page, PATHINFO_EXTENSION);
             if($ext && $this->_renderers->has($ext)) {
-                $default_page = self::parent_path($page) . "/_default." . $ext;
+                $default_page = self::parentPath($page) . "/_default." . $ext;
                 if(is_file($this->_basedir . $default_page)) {
                     return $default_page;
                 }
@@ -687,7 +690,7 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public function render($page)
     {
-        $page = $this->resolve_path($page);
+        $page = $this->resolvePath($page);
         $ext = pathinfo($page, PATHINFO_EXTENSION);
         if($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
             $renderer = $this->_renderers[$ext];
@@ -705,7 +708,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $filename
      * @return string
      */
-    public static function mime_type($filename)
+    public static function mimeType($filename)
     {
         if(file_exists($filename)) {
             if(function_exists('finfo_open'))
@@ -730,7 +733,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         // final fallback process
         include_once dirname(__FILE__) . '/Pinoco/MIMEType.php';
-        return Pinoco_MIMEType::from_filename($filename);
+        return Pinoco_MIMEType::fromFileName($filename);
     }
     
     /**
@@ -811,7 +814,7 @@ class Pinoco extends Pinoco_DynamicVars {
     /**
      * Updates 'include_path' in php.ini by this->incdir.
      */
-    public function update_incdir()
+    public function updateIncdir()
     {
         $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
         $runinc = array();
@@ -848,8 +851,8 @@ class Pinoco extends Pinoco_DynamicVars {
             $this->_script = $script;
             $this->_subpath = $subpath;
             try {
-                $this->update_incdir();
-                $this->include_with_this($this->_script, $this->_autolocal->to_array());
+                $this->updateIncdir();
+                $this->includeWithThis($this->_script, $this->_autolocal->toArray());
             }
             catch(Pinoco_FlowControlSkip $ex) {
             }
@@ -900,8 +903,8 @@ class Pinoco extends Pinoco_DynamicVars {
         
         // non-html but existing => raw binary with mime-type header
         $realfile = $this->_basedir . $this->_path;
-        if(!$this->is_renderable_path($this->_path) && is_file($realfile)) {
-            header('Content-Type:' . $this->mime_type($realfile));
+        if(!$this->isRenderablePath($this->_path) && is_file($realfile)) {
+            header('Content-Type:' . $this->mimeType($realfile));
             $st = stat($realfile);
             header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
             readfile($realfile);  // TODO: streaming
@@ -992,7 +995,7 @@ class Pinoco extends Pinoco_DynamicVars {
             //render
             if(!$this->_manually_rendered) {
                 if($this->_page) {
-                    $page = $this->resolve_path($this->_page);
+                    $page = $this->resolvePath($this->_page);
                 }
                 else {
                     $page = $this->_page_from_path_with_directory_index($this->_path);

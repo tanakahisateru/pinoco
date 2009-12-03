@@ -39,7 +39,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
      * @param mixed $src
      * @return Pinoco_Vars
      */
-    public static function from_array($src)
+    public static function fromArray($src)
     {
         $self = new Pinoco_Vars();
         $self->import($src);
@@ -91,7 +91,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
      */
     public function keys()
     {
-        return Pinoco_List::from_array(array_keys($this->_vars));
+        return Pinoco_List::fromArray(array_keys($this->_vars));
     }
     
     public function __get($name)
@@ -115,7 +115,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
      * @param mixed $value
      * @return void
      */
-    public function setdefault($value)
+    public function setDefault($value)
     {
         $this->_default_val = $value;
     }
@@ -125,7 +125,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
      * @param bool $flag
      * @return void
      */
-    public function setloose($flag)
+    public function setLoose($flag)
     {
         $this->_loose = $flag;
     }
@@ -187,7 +187,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
      * @param string $modifier
      * @return array
      */
-    public function to_array($filter=false, $default=null, $modifier="%s")
+    public function toArray($filter=false, $default=null, $modifier="%s")
     {
         $arr = array();
         $ks = $filter ? $filter : $this->keys();
@@ -258,7 +258,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $src
      * @return Pinoco_List
      */
-    public static function from_array($src)
+    public static function fromArray($src)
     {
         $self = new Pinoco_List();
         $self->concat($src);
@@ -379,7 +379,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function reverse()
     {
-        return self::from_array(array_reverse($this->_arr));
+        return self::fromArray(array_reverse($this->_arr));
     }
     
     /**
@@ -390,10 +390,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function slice($offset) { // $length
         if(func_num_args() >= 2) {
-            return self::from_array(array_slice($this->_arr, $offset, func_get_arg(1)));
+            return self::fromArray(array_slice($this->_arr, $offset, func_get_arg(1)));
         }
         else {
-            return self::from_array(array_slice($this->_arr, $offset));
+            return self::fromArray(array_slice($this->_arr, $offset));
         }
     }
     
@@ -406,10 +406,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function splice($offset, $length=0) { // $replacement
         if(func_num_args() >= 3) {
-            return self::from_array(array_splice($this->_arr, $offset, $length, func_get_arg(2)));
+            return self::fromArray(array_splice($this->_arr, $offset, $length, func_get_arg(2)));
         }
         else {
-            return self::from_array(array_splice($this->_arr, $offset, $length));
+            return self::fromArray(array_splice($this->_arr, $offset, $length));
         }
     }
     
@@ -484,7 +484,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $value
      * @return void
      */
-    public function setdefault($value)
+    public function setDefault($value)
     {
         $this->_default_val = $value;
     }
@@ -494,7 +494,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param array|null $modifier
      * @return array
      */
-    public function to_array($modifier=null)
+    public function toArray($modifier=null)
     {
         $arr = array();
         foreach($this->_arr as $i=>$v) {
@@ -533,7 +533,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function map($callable)
     {
-        return self::from_array(array_map($callable, $this->_arr));
+        return self::fromArray(array_map($callable, $this->_arr));
     }
     
     /**
@@ -543,7 +543,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function filter($callable)
     {
-        return self::from_array(array_filter($this->_arr, $callable));
+        return self::fromArray(array_filter($this->_arr, $callable));
     }
     /*
     public function any($callable)
@@ -623,7 +623,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
     
     /**
      * Checks if this object has certain property or not.
-     * If setloose is set true then it returns true always.
+     * If setLoose is set true then it returns true always.
      * @param stirng $name
      * @return bool
      * @see src/Pinoco/Pinoco_Vars#has($name)
@@ -648,7 +648,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
                 array_push($ks, $m[1]);
             }
         }
-        $ks = Pinoco_List::from_array($ks);
+        $ks = Pinoco_List::fromArray($ks);
         $ks->concat(parent::keys());
         return $ks;
     }
@@ -676,7 +676,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
     public function getIterator()
     {
         // to include reserved special vars
-        return new Pinoco_Iterator($this->to_array());
+        return new Pinoco_Iterator($this->toArray());
     }
     
     public function _x_call($name, $args) // diabled temporaly

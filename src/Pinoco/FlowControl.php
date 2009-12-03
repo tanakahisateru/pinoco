@@ -63,7 +63,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
         $pref = $pinoco->sysdir . "/error/";
         foreach(array($this->code . '.php', 'default.php') as $errfile) {
             if(file_exists($pref . $errfile)) {
-                $pinoco->include_with_this($pref . $errfile, get_object_vars($this));
+                $pinoco->includeWithThis($pref . $errfile, get_object_vars($this));
                 return;
             }
         }

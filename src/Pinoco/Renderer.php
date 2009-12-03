@@ -131,13 +131,13 @@ class Pinoco_NativeRenderer extends Pinoco_Renderer {
      */
     public function render($page, $extravars=array())
     {
-        $vars = $this->_sysref->autolocal->to_array();
+        $vars = $this->_sysref->autolocal->toArray();
         foreach($extravars as $k=>$v) {
             $vars[$k] = $v;
         }
         $orig_dir  = getcwd();
-        chdir($this->_sysref->parent_path($this->_sysref->basedir . "/" . $page));
-        $this->_sysref->include_with_this($this->_sysref->basedir . "/" . $page, $vars);
+        chdir($this->_sysref->parentPath($this->_sysref->basedir . "/" . $page));
+        $this->_sysref->includeWithThis($this->_sysref->basedir . "/" . $page, $vars);
         chdir($orig_dir);
     }
 }
