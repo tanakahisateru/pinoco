@@ -947,7 +947,7 @@ class Pinoco extends Pinoco_DynamicVars {
                             $fename = '_default';
                         }
                         else {
-                            break;
+                            $fename = $fename_orig;
                         }
                     }
                     else {
