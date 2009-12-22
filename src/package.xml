@@ -40,8 +40,8 @@
     <version>0.2.0</version>
     <date>2009-12-22</date>
     <license>LGPL</license>
-    <state>stable</state>
-    <notes>1st production release.</notes>
+    <state>beta</state>
+    <notes>1st production quality release.</notes>
    </release>
    <release>
     <version>0.1.0</version>
