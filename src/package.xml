@@ -14,8 +14,8 @@
   </maintainer>
  </maintainers>
  <release>
-  <version>0.1.2</version>
-  <date>2009-10-09</date>
+  <version>0.2.0</version>
+  <date>2009-12-22</date>
   <license>LGPL</license>
   <state>beta</state>
   <notes>The 3rd package we released.</notes>
@@ -37,18 +37,11 @@
  </release>
  <changelog>
    <release>
-    <version>0.1.2</version>
-    <date>2009-11-19</date>
+    <version>0.2.0</version>
+    <date>2009-12-22</date>
     <license>LGPL</license>
-    <state>beta</state>
-    <notes>The 3rd package we released.</notes>
-   </release>
-   <release>
-    <version>0.1.1</version>
-    <date>2009-10-09</date>
-    <license>LGPL</license>
-    <state>beta</state>
-    <notes>The 2nd package we released.</notes>
+    <state>stable</state>
+    <notes>1st production release.</notes>
    </release>
    <release>
     <version>0.1.0</version>
