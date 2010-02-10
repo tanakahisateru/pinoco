@@ -1,0 +1,31 @@
+<html metal:use-macro="_wrapper.html/all" tal:define="title 'FrontPage'">
+<head>
+<tal:block metal:fill-slot="exhead">
+<!-- local css and js -->
+<style type="text/css" rel="">
+.powerdby {
+    font-size:70%;
+}
+</style>
+</tal:block>
+</head>
+<body>
+    
+    <h1>main</h1>
+    <div metal:fill-slot="main">
+        <p>My contents are here.</p>
+        <p>My contents are here.</p>
+        <p>My contents are here.</p>
+        <p>My contents are here.</p>
+    </div>
+    
+    <h1>subpane</h1>
+    <div metal:fill-slot="subpane">
+        <ul class="powerdby">
+            <li>Powerd by PHP</li>
+            <li>Powerd by Pinoco</li>
+        </ul>
+    </div>
+    
+</body>
+</html>

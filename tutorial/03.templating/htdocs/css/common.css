@@ -1,0 +1,35 @@
+body {
+    margin:0px;
+    padding:0px;
+    text-align:center;
+    background-color:gray;
+}
+.wrapper {
+    width:800px;
+    margin:auto;
+    text-align:left;
+    background-color:white;
+    padding-bottom:0.5em;
+}
+.header {
+    background-color:#0D8;
+    padding:0.4em;
+    color:white;
+    font-size:200%;
+}
+.subpane {
+    float:right;
+    border:solid 1px gray;
+    margin:0.5em 1em 0.5em 1em;
+    padding:0.4em;
+}
+.main {
+    margin:0.4em 1em 1em 1em;
+}
+.footer {
+    clear:both;
+    font-size:80%;
+    margin:0.5em 2em;
+    text-align:center;
+    color:gray;
+}

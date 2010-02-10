@@ -1,0 +1,29 @@
+<html metal:define-macro="all">
+<head>
+<title>${title} - Pinoco Tutorial</title>
+<!-- global css and js -->
+<link href="css/common.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+</style>
+<tal:block metal:define-slot="exhead">
+</tal:block>
+</head>
+<body align="center">
+<div class="wrapper">
+    
+    <div class="header">
+        <div>${title} - Pinoco Tutorial</div>
+    </div>
+    
+    <div class="subpane"><tal:block metal:define-slot="subpane">
+        <p>No text here</p><!--! Default contents for sub pane -->
+    </tal:block></div>
+    
+    <div class="main"><tal:block metal:define-slot="main">
+        <p>Under construction...</p><!--! Default contents for main area -->
+    </tal:block></div>
+    
+    <div class="footer">Default footer line</div>
+</div>
+</body>
+</html>

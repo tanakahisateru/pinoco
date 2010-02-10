@@ -1,0 +1,36 @@
+<html metal:define-macro="all">
+<head>
+<title>${title} - Pinoco Tutorial</title>
+<!-- global css and js -->
+<link href="css/common.css" rel="stylesheet" type="text/css"
+    tal:attributes="href url:/css/common.css"/><!--! URL resolver works well in master template! -->
+<style type="text/css">
+</style>
+<tal:block metal:define-slot="exhead">
+</tal:block>
+</head>
+<body align="center">
+<div class="wrapper">
+    
+    <div class="header">
+        <div>${title} - Pinoco Tutorial</div>
+    </div>
+    
+    <ul class="hnav">
+        <li><a href="index.html" tal:attributes="href url:/">Home</a></li>
+        <li><a href="sub/index.html" tal:attributes="href url:/sub/">Sub</a></li>
+        <li><a href="sibling/sibling.html" tal:attributes="href url:/sub/sibling.html">Sibling of Sub</a></li>
+    </ul>
+    
+    <div class="subpane"><tal:block metal:define-slot="subpane">
+        <p>No text here</p><!--! Default contents for sub pane -->
+    </tal:block></div>
+    
+    <div class="main"><tal:block metal:define-slot="main">
+        <p>Under construction...</p><!--! Default contents for main area -->
+    </tal:block></div>
+    
+    <div class="footer">Default footer line</div>
+</div>
+</body>
+</html>
