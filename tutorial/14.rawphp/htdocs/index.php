@@ -1,1 +1,1 @@
-<p>Hello <?php echo $this->message; ?>.</p>
+<p>Hello <?php echo htmlspecialchars($this->message); ?>.</p>
