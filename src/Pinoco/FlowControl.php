@@ -60,6 +60,8 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
      */
     public function respond($pinoco)
     {
+        header("HTTP/1.0 " . $this->code . " " . $this->title);
+        
         $pref = $pinoco->sysdir . "/error/";
         foreach(array($this->code . '.php', 'default.php') as $errfile) {
             if(file_exists($pref . $errfile)) {
@@ -67,7 +69,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
                 return;
             }
         }
-        header("HTTP/1.0 " . $this->code . " " . $this->title);
+        
         header("Content-Type: text/html; charset=iso-8859-1");
         echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' . "\n";
         echo "<html><head>\n";
