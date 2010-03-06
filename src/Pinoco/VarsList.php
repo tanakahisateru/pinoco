@@ -676,7 +676,8 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
     public function getIterator()
     {
         // to include reserved special vars
-        return new Pinoco_Iterator($this->toArray());
+        $arr = $this->toArray();
+        return new Pinoco_Iterator($arr);
     }
     
     public function _x_call($name, $args) // diabled temporaly
