@@ -14,11 +14,11 @@
   </maintainer>
  </maintainers>
  <release>
-  <version>0.2.0</version>
-  <date>2009-12-22</date>
+  <version>0.2.1</version>
+  <date>2010-03-16</date>
   <license>LGPL</license>
   <state>beta</state>
-  <notes>The 3rd package we released.</notes>
+  <notes>Maintenance release for 0.2.0.</notes>
   <provides type="class" name="Pinoco" />
   <provides type="function" name="Pinoco::create" />
   <deps>
@@ -36,6 +36,13 @@
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.2.1</version>
+    <date>2010-03-16</date>
+    <license>LGPL</license>
+    <state>beta</state>
+    <notes>1st production quality release.</notes>
+   </release>
    <release>
     <version>0.2.0</version>
     <date>2009-12-22</date>
