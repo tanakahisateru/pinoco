@@ -983,9 +983,11 @@ class Pinoco extends Pinoco_DynamicVars {
                     $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
                     
                     // main script
-                    if($this->_run_hook_if_exists($hookbase . $dpath . "/" . $fename . ".php", implode('/', $uris))) {
+                    if(is_file($hookbase . $dpath . "/" . $fename . ".php")) {
                         $proccessed = true;
-                        break;
+                        if($this->_run_hook_if_exists($hookbase . $dpath . "/" . $fename . ".php", implode('/', $uris))) {
+                            break;
+                        }
                     }
                 }
             }
