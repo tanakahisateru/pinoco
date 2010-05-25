@@ -138,7 +138,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         
         // base uri (gateway placed path)
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = urldecode($_SERVER['REQUEST_URI']);  // to urldecoded path like path_info or _GET params
         $seppos = strpos($uri, '?');
         if($seppos !== FALSE) {
             $uri = substr($uri, 0, $seppos);
@@ -156,6 +156,11 @@ class Pinoco extends Pinoco_DynamicVars {
         else {
             $trailings = "/" . $gateway;
         }
+        
+        // remove double slashes in path expression (e.g. /foo//bar)
+        $uri = preg_replace('/\/\/+/', '/', $uri);
+        $trailings = preg_replace('/\/\/+/', '/', $trailings);
+        
         $baseuri = substr($uri, 0, strlen($uri) - strlen($trailings));
         
         // build engine
@@ -702,7 +707,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         $this->_manually_rendered = true;
     }
-    
+        
     /**
      * MIME type of file.
      * @param string $filename
