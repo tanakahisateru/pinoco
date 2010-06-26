@@ -31,7 +31,7 @@ RewriteCond %{REQUEST_FILENAME} !_gateway\.php$
 # * Execute rewriting!
 
 # * The path is given to $_SERVER['PATH_INFO']:
-RewriteRule ^(.*)$   _gateway.php/$1 [L,QSA]
+RewriteRule ^(.*)$   _gateway.php/$1 [L]
 # * The path is given to $_GET['PATH_INFO']:
 # RewriteRule ^(.*)$   _gateway.php?PATH_INFO=/$1 [L,QSA]
 

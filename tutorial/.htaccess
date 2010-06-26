@@ -1,5 +1,5 @@
 RewriteEngine On
 # RewriteBase /your/alias/uri
-RewriteRule ^(.*?)\/(.*)$   $1/htdocs/$2 [L,QSA]
+RewriteRule ^(.*?)\/(.*)$   $1/htdocs/$2 [L]
 
 php_flag display_errors On
