@@ -390,7 +390,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function slice($offset) { // $length
         if(func_num_args() >= 2) {
-            return self::fromArray(array_slice($this->_arr, $offset, func_get_arg(1)));
+            $a1 = func_get_arg(1);
+            return self::fromArray(array_slice($this->_arr, $offset, $a1));
         }
         else {
             return self::fromArray(array_slice($this->_arr, $offset));
@@ -406,7 +407,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function splice($offset, $length=0) { // $replacement
         if(func_num_args() >= 3) {
-            return self::fromArray(array_splice($this->_arr, $offset, $length, func_get_arg(2)));
+            $a2 = func_get_arg(2);
+            return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
         }
         else {
             return self::fromArray(array_splice($this->_arr, $offset, $length));
@@ -613,7 +615,8 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
         }
         else {
             if(func_num_args() > 1) {
-                return parent::get($name, func_get_arg(1));
+                $a1 = func_get_arg(1);
+                return parent::get($name, $a1);
             }
             else {
                 return parent::get($name);
