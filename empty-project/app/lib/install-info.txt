@@ -1,0 +1,9 @@
+NOTE: Installing PHPTAL
+If you still not install PHPTAL, you can put PHPTAL components here.
+
+NOTE: Installing Pinoco
+If you still not install Pinoco, you can put Pinoco components here,
+and you must change the require_once statement in _gateway.php to point here.
+  e.g.
+    require_once "../app/lib/Pinoco.php"
+
