@@ -942,6 +942,10 @@ class Pinoco extends Pinoco_DynamicVars {
                     if(preg_match('/^_.*$/', $fename_orig)) {
                         $this->notfound();
                     }
+                    
+                    // enter
+                    $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
+                    
                     // default dir
                     if(count($uris) > 0) {
                         if(is_dir($hookbase . $dpath . '/' . $fename_orig)) {
@@ -984,9 +988,6 @@ class Pinoco extends Pinoco_DynamicVars {
                         }
                     }
                     
-                    // enter
-                    $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
-                    
                     // main script
                     if(is_file($hookbase . $dpath . "/" . $fename . ".php")) {
                         $proccessed = true;
@@ -1007,6 +1008,8 @@ class Pinoco extends Pinoco_DynamicVars {
                 else {
                     $page = $this->_page_from_path_with_directory_index($this->_path);
                 }
+                
+                $this->updateIncdir();
                 
                 if($this->_page_modifier) {
                     $page = call_user_func($this->_page_modifier, $page, $this->_path);
