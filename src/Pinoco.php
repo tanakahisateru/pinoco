@@ -1017,12 +1017,8 @@ class Pinoco extends Pinoco_DynamicVars {
             
             //render
             if(!$this->_manually_rendered) {
-                if($this->_page) {
-                    $page = $this->resolvePath($this->_page);
-                }
-                else {
-                    $page = $this->_page_from_path_with_directory_index($this->_path);
-                }
+                $page = $this->_page_from_path_with_directory_index(
+                    $this->_page ? $this->resolvePath($this->_page) : $this->_path);
                 
                 $this->updateIncdir();
                 
@@ -1041,6 +1037,10 @@ class Pinoco extends Pinoco_DynamicVars {
                     else {
                         $this->notfound();
                     }
+                }
+                else if($this->_page) {
+                    // page specified in hook-script but not found it
+                    $this->error(500, "Internal Server Error", "File not found: " . $this->_page);
                 }
             }
         }
