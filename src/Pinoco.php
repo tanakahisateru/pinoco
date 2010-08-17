@@ -965,8 +965,10 @@ class Pinoco extends Pinoco_DynamicVars {
                     // resolve index file for directory access(the last element is empty like "/foo/").
                     if(count($uris) == 0 && $fename == "") {
                         foreach(explode(" ", $this->_directory_index) as $idx) {
-                            if(is_file($this->_basedir . $dpath . "/" . $idx) ||    //base
-                                is_file($hookbase . $dpath . "/" . $idx . ".php")) { //sys
+                            if(
+                                is_file($this->_basedir . $dpath . "/" . $idx) ||  //base
+                                is_file($hookbase . $dpath . "/" . $idx . ".php")  //sys
+                            ) {
                                 $fename = $idx;
                                 break;
                             }
@@ -976,7 +978,20 @@ class Pinoco extends Pinoco_DynamicVars {
                     
                     // default script support for the last element(=file)
                     if(count($uris) == 0) {
-                        if($fename == "" || !is_file($hookbase . $dpath . "/" . $fename . ".php")) {
+                        if($fename == "") { // case: no index file found for dir access
+                            foreach(explode(" ", $this->_directory_index) as $idx) {
+                                $ext = pathinfo($idx, PATHINFO_EXTENSION);
+                                if($ext && is_file($hookbase . $dpath . "/_default." . $ext . ".php")) {
+                                    $fename = "_default." . $ext;
+                                    break;
+                                }
+                            }
+                            if($fename == "") {
+                                $fename = "_default";
+                            }
+                            $this->_pathargs->push($fename_orig);
+                        }
+                        else if(!is_file($hookbase . $dpath . "/" . $fename . ".php")) {
                             $ext = pathinfo($fename, PATHINFO_EXTENSION);
                             if($ext && is_file($hookbase . $dpath . "/_default." . $ext . ".php")) {
                                 $fename = "_default." . $ext;
