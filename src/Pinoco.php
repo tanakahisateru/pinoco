@@ -225,7 +225,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->_renderers->html = new Pinoco_TALRenderer($this);
         $this->_renderers->php  = new Pinoco_NativeRenderer($this);
         
-        $this->_page = NULL;
+        $this->_page = "<default>";  // To be resolved automatically
         
         $this->_autolocal = self::newVars();
         
@@ -444,6 +444,8 @@ class Pinoco extends Pinoco_DynamicVars {
     
     /**
      * File name to override view.
+     * Set FALSE if you want an empty output.
+     * Set "<default>" if you want to reset to default view.
      * @param string $page
      * @return void
      */
@@ -690,11 +692,16 @@ class Pinoco extends Pinoco_DynamicVars {
     /**
      * Invokes renderer with page file immediately.
      * Default rendering will be canceled.
+     * Pass FALSE if you want an empty response.
      * @param string $page
      * @return void
      */
     public function render($page)
     {
+        if(!$page) {
+            $this->_manually_rendered = true;
+            return;
+        }
         $page = $this->resolvePath($page);
         $ext = pathinfo($page, PATHINFO_EXTENSION);
         if($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
@@ -1017,9 +1024,9 @@ class Pinoco extends Pinoco_DynamicVars {
             }
             
             //render
-            if(!$this->_manually_rendered) {
+            if(!$this->_manually_rendered && $this->_page) {
                 $page = $this->_page_from_path_with_directory_index(
-                    $this->_page ? $this->resolvePath($this->_page) : $this->_path);
+                    ($this->_page != "<default>") ? $this->resolvePath($this->_page) : $this->_path);
                 
                 $this->updateIncdir();
                 
@@ -1039,7 +1046,7 @@ class Pinoco extends Pinoco_DynamicVars {
                         $this->notfound();
                     }
                 }
-                else if($this->_page) {
+                else if($this->_page != "<default>") {
                     // page specified in hook-script but not found it
                     $this->error(500, "Internal Server Error", "File not found: " . $this->_page);
                 }
