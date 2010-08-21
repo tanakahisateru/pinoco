@@ -9,7 +9,7 @@
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.2.3
+ * @version  0.2.4
  * @link     http://code.google.com/p/pinoco/
  * @filesource
  */
