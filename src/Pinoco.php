@@ -944,10 +944,12 @@ class Pinoco extends Pinoco_DynamicVars {
                 while(count($uris) > 0) {
                     $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
                     
-                    $fename_orig = array_shift($uris);
+                    $fename_orig = $uris[0];
                     
                     // enter
                     $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
+                    
+                    array_shift($uris);
                     
                     // invisible file entry name.
                     if(preg_match('/^_.*$/', $fename_orig)) {
