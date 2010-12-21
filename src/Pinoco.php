@@ -752,12 +752,13 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return self::$_current_instance;
     }
-    /* 
-     * IDEA: Pinoco::instance()->some_method() can write as Pinoco::some_method()
-     * PHP >= 5.3.0
-     
+    
     public static function __callStatic($name, $arguments)
     {
+        // Pinoco::instance()->some_method() can write as Pinoco::some_method()
+        // PHP >= 5.3.0
+        // Why not? => public static function __getStatic() / public static function __setStatic() ...
+        
         $instance = self::instance();
         if($instance) {
             return call_user_func_array(array($instance, $name), $arguments);
@@ -767,9 +768,6 @@ class Pinoco extends Pinoco_DynamicVars {
             throw new $exclass(__CLASS__ . " method called in invalid state");
         }
     }
-    
-    public static function __getStatic() / public static function __setStatic() ...
-    */
     
     // runtime core
     /**
