@@ -520,8 +520,7 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public static function notfound()
     {
-        self::error(404, "Not found",
-            "The requested URL " . $_SERVER['REQUEST_URI'] . " is not availavle on this server.");
+        self::error(404);
     }
     
     /**
@@ -530,8 +529,7 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public static function forbidden()
     {
-        self::error(403, "Forbidden",
-            "You don't have privileges to access this resource.");
+        self::error(403);
     }
     
     /**
