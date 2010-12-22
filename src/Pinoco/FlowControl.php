@@ -191,7 +191,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
             $fixedurl = $protocol . ':' . $this->url;
         }
         else if(preg_match('/^\/[^\/]?/', $this->url)) {
-            if($this->extrenal) {
+            if($this->external) {
                 $fixedurl = $server_prefix. $this->url;
             }
             else {
