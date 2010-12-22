@@ -723,6 +723,7 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public static function mimeType($filename)
     {
+        /*----------- not work well, fixme ----------
         if(file_exists($filename) && ini_get('mime_magic.magicfile')) {
             if(function_exists('finfo_open'))
             {
@@ -740,6 +741,7 @@ class Pinoco extends Pinoco_DynamicVars {
                 }
             }
         }
+        ----------------------------------- */
         // final fallback process
         include_once dirname(__FILE__) . '/Pinoco/MIMEType.php';
         return Pinoco_MIMEType::fromFileName($filename);
