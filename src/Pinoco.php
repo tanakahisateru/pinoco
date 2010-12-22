@@ -886,25 +886,6 @@ class Pinoco extends Pinoco_DynamicVars {
         // insert credit into X-Powered-By header
         $this->_credit_into_x_powerd_by();
         
-        try {
-            // No dispatcher indicates to force to use mod_rewrite.
-            $with_rewite = strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) === FALSE;
-            // and index.php/ or PATH_INFO= after index.php
-            if($this->_dispatcher=="" && !$with_rewite) {
-                $this->forbidden();
-            }
-            
-            // NOT IN USE NOW!
-            // preprocess notfound -- if handler or page is not exists
-            //if(!$this->_hook_or_page_exists()){
-            //    $this->notfound();
-            //}
-        }
-        catch(Pinoco_FlowControlHttpError $ex) {
-            $ex->respond($this);
-            return;
-        }
-        
         // non-html but existing => raw binary with mime-type header
         $realfile = $this->_basedir . $this->_path;
         if(!$this->isRenderablePath($this->_path) && is_file($realfile)) {
@@ -942,6 +923,20 @@ class Pinoco extends Pinoco_DynamicVars {
                     $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
                     
                     array_shift($uris);
+                    
+                    // For mod_rewrite users: direct access to gateway should be rejected.
+                    if($this->_dispatcher == "") { // No dispatcher indicates to force to use mod_rewrite.
+                        $with_rewite = strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) === FALSE;
+                        if(!$with_rewite) {
+                            $this->forbidden();
+                        }
+                    }
+                    
+                    // NOT IN USE NOW!
+                    // preprocess notfound -- if handler or page is not exists
+                    //if(!$this->_hook_or_page_exists()){
+                    //    $this->notfound();
+                    //}
                     
                     // invisible file entry name.
                     if(preg_match('/^_.*$/', $fename_orig)) {
