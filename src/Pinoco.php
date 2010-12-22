@@ -149,6 +149,9 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         if($use_mod_rewrite) {
             $trailings = $pathinfo;
+            if(strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) !== FALSE) {
+                $trailings = "/" . basename($_SERVER['SCRIPT_NAME']) . $pathinfo;
+            }
         }
         else if($use_path_info) {
             $trailings = "/" . $gateway . $pathinfo;
@@ -926,8 +929,7 @@ class Pinoco extends Pinoco_DynamicVars {
                     
                     // For mod_rewrite users: direct access to gateway should be rejected.
                     if($this->_dispatcher == "") { // No dispatcher indicates to force to use mod_rewrite.
-                        $with_rewite = strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) === FALSE;
-                        if(!$with_rewite) {
+                        if(strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) !== FALSE) {
                             $this->forbidden();
                         }
                     }
