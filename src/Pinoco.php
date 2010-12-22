@@ -498,7 +498,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $message
      * @return void
      */
-    public static function error($code, $title="", $message="")
+    public static function error($code, $title=NULL, $message=NULL)
     {
         throw new Pinoco_FlowControlHttpError($code, $title, $message);
     }
