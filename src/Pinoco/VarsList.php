@@ -276,7 +276,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     public static function wrap(&$srcref)
     {
         $self = new Pinoco_List();
-        $self->_arr = $srcref;
+        $self->_arr = &$srcref;
         return $self;
     }
     
@@ -408,7 +408,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param array $replacement
      * @return Pinoco_List;
      */
-    public function splice($offset, $length=0) { // $replacement
+    public function splice($offset, $length) { // $replacement
         if(func_num_args() >= 3) {
             $a2 = func_get_arg(2);
             return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
@@ -461,7 +461,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function get($idx)
     {
-        if($idx < $this->count()) {
+        if(isset($this->_arr[$idx])) {
             return $this->_arr[$idx];
         }
         else {
@@ -479,7 +479,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     public function set($idx, $value)
     {
         for($i = count($this->_arr); $i < $idx; $i++) {
-            $this->_arr[$idx] = func_num_args() > 2 ? func_get_arg(2) : $this->_default_val; //default??
+            $this->_arr[$i] = func_num_args() > 2 ? func_get_arg(2) : $this->_default_val; //default??
         }
         $this->_arr[$idx] = $value;
     }
@@ -502,8 +502,18 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     public function toArray($modifier=null)
     {
         $arr = array();
-        foreach($this->_arr as $i=>$v) {
-            $arr[$modifier ? sprintf($modifier, $i) : $i] = $v;
+        if($modifier) {
+            foreach($this->_arr as $i=>$v) {
+                $name = (strpos($modifier, "%") !== FALSE) ? sprintf($modifier, $i) : (
+                    is_callable($modifier) ? call_user_func($modifier, $i) : ($modifier . $i)
+                );
+                $arr[$name] = $v;
+            }
+        }
+        else {
+            foreach($this->_arr as $i=>$v) {
+                $arr[$i] = $v;
+            }
         }
         return $arr;
     }
