@@ -54,9 +54,9 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     public static function wrap(&$srcref)
     {
         $self = new Pinoco_Vars();
-        $self->_vars = $srcref;
+        $self->_vars = &$srcref;
         return $self;
-    }    
+    }
     
     /**
      * Returns a value or default by name.
