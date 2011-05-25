@@ -192,7 +192,10 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
         $arr = array();
         $ks = $filter ? $filter : $this->keys();
         foreach($ks as $k) {
-            $arr[sprintf($modifier, $k)] = $this->get($k, $default);
+            $name = (strpos($modifier, "%") !== FALSE) ? sprintf($modifier, $k) : (
+                is_callable($modifier) ? call_user_func($modifier, $k) : ($modifier . $k)
+            );
+            $arr[$name] = $this->get($k, $default);
         }
         return $arr;
     }

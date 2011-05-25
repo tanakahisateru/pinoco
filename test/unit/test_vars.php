@@ -83,12 +83,16 @@ foreach($v as $k=>$e) {
 }
 $t->is_deeply($tmp, array('a', 1, 'b', 2), "Vars is iterable");
 
+$name_mod = create_function('$orig', 'return "m_" . $orig;');
+
 $t->diag("toArray test");
 $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
 $t->is_deeply($v->toArray(), array('a'=>1, 'b'=>2));
 $t->is_deeply($v->toArray(array('a','c')), array('a'=>1, 'c'=>null));
 $t->is_deeply($v->toArray(array('a','c'), -1), array('a'=>1, 'c'=>-1));
+$t->is_deeply($v->toArray(false, null, 'm_'), array('m_a'=>1, 'm_b'=>2));
 $t->is_deeply($v->toArray(false, null, 'm_%s'), array('m_a'=>1, 'm_b'=>2));
+$t->is_deeply($v->toArray(false, null, $name_mod), array('m_a'=>1, 'm_b'=>2));
 
 $t->diag("import test");
 $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -104,7 +108,6 @@ $v->import(array('i'=>9), false, null, 'm_%s');
 $t->is_deeply($v->toArray(), array(
     'a'=>1, 'b'=>2, 'c'=>3, 'e'=>5, 'g'=>7, 'h'=>-1, 'm_i'=>9
 ));
-$name_mod = create_function('$orig', 'return "m_" . $orig;');
 $v->import(array('j'=>10), false, null, $name_mod);
 $t->is_deeply($v->toArray(), array(
     'a'=>1, 'b'=>2, 'c'=>3, 'e'=>5, 'g'=>7, 'h'=>-1, 'm_i'=>9, 'm_j'=>10
