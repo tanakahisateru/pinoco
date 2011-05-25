@@ -225,7 +225,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
         }
         $ks = $filter ? $filter : array_keys($srcarr);
         foreach($ks as $k) {
-            $name = (strpos($modifier, "%") != -1) ? sprintf($modifier, $k) : (
+            $name = (strpos($modifier, "%") !== FALSE) ? sprintf($modifier, $k) : (
                 is_callable($modifier) ? call_user_func($modifier, $k) : ($modifier . $k)
             );
             $this->set($name, array_key_exists($k, $srcarr) ? $srcarr[$k] : $default);
