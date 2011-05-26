@@ -113,4 +113,17 @@ $t->is_deeply($v->toArray(), array(
     'a'=>1, 'b'=>2, 'c'=>3, 'e'=>5, 'g'=>7, 'h'=>-1, 'm_i'=>9, 'm_j'=>10
 ));
 
+$v = new Pinoco_Vars();
+$v->a = Pinoco_Vars::fromArray(array('aa'=>1, 'ab'=>2));
+$v->b = Pinoco_Vars::fromArray(array('ba'=>3, 'bb'=>4));
+$t->is_deeply($v->toArrayRecurse(), array(
+    'a'=>array('aa'=>1, 'ab'=>2),
+    'b'=>array('ba'=>3, 'bb'=>4),
+), "toArrayRecurse");
+$tmp = $v->toArrayRecurse(0);
+$t->cmp_ok($tmp, '===', $v, "toArrayRecurse 0");
+$tmp = $v->toArrayRecurse(1);
+$t->cmp_ok($tmp['a'], '===', $v->a, "toArrayRecurse 1");
+$t->cmp_ok($tmp['b'], '===', $v->b, "toArrayRecurse 1");
+
 

@@ -201,6 +201,25 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     }
     
     /**
+     * Exports properties to Array recursively.
+     * @param integer $depth
+     * @return array
+     */
+    public function toArrayRecurse($depth=false)
+    {
+        if($depth !== false && $depth == 0) { return $this; }
+        $arr = array();
+        foreach($this->keys() as $k) {
+            $v = $this->get($k);
+            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+            }
+            $arr[$k] = $v;
+        }
+        return $arr;
+    }
+    
+    /**
      * Imports properties from an array, object or another Vars
      * @param mixed $src
      * @param array|false $filter
@@ -514,6 +533,24 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
             foreach($this->_arr as $i=>$v) {
                 $arr[$i] = $v;
             }
+        }
+        return $arr;
+    }
+    
+    /**
+     * Exports properties to Array recursively.
+     * @param integer $depth
+     * @return array
+     */
+    public function toArrayRecurse($depth=false)
+    {
+        if($depth !== false && $depth == 0) { return $this; }
+        $arr = array();
+        foreach($this->_arr as $i=>$v) {
+            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+            }
+            $arr[$i] = $v;
         }
         return $arr;
     }

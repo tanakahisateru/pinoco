@@ -144,4 +144,17 @@ foreach($l as $e) {
 }
 $t->is_deeply($tmp, array(1, 2, 3), "List is iterable");
 
+$l = new Pinoco_List();
+$l->push(Pinoco_List::fromArray(array(1, 2)));
+$l->push(Pinoco_List::fromArray(array(3, 4)));
+$t->is_deeply($l->toArrayRecurse(), array(
+    array(1, 2),
+    array(3, 4),
+), "toArrayRecurse");
+$tmp = $l->toArrayRecurse(0);
+$t->cmp_ok($tmp, '===', $l, "toArrayRecurse 0");
+$tmp = $l->toArrayRecurse(1);
+$t->cmp_ok($tmp[0], '===', $l[0], "toArrayRecurse 1");
+$t->cmp_ok($tmp[1], '===', $l[1], "toArrayRecurse 1");
+
 
