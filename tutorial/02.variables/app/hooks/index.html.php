@@ -17,7 +17,7 @@ $this->info .= sprintf("localvars keys: (%s)\n",
 );
 
 // Several ways to get variables value (supporting default value like Python)
-$this->info .= sprintf("foo:%s\nbar:%s\nbaz:%s\nbax:%s\nbuzz:%s\n\n",
+$this->info .= sprintf("foo:%s\nbar:%s\nbaz:%s\nbax:%s\nbuzz:%s\n",
     $localvars->foo,
     $localvars["bar"],
     $localvars->get("baz"),
@@ -25,6 +25,27 @@ $this->info .= sprintf("foo:%s\nbar:%s\nbaz:%s\nbax:%s\nbuzz:%s\n\n",
     $localvars->get("buzz", "Text as default") // default value instead of buzz value
 );
 
+// Lazy/Dynamic fields
+function dynamicFieldImpl($owner) {
+    $owner->cc1++; // will called many times.
+    return $owner->cc1 . " times called (dynamic)";
+}
+$localvars->cc1 = 0;
+$localvars->registerAsDynamic('dynamicField', 'dynamicFieldImpl');
+$this->info .= $localvars->dynamicField . "\n";
+$this->info .= $localvars->dynamicField . "\n";
+
+function lazyFieldImpl($owner) {
+    $owner->cc2++; // will called once.
+    return $owner->cc2 . " times called (lazy)";
+}
+$localvars->cc2 = 0;
+$localvars->registerAsLazy('lazyField', 'lazyFieldImpl');
+$this->info .= $localvars->lazyField . "\n";
+$this->info .= $localvars->lazyField . "\n\n";
+
+
+// List
 $locallist = $this->newList(); // You can write as Pinoco::newList();
 
 $locallist->push("1st");
