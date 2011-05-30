@@ -891,16 +891,6 @@ class Pinoco extends Pinoco_DynamicVars {
         // insert credit into X-Powered-By header
         $this->_credit_into_x_powerd_by();
         
-        // non-html but existing => raw binary with mime-type header
-        $realfile = $this->_basedir . $this->_path;
-        if(!$this->isRenderablePath($this->_path) && is_file($realfile)) {
-            header('Content-Type:' . $this->mimeType($realfile));
-            $st = stat($realfile);
-            header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
-            readfile($realfile);  // TODO: streaming
-            return;
-        }
-        
         self::$_current_instance = $this;
         
         //set_error_handler(array($this, "_exception_error_handler"));
@@ -1018,17 +1008,36 @@ class Pinoco extends Pinoco_DynamicVars {
             
             //render
             if(!$this->_manually_rendered && $this->_page) {
-                $page = $this->_page_from_path_with_directory_index(
-                    ($this->_page != "<default>") ? $this->resolvePath($this->_page) : $this->_path);
                 
-                $this->updateIncdir();
-                
-                if($this->_page_modifier) {
-                    $page = call_user_func($this->_page_modifier, $page, $this->_path);
+                if($this->_page != "<default>") {
+                    $pagepath = $this->resolvePath($this->_page);
+                    $page = $this->_page_from_path_with_directory_index($pagepath);
+                }
+                else {
+                    $pagepath = $this->_path;
+                    if($this->_page_modifier) {
+                        $this->updateIncdir();
+                        $pagepath = call_user_func($this->_page_modifier, $pagepath);
+                    }
+                    if($pagepath) {
+                        $page = $this->_page_from_path_with_directory_index($pagepath);
+                    }
+                    else {
+                        $page = FALSE;
+                    }
                 }
                 
                 if($page && is_file($this->_basedir . $page)) {
-                    $this->render($page);
+                    // non-html but existing => raw binary with mime-type header
+                    if($this->isRenderablePath($this->_basedir . $page)) {
+                        $this->render($page);
+                    }
+                    else {
+                        header('Content-Type:' . $this->mimeType($this->_basedir . $page));
+                        //$st = stat($this->_basedir . $page);
+                        //header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
+                        readfile($this->_basedir . $page);  // TODO: streaming
+                    }
                 }
                 else if(!$proccessed) {
                     // no page and no tarminal hook indicates resource was not found or forbidden
