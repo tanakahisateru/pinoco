@@ -229,6 +229,11 @@ class Pinoco_MIMEType {
     public static function fromFileName($filename)
     {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        return $ext ? self::$EXT2TYPE[$ext] : "";
+        if($ext && isset(self::$EXT2TYPE[$ext])) {
+            return self::$EXT2TYPE[$ext];
+        }
+        else {
+            return 'application/octet-stream';
+        }
     }
 }
