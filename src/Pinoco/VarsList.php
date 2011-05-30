@@ -67,7 +67,11 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     public function get($name)
     {
         if(array_key_exists($name, $this->_vars)) {
-            return $this->_vars[$name];
+            $r = $this->_vars[$name];
+            if($r instanceof Pinoco_LazyValueProxy) {
+                $r = $r->fetch($this);
+            }
+            return $r;
         }
         else {
             return func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
@@ -108,6 +112,32 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     public function set($name, $value)
     {
         $this->_vars[$name] = $value;
+    }
+    
+    /**
+     * Sets a value to this object as given named dynamic value.
+     * The callback evaluted every time when fetched.
+     * @param string $name
+     * @param callable $callback
+     * @param array $context
+     * @return void
+     */
+    public function registerAsDynamic($name, $callback, $context=array())
+    {
+        $this->_vars[$name] = new Pinoco_LazyValueProxy($callback, false, $context);
+    }
+    
+    /**
+     * Sets a value to this object as given named lazy value.
+     * The callback evaluted as oneshot.
+     * @param string $name
+     * @param callable $callback
+     * @param array $context
+     * @return void
+     */
+    public function registerAsLazy($name, $callback, $context=array())
+    {
+        $this->_vars[$name] = new Pinoco_LazyValueProxy($callback, true, $context);
     }
     
     /**
@@ -256,6 +286,68 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     
     public function __toString() { return __CLASS__; } // TODO: dump vars name/values
 }
+
+/**
+ * Lazy value proxy
+ * @package Pinoco
+ * @internal
+ */
+class Pinoco_LazyValueProxy {
+    
+    private $callback;
+    private $context;
+    private $oneshot;
+    private $freeze;
+    private $value;
+    
+    /**
+     * Constructor to make an lazy value proxy.
+     *
+     * @param callable $callback
+     * @param boolean $oneshot
+     * @param array $context
+     */
+    public function __construct($callback, $oneshot=false, $context=array())
+    {
+        if(is_callable($callback)) {
+            $this->callback = $callback;
+            $this->oneshot = $oneshot;
+            $this->context = !empty($context) ? $context : array();
+            $this->freeze = false;
+            $this->value = null;
+        }
+        else {
+            $this->freeze = true;
+            $this->value = $callback;
+        }
+    }
+    
+    /**
+     * Evalute real value.
+     *
+     * @param mixed $ovner
+     * @return mixed
+     */
+    public function fetch($owner=null)
+    {
+        if($this->oneshot && $this->freeze) {
+            return $this->value;
+        }
+        $args = $this->context;
+        array_unshift($args, $owner);
+        $result = call_user_func_array($this->callback, $args);
+        if($result instanceof Pinoco_LazyValueProxy) {
+            $result = $result->fetch($owner);
+        }
+        if($this->oneshot) {
+            $this->freeze = true;
+            $this->value = $result;
+        }
+        return $result;
+    }
+    
+}
+
 
 /**
  * List model
@@ -648,6 +740,9 @@ class Pinoco_Iterator implements Iterator {
 }
 
 /**
+ * Dynamic vars model base
+ * @package Pinoco
+ * @abstract
  */
 class Pinoco_DynamicVars extends Pinoco_Vars {
     
@@ -749,3 +844,4 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
         return call_user_func_array($func, $args);
     }
 }
+
