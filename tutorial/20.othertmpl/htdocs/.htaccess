@@ -6,6 +6,10 @@
 
 RewriteEngine On
 
+<FilesMatch "\.tpl$">
+    Deny from all
+</FilesMatch>
+
 # * Set RewriteBase if you are using Alias directive to place your contents out of DocumentRoot.
 # RewriteBase /your/alias/uri
 
