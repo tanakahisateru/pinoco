@@ -137,7 +137,9 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
      */
     public function respond($pinoco)
     {
-        header("HTTP/1.0 " . $this->code . " " . $this->title);
+        if(!headers_sent()) {
+            header("HTTP/1.0 " . $this->code . " " . $this->title);
+        }
         
         $pref = $pinoco->sysdir . "/error/";
         foreach(array($this->code . '.php', 'default.php') as $errfile) {
@@ -147,7 +149,9 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
             }
         }
         
-        header("Content-Type: text/html; charset=iso-8859-1");
+        if(!headers_sent()) {
+            header("Content-Type: text/html; charset=iso-8859-1");
+        }
         echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' . "\n";
         echo "<html><head>\n";
         echo "<title>" . $this->code . " " . $this->title . "</title>\n";
