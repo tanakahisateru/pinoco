@@ -24,15 +24,15 @@ Though there is no relation to the character "Pinoko" in "Black Jack". If the we
 Pinoco also stands for "PHP Is Not for Object Coders Only". I hope PHP aiming to OOP world is also to be more easy to use for designers or script hackers.
 
 **/htdocs/hello.html**
+
 ```html
  <p>Hello <span tal:content="this/message | default">World</span>.</p>
-
 ```
 
 **/app/hooks/hello.html.php**
+
 ```php
 <?php
  $this->message = "Pinoco";
-
 ```
 
