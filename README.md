@@ -26,11 +26,13 @@ Pinoco also stands for "PHP Is Not for Object Coders Only". I hope PHP aiming to
 **/htdocs/hello.html**
 ```html
  <p>Hello <span tal:content="this/message | default">World</span>.</p>
+
 ```
 
 **/app/hooks/hello.html.php**
 ```php
 <?php
  $this->message = "Pinoco";
+
 ```
 
