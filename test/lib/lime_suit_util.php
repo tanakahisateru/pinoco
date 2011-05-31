@@ -3,7 +3,7 @@ require_once dirname(__FILE__) . '/lime.php';
 
 function _run_unit_test_innner($test)
 {
-    include getcwd() . '/' . $test;
+    include $test;
     
     $all_results = lime_test::to_array();
     $numtests = count($all_results);
