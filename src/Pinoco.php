@@ -858,6 +858,96 @@ class Pinoco extends Pinoco_DynamicVars {
         
         ini_set('include_path', implode($sep, $runinc));
     }
+    
+    /**
+     * @internal
+     */
+    private function _error_handler($errno, $errstr, $errfile, $errline)
+    {
+        if(function_exists('xdebug_is_enabled') && xdebug_is_enabled()) {
+            return FALSE;
+        }
+        if((error_reporting() & $errno) == 0) {
+            return FALSE;
+        }
+        
+        $errno2txt = array(
+            E_NOTICE=>"Notice", E_USER_NOTICE=>"Notice",
+            E_WARNING=>"Warning", E_USER_WARNING=>"Warning",
+            E_ERROR=>"Fatal Error", E_USER_ERROR=>"Fatal Error"
+        );
+        $errors = isset($errno2txt[$errno]) ? $errno2txt[$errno] : "Unknown";
+        
+        $trace = debug_backtrace();
+        array_shift($trace);
+        $stacktrace = array();
+        for($i=0; $i < count($trace); $i++) {
+            $stacktrace[] = htmlspecialchars(sprintf("#%d %s%s%s called at [%s:%d]",
+                $i,
+                @$trace[$i]['class'],
+                @$trace[$i]['type'],
+                $trace[$i]['function'],
+                $trace[$i]['file'],
+                $trace[$i]['line']
+            ));
+        }
+        
+        ob_start();
+        if (ini_get("display_errors")) {
+            printf("<br />\n<b>%s</b>: %s in <b>%s</b> on line <b>%d</b><br />\n", $errors, $errstr, $errfile, $errline);
+            echo "Stack trace:<br />\n" . implode("<br />\n", $stacktrace) . "<br /><br />\n";
+        }
+        if (ini_get('log_errors')) {
+            error_log(sprintf("PHP %s:  %s in %s on line %d", $errors, $errstr, $errfile, $errline));
+        }
+        if($errno & (E_ERROR | E_USER_ERROR)) {
+            if (!headers_sent()) {
+                header('HTTP/1.0 500 Fatal Error');
+                header('Content-Type:text/html');
+            }
+        }
+        ob_end_flush();
+        if($errno & (E_ERROR | E_USER_ERROR)) {
+            echo str_repeat('    ', 100)."\n"; // IE won't display error pages < 512b
+            exit(1);
+        }
+        return TRUE;
+    }
+    
+    /**
+     * @internal
+     */
+    public function _exception_handler($e)
+    {
+        if (!headers_sent()) {
+            header('HTTP/1.0 500 Uncaught Exception');
+            header('Content-Type:text/html');
+        }
+
+        $line = $e->getFile();
+        if ($e->getLine()) {
+            $line .= ' line '.$e->getLine();
+        }
+
+        if (ini_get('display_errors')) {
+            $title = get_class($e);
+            $body = "<p><strong>\n".htmlspecialchars($e->getMessage()).'</strong></p>' .
+                    '<p>In '.htmlspecialchars($line)."</p><pre>\n".htmlspecialchars($e->getTraceAsString()).'</pre>';
+        } else {
+            $title = "Uncaught Exception";
+            $body = "<p>The server encountered an uncaught exception and was unable to complete your request.</p>";
+        }
+
+        echo "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><style>body{font-family:sans-serif}</style><title>\n";
+        echo $title.'</title></head><body><h1>' . $title . '</h1>'.$body;
+        if (ini_get('log_errors')) {
+            error_log($e->getMessage().' in '.$line);
+        }
+        echo '</body></html>';
+        echo str_repeat('    ', 100)."\n"; // IE won't display error pages < 512b
+        exit(1);
+    }
+    
     /**
      * Runs a hook script.
      * @param string $script
@@ -904,7 +994,13 @@ class Pinoco extends Pinoco_DynamicVars {
         
         self::$_current_instance = $this;
         
-        //set_error_handler(array($this, "_exception_error_handler"));
+        if(!(function_exists('xdebug_is_enabled') && xdebug_is_enabled())
+            && PHP_SAPI !== 'cli')
+        {
+            $special_error_handler_enabled = true;
+            set_error_handler(array($this, "_error_handler"));
+            set_exception_handler(array($this, "_exception_handler"));
+        }
         
         if($output_buffering) {
             ob_start();
@@ -1089,8 +1185,10 @@ class Pinoco extends Pinoco_DynamicVars {
             ob_end_flush();
         }
         
-        //restore_error_handler();
-        
+        if(isset($special_error_handler_enabled)) {
+            restore_exception_handler();
+            restore_error_handler();
+        }
         self::$_current_instance = null;
     }
 }
