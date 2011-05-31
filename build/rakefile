@@ -1,0 +1,16 @@
+task 'default' => 'dist'
+
+task 'dist' => ['test','doc','package']
+
+task 'package' do
+  sh 'pear package ../src/package.xml'
+end
+
+task 'doc' do
+  sh 'phpdoc -q -t doc -d ../src'
+end
+
+task 'test' do
+  sh 'php ../test/unit/all.php'
+end
+
