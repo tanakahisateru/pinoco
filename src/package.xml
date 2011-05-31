@@ -14,11 +14,11 @@
   </maintainer>
  </maintainers>
  <release>
-  <version>0.3.0</version>
-  <date>2010-12-22</date>
+  <version>0.4.0</version>
+  <date>2011-06-01</date>
   <license>LGPL</license>
   <state>beta</state>
-  <notes>Small conceptual changes and fixes.</notes>
+  <notes>Various conceptual changes.</notes>
   <provides type="class" name="Pinoco" />
   <provides type="function" name="Pinoco::create" />
   <deps>
@@ -31,11 +31,19 @@
     <file role="php" baseinstalldir="" name="FlowControl.php"/>
     <file role="php" baseinstalldir="" name="Renderer.php"/>
     <file role="php" baseinstalldir="" name="MIMEType.php"/>
+    <file role="php" baseinstalldir="" name="PDOWrapper.php"/>
    </dir>
    <file role="doc" baseinstalldir="" name="COPYING"/>
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.4.0</version>
+    <date>2010-06-01</date>
+    <license>LGPL</license>
+    <state>beta</state>
+    <notes>Various conceptual changes.</notes>
+   </release>
    <release>
     <version>0.3.0</version>
     <date>2010-12-22</date>

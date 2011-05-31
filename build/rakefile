@@ -1,3 +1,5 @@
+VER = '0.4.0'
+
 task 'default' => 'dist'
 
 task 'dist' => ['test','doc','package']
@@ -7,7 +9,10 @@ task 'package' do
 end
 
 task 'doc' do
-  sh 'phpdoc -q -t doc -d ../src'
+  docname = "Pinoco-#{VER}-doc"
+  sh "rm -rf #{docname} #{docname}.tgz"
+  sh 'phpdoc -q -t ' + docname + '/doc -d ../src -ti "Pinoco ' + VER + ' Documentation"'
+  sh "tar -czf #{docname}.tgz #{docname}"
 end
 
 task 'test' do

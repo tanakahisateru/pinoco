@@ -9,8 +9,8 @@
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.3.0
- * @link     http://code.google.com/p/pinoco/
+ * @version  0.4.0
+ * @link     https://github.com/tanakahisateru/pinoco
  * @filesource
  */
 
@@ -64,7 +64,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
      * @param mixed $default
      * @return mixed
      */
-    public function get($name)
+    public function get($name /*[, $default]*/)
     {
         if(array_key_exists($name, $this->_vars)) {
             $r = $this->_vars[$name];
@@ -232,7 +232,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     
     /**
      * Exports properties to Array recursively.
-     * @param integer $depth
+     * @param int $depth
      * @return array
      */
     public function toArrayRecurse($depth=false)
@@ -396,7 +396,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $value,...
      * @return void
      */
-    public function push($value)
+    public function push($value /*[, $value1[, ...]]*/)
     {
         $n = func_num_args();
         for($i = 0; $i < $n; $i++) {
@@ -419,7 +419,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $value,...
      * @return void
      */
-    public function unshift($value)
+    public function unshift($value /*[, $value1[, ...]]*/)
     {
         $n = func_num_args();
         for($i = 0; $i < $n; $i++) {
@@ -442,7 +442,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $source
      * @return void
      */
-    public function concat($source)
+    public function concat($source /*[, $source1[, ...]]*/)
     {
         $n = func_num_args();
         for($i = 0; $i < $n; $i++) {
@@ -502,7 +502,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param int $length
      * @return Pinoco_List
      */
-    public function slice($offset) { // $length
+    public function slice($offset /*[, $length]*/) {
         if(func_num_args() >= 2) {
             $a1 = func_get_arg(1);
             return self::fromArray(array_slice($this->_arr, $offset, $a1));
@@ -519,7 +519,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param array $replacement
      * @return Pinoco_List;
      */
-    public function splice($offset, $length) { // $replacement
+    public function splice($offset, $length /*[, $replacement]*/) { // $replacement
         if(func_num_args() >= 3) {
             $a2 = func_get_arg(2);
             return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
@@ -535,7 +535,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $value
      * @return void
      */
-    public function insert($offset, $value)
+    public function insert($offset, $value /*[, $value1[, ...]]*/)
     {
         $args = func_get_args();
         array_shift($args);
@@ -570,7 +570,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $default
      * @return unknown_type
      */
-    public function get($idx)
+    public function get($idx /*[, $default]*/)
     {
         if(isset($this->_arr[$idx])) {
             return $this->_arr[$idx];
@@ -587,7 +587,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      * @param mixed $default
      * @return void
      */
-    public function set($idx, $value)
+    public function set($idx, $value /*[, $default]*/)
     {
         for($i = count($this->_arr); $i < $idx; $i++) {
             $this->_arr[$i] = func_num_args() > 2 ? func_get_arg(2) : $this->_default_val; //default??
@@ -631,7 +631,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     
     /**
      * Exports properties to Array recursively.
-     * @param integer $depth
+     * @param int $depth
      * @return array
      */
     public function toArrayRecurse($depth=false)
@@ -753,7 +753,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
      * @return mixed
      * @see src/Pinoco/Pinoco_Vars#get($name)
      */
-    public function get($name)
+    public function get($name /*[, $default]*/)
     {
         if(method_exists($this, 'get_' . $name)) {
             return call_user_func(array($this, 'get_' . $name));

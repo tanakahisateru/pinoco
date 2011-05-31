@@ -9,11 +9,13 @@
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.3.0
- * @link     http://code.google.com/p/pinoco/
+ * @version  0.4.0
+ * @link     https://github.com/tanakahisateru/pinoco
  * @filesource
  */
 
+/**
+ */
 require_once dirname(__FILE__) . '/Pinoco/VarsList.php';
 require_once dirname(__FILE__) . '/Pinoco/Renderer.php';
 require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
@@ -45,25 +47,25 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * </code>
  * 
  * @package Pinoco
- * @property-read string $baseuri
- * @property-read string $basedir
- * @property-read string $sysdir
- * @property Pinoco_List $incdir
- * @property-read string $path
- * @property-read string $script
- * @property-read Pinoco_List $activity
- * @property-read string $subpath
- * @property-read Pinoco_List $pathargs
- * @property string $directory_index
- * @property string $page
- * @property-read Pinoco_Vars $renderers
- * @property-read Pinoco_Vars $autolocal
- * @property callback $url_modifier
- * @property callback $page_modifier
+ * @property-read string $baseuri Base URI
+ * @property-read string $basedir Base directory
+ * @property-read string $sysdir  Application directory
+ * @property Pinoco_List $incdir  Include pathes
+ * @property-read string $path    Path under base URI
+ * @property-read string $script  Current hook script
+ * @property-read Pinoco_List $activity  Activity history of hook scripts
+ * @property-read string $subpath Sub path under current hook script
+ * @property-read Pinoco_List $pathargs Path elements matches _default[.*] hooks
+ * @property string $directory_index Space separated directory index files(like Apache)
+ * @property string $page         Template file to be rendered
+ * @property-read Pinoco_Vars $renderers File extension to rendering module mappings
+ * @property-read Pinoco_Vars $autolocal Auto extraced variables into local scope
+ * @property callback $url_modifier  URL modification callback
+ * @property callback $page_modifier Template page base path modification callback
  */
 class Pinoco extends Pinoco_DynamicVars {
     
-    const VERSION = "0.3.0";
+    const VERSION = "0.4.0";
     
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
@@ -287,7 +289,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param mixed $args,...
      * @return object
      */
-    public static function newObj($class)
+    public static function newObj($class /*[, $args[, ...]]*/)
     {
         $seppos = strrpos($class, '/');
         if($seppos !== FALSE) {
@@ -786,7 +788,6 @@ class Pinoco extends Pinoco_DynamicVars {
     // runtime core
     /**
      * Writes Pinoco credit into HTTP header.
-     * @internal
      * @return void
      */
     private function _credit_into_x_powerd_by()
@@ -860,7 +861,12 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
-     * @internal
+     * @param string $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param string $errline
+     * @return void
+     * @ignore
      */
     private function _error_handler($errno, $errstr, $errfile, $errline)
     {
@@ -915,7 +921,9 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
-     * @internal
+     * @param Exception $e
+     * @return void
+     * @ignore
      */
     public function _exception_handler($e)
     {
@@ -953,7 +961,6 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $script
      * @param string $subpath
      * @return bool
-     * @internal
      */
     private function _run_hook_if_exists($script, $subpath)
     {

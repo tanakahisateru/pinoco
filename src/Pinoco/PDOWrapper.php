@@ -9,21 +9,35 @@
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.3.0
- * @link     http://code.google.com/p/pinoco/
+ * @version  0.4.0
+ * @link     https://github.com/tanakahisateru/pinoco
  * @filesource
  */
 
+/**
+ */
 require_once dirname(__FILE__) . '/VarsList.php';
 
 /**
- * PDOWrapper provides extra methods to PDO
+ * PDOWrapper provides extra methods to PDO.
  * Of course you can use also PDO functions.
  * @package Pinoco
- * @property-read PDO connection
- * @property mixed afterConnection
+ * @property-read PDO $connection
+ * @property mixed $afterConnection
+ * @method bool beginTransaction()
+ * @method bool commit()
+ * @method mixed errorCode()
+ * @method array errorInfo()
+ * @method int exec() exec(string $statement)
+ * @method mixed getAttribute() getAttribute(int $attribute)
+ * @method array getAvailableDrivers()
+ * @method bool inTransaction()
+ * @method string lastInsertId() lastInsertId([ string $name = NULL ])
+ * @method string quote() quote( string $string [, int $parameter_type = PDO::PARAM_STR ] )
+ * @method bool rollBack()
+ * @method bool setAttribute() setAttribute( int $attribute , mixed $value )
  */
-class Pinoco_PDOWrapper extends Pinoco_DynamicVars{
+class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     private $_dsn;
     private $_un;
     private $_pw;
@@ -117,9 +131,9 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars{
     /**
      * Alias to exec
      * @param mixed $args...
-     * @return integer
+     * @return int
      */
-    public function execute()
+    public function execute(/*[$args[, ...]]*/)
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'exec'), $args);
@@ -142,6 +156,23 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars{
  * PDO Statement wrapper overrides PDO statement object.
  * You can use also native functions.
  * @package Pinoco
+ * @property-read string $queryString
+ * @method bool bindColumn() bindColumn( mixed $column , mixed &$param [, int $type [, int $maxlen [, mixed $driverdata ]]] )
+ * @method bool bindParam() bindParam( mixed $parameter , mixed &$variable [, int $data_type = PDO::PARAM_STR [, int $length [, mixed $driver_options ]]] )
+ * @method bool bindValue() bindValue( mixed $parameter , mixed $value [, int $data_type = PDO::PARAM_STR ] )
+ * @method bool closeCursor()
+ * @method int columnCount()
+ * @method bool debugDumpParams()
+ * @method string errorCode()
+ * @method array errorInfo()
+ * @method string fetchColumn() fetchColumn([ int $column_number = 0 ] )
+ * @method mixed fetchObject() fetchObject([ string $class_name = "stdClass" [, array $ctor_args ]] )
+ * @method mixed getAttribute() getAttribute( int $attribute )
+ * @method array getColumnMeta() getColumnMeta( int $column )
+ * @method bool nextRowset()
+ * @method int rowCount()
+ * @method bool setAttribute() setAttribute( int $attribute , mixed $value )
+ * @method bool setFetchMode() setFetchMode( int $mode )
  */
 class Pinoco_PDOStatementWrapper {
     private $_stmt;
@@ -168,10 +199,10 @@ class Pinoco_PDOStatementWrapper {
      *     array incompatible:  applied as sigle argument.
      *   Multiple arguments:    applied to params as is. (only sequencial)
      *
-     * @params mixed $args...
-     * @return integer
+     * @param mixed $args...
+     * @return int
      */
-    public function execute()
+    public function execute(/*[$args[, ...]]*/)
     {
         if(func_num_args() == 0) {
             $args = array();
@@ -198,9 +229,9 @@ class Pinoco_PDOStatementWrapper {
     /**
      * Alias to execute
      * @param mixed $args...
-     * @return integer
+     * @return int
      */
-    public function exec()
+    public function exec(/*[$args[, ...]]*/)
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'execute'), $args);
@@ -211,7 +242,7 @@ class Pinoco_PDOStatementWrapper {
      * @param mixed $args...
      * @return Pinoco_PDOStatementWrapper
      */
-    public function query()
+    public function query(/*[$args[, ...]]*/)
     {
         $args = func_get_args();
         call_user_func_array(array($this, 'execute'), $args);

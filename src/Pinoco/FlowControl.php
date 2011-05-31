@@ -9,14 +9,15 @@
  * @package  Pinoco
  * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.3.0
- * @link     http://code.google.com/p/pinoco/
+ * @version  0.4.0
+ * @link     https://github.com/tanakahisateru/pinoco
  * @filesource
  */
 
 /**
  * Flow control object
  * @package Pinoco
+ * @internal
  */
 class Pinoco_FlowControl extends Exception {
 }
@@ -24,6 +25,7 @@ class Pinoco_FlowControl extends Exception {
 /**
  * Flow control object
  * @package Pinoco
+ * @internal
  */
 class Pinoco_FlowControlSkip extends Pinoco_FlowControl {
 }
@@ -31,6 +33,7 @@ class Pinoco_FlowControlSkip extends Pinoco_FlowControl {
 /**
  * Flow control object
  * @package Pinoco
+ * @internal
  */
 class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
 }
@@ -38,6 +41,7 @@ class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
 /**
  * Flow control object
  * @package Pinoco
+ * @internal
  */
 class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
     
@@ -165,6 +169,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
 /**
  * Flow control object
  * @package Pinoco
+ * @internal
  */
 class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
     /**
