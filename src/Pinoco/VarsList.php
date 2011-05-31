@@ -827,21 +827,5 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
         $arr = $this->toArray();
         return new Pinoco_Iterator($arr);
     }
-    
-    public function _x_call($name, $args) // diabled temporaly
-    {
-        if(!$this->has($name)) {
-            return;
-            // throw new BadMethodCallException();
-        }
-        $func = $this->get($name);
-        if(!is_callable($func)) {
-            return;
-            // throw new BadMethodCallException();
-        }
-        
-        array_unshift($args, $this);
-        return call_user_func_array($func, $args);
-    }
 }
 
