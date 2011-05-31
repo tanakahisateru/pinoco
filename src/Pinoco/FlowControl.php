@@ -57,7 +57,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
     }
     
     private function _code2message($code, $field) {
-        $ise = "The server encountered an internal error or misconfigurationand was unable to complete your request.";
+        $ise = "The server encountered an internal error or misconfiguration and was unable to complete your request.";
         if(!$this->_status_messages) {
             $this->_status_messages = array(
                 100 => array('title'=>'Continue', 'message'=>$ise),
