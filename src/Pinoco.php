@@ -318,6 +318,19 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
+     * Wrapped PDO factory
+     * @param string $dsn
+     * @param string $un
+     * @param string $pw
+     * @param array $opts
+     * @return Pinoco_PDOWrapper
+     */
+    public static function newPDOWrapper($dsn, $un="", $pw="", $opts=array())
+    {
+        return new Pinoco_PDOWrapper($dsn, $un, $pw, $opts);
+    }
+    
+    /**
      * It reads and executes another PHP file with any local variables.
      * It can read already executed file.
      * @param string $script_abs_path must be absolute pathe for local file system.
