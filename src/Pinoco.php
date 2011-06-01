@@ -329,6 +329,7 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public static function newPDOWrapper($dsn, $un="", $pw="", $opts=array())
     {
+        require_once dirname(__FILE__) . '/Pinoco/PDOWrapper.php';
         return new Pinoco_PDOWrapper($dsn, $un, $pw, $opts);
     }
     
