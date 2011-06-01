@@ -37,7 +37,7 @@ require_once dirname(__FILE__) . '/VarsList.php';
  * @method bool rollBack()
  * @method bool setAttribute() setAttribute( int $attribute , mixed $value )
  */
-class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
+class Pinoco_PDOWrapper {
     private $_dsn;
     private $_un;
     private $_pw;
@@ -77,7 +77,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     /**
      * @return mixed
      */
-    public function get_afterConnection()
+    public function getAfterConnection()
     {
         return $this->_after_connection;
     }
@@ -85,7 +85,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     /**
      * @param mixed $after_connection
      */
-    public function set_afterConnection($after_connection)
+    public function setAfterConnection($after_connection)
     {
         $this->_after_connection = $after_connection;
     }
@@ -93,7 +93,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     /**
      * @return PDO
      */
-    public function get_connection()
+    public function getConnection()
     {
         if($this->_conn === NULL) {
             $this->_conn = new PDO($this->_dsn, $this->_un, $this->_pw, $this->_opts);
@@ -112,7 +112,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     
     public function __call($name, $args)
     {
-        return call_user_func_array(array($this->connection, $name), $args);
+        return call_user_func_array(array($this->getConnection(), $name), $args);
     }
     
     /**
@@ -124,7 +124,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     public function prepare($sql, $opts=array())
     {
         return new Pinoco_PDOStatementWrapper(
-            $this->connection->prepare($sql, $opts)
+            $this->getConnection()->prepare($sql, $opts)
         );
     }
     
@@ -147,7 +147,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
     public function query($sql)
     {
         return new Pinoco_PDOStatementWrapper(
-            $this->connection->query($sql)
+            $this->getConnection()->query($sql)
         );
     }
 }

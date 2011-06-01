@@ -869,7 +869,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @return void
      * @ignore
      */
-    private function _error_handler($errno, $errstr, $errfile, $errline)
+    public function _error_handler($errno, $errstr, $errfile, $errline)
     {
         if(function_exists('xdebug_is_enabled') && xdebug_is_enabled()) {
             return FALSE;
@@ -893,9 +893,9 @@ class Pinoco extends Pinoco_DynamicVars {
                 $i,
                 @$trace[$i]['class'],
                 @$trace[$i]['type'],
-                $trace[$i]['function'],
-                $trace[$i]['file'],
-                $trace[$i]['line']
+                @$trace[$i]['function'],
+                @$trace[$i]['file'],
+                @$trace[$i]['line']
             ));
         }
         
