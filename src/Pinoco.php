@@ -938,20 +938,36 @@ class Pinoco extends Pinoco_DynamicVars {
         }
 
         if (ini_get('display_errors')) {
-            $title = get_class($e);
-            $body = "<p><strong>\n".htmlspecialchars($e->getMessage()).'</strong></p>' .
+            $title = '500 ' . get_class($e);
+            $body = "<p><strong>\n ".htmlspecialchars($e->getMessage()).'</strong></p>' .
                     '<p>In '.htmlspecialchars($line)."</p><pre>\n".htmlspecialchars($e->getTraceAsString()).'</pre>';
         } else {
-            $title = "Uncaught Exception";
+            $title = "500 Uncaught Exception";
             $body = "<p>The server encountered an uncaught exception and was unable to complete your request.</p>";
         }
 
-        echo "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><style>body{font-family:sans-serif}</style><title>\n";
-        echo $title.'</title></head><body><h1>' . $title . '</h1>'.$body;
         if (ini_get('log_errors')) {
             error_log($e->getMessage().' in '.$line);
         }
-        echo '</body></html>';
+        
+        if(ob_get_level() > 0 && ob_get_length() > 0) {
+            $curbuf = ob_get_contents();
+            ob_clean();
+        }
+        if(isset($curbuf) && preg_match('/<html/i', $curbuf)) {
+            echo $curbuf;
+            echo "<hr />";
+            echo "<h1>" . $title . "</h1>\n" . $body . '</body></html>';
+        }
+        else {
+            echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' . "\n";
+            echo "<html><head>\n<title>".$title."</title>\n</head><body>\n";
+            if(isset($curbuf)) {
+                echo $curbuf;
+                echo "<hr />";
+            }
+            echo "<h1>" . $title . "</h1>\n" . $body . '</body></html>';
+        }
         echo str_repeat('    ', 100)."\n"; // IE won't display error pages < 512b
         exit(1);
     }
