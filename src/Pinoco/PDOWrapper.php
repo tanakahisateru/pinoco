@@ -100,7 +100,7 @@ class Pinoco_PDOWrapper extends Pinoco_DynamicVars {
             $this->_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             if($this->_after_connection) {
                 if(is_callable($this->_after_connection)) {
-                    call_user_func($this->_after_connection, $this->_conn);
+                    call_user_func($this->_after_connection, $this);
                 }
                 else {
                     $this->execute($this->_after_connection);
