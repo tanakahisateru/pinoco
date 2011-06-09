@@ -141,6 +141,21 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     }
     
     /**
+     * Clear lazy property's internal cache.
+     * It would be regenerated at the next fetching.
+     * @param string $name
+     * @return void
+     */
+    public function markAsDirty($name)
+    {
+        if(array_key_exists($name, $this->_vars) &&
+            $this->_vars[$name] instanceof Pinoco_LazyValueProxy
+        ) {
+            $this->_vars[$name]->dirty();
+        }
+    }
+    
+    /**
      * Sets a default value for non existence property access.
      * @param mixed $value
      * @return void
@@ -346,6 +361,15 @@ class Pinoco_LazyValueProxy {
         return $result;
     }
     
+    /**
+     * Mark it as dirty.
+     *
+     * @return void
+     */
+    public function dirty()
+    {
+        $this->freeze = false;
+    }
 }
 
 

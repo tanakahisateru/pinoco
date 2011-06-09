@@ -42,3 +42,7 @@ $v->registerAsLazy('d', create_function('$owner', 'global $ccc3; return ++$ccc3;
 $t->is($v->d, 1);
 $t->is_deeply($v->toArray(), array('a'=>1, 'b'=>2, 'c'=>2, 'd'=>1));
 
+$t->diag("Marking Dirty");
+$v->markAsDirty('d');
+$t->is($v->d, 2);
+
