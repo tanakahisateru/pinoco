@@ -321,6 +321,7 @@ class Pinoco extends Pinoco_DynamicVars {
     
     /**
      * Wrapped PDO factory
+     * @deprecated
      * @param string $dsn
      * @param string $un
      * @param string $pw
@@ -329,8 +330,10 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public static function newPDOWrapper($dsn, $un="", $pw="", $opts=array())
     {
-        require_once dirname(__FILE__) . '/Pinoco/PDOWrapper.php';
-        return new Pinoco_PDOWrapper($dsn, $un, $pw, $opts);
+        return self::newObj(
+            'Pinoco/PDOWrapper.php/Pinoco_PDOWrapper',
+            $dsn, $un, $pw, $opts
+        );
     }
     
     /**
