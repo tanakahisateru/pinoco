@@ -8,15 +8,15 @@
     </head>
     <body>
         <h1>Hello world</h1>
-        <p tal:content="title | default">Value of "title" registerd to autolocal would be shown here.</p>
+        <p pal:content-nl2br="title | default">Value of "title" registerd to autolocal would be shown here.</p>
         
         <div metal:use-macro="/_vardump.html/alltests">
 	    all tests
         </div>
         
         <p>Sub contents
-            <a href="sub/index.html" tal:attributes="href url:sub/">sub/</a>
-            <a href="sub/index.html" tal:attributes="href url:sub/index.html">sub/index.html</a></p>
+            <a href="sub/index.html" pal:attr="href url:sub/">sub/</a>
+            <a href="sub/index.html" pal:attr="href url:${attr/href}">sub/index.html</a></p>
         <p>Sub contents 2
             <a href="sub2/index.php" tal:attributes="href url:sub2/">sub2/</a>
             <a href="sub2/index.php" tal:attributes="href url:sub2/index.php">sub2/index.php</a></p>
