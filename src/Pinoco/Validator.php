@@ -23,9 +23,16 @@ require_once dirname(__FILE__) . '/VarsList.php';
  * <code>
  * $validator = new Pinoco_Validator($data);
  * $validator->check('name')->is('not-empty')->is('max-length 255');
- * $validator->check('age')->is('not-empty')->is('integer')->is('>= 21', 'Adult only.');
+ * $validator->check('age')->is('not-empty')->is('integer')
+ *                         ->is('>= 21', 'Adult only.');
  * // check $validator->name->invalid then use $validator->name->message.
  * </code>
+ *
+ * Builtin tests:
+ *   pass, fail, empty, not-empty, max-length, min-length, in, not-in,
+ *   numeric, integer, alpha, alpha-numeric, ==, !=, >, >=, <,  <=,
+ *   match, not-match, email,url
+ *
  * @package Pinoco
  */
 class Pinoco_Validator extends Pinoco_Vars {
@@ -51,49 +58,49 @@ class Pinoco_Validator extends Pinoco_Vars {
         $this->overrideErrorMessages($messages);
         
         // builtin testers
-        $this->defineValidityTest('pass', array($this, 'testPass'),
+        $this->defineValidityTest('pass', array($this, '_testPass'),
             "Valid.");
-        $this->defineValidityTest('fail', array($this, 'testFail'),
+        $this->defineValidityTest('fail', array($this, '_testFail'),
             "Invalid.");
-        $this->defineValidityTest('empty', array($this, 'testEmpty'),
+        $this->defineValidityTest('empty', array($this, '_testEmpty'),
             "Leave as empty.");
-        $this->defineValidityTest('not-empty', array($this, 'testNotEmpty'),
+        $this->defineValidityTest('not-empty', array($this, '_testNotEmpty'),
             "Reqierd.");
-        $this->defineValidityTest('max-length', array($this, 'testMaxLength'),
+        $this->defineValidityTest('max-length', array($this, '_testMaxLength'),
             "In {0} letters.");
-        $this->defineValidityTest('min-length', array($this, 'testMinLength'),
+        $this->defineValidityTest('min-length', array($this, '_testMinLength'),
             "At least {0} letters.");
-        $this->defineValidityTest('in', array($this, 'testIn'),
+        $this->defineValidityTest('in', array($this, '_testIn'),
             "Coose in {0}.");
-        $this->defineValidityTest('not-in', array($this, 'testNotIn'),
+        $this->defineValidityTest('not-in', array($this, '_testNotIn'),
             "Choose else of {0}.");
-        $this->defineValidityTest('numeric', array($this, 'testNumeric'),
+        $this->defineValidityTest('numeric', array($this, '_testNumeric'),
             "By number.");
-        $this->defineValidityTest('integer', array($this, 'testInteger'),
+        $this->defineValidityTest('integer', array($this, '_testInteger'),
             "By integer number.");
-        $this->defineValidityTest('alpha', array($this, 'testAlpha'),
+        $this->defineValidityTest('alpha', array($this, '_testAlpha'),
             "Alphabet only.");
-        $this->defineValidityTest('alpha-numeric', array($this, 'testAlphaNumeric'),
+        $this->defineValidityTest('alpha-numeric', array($this, '_testAlphaNumeric'),
             "Alphabet or number.");
-        $this->defineValidityTest('==', array($this, 'testEqual'),
+        $this->defineValidityTest('==', array($this, '_testEqual'),
             "Shuld equal to {0}.");
-        $this->defineValidityTest('!=', array($this, 'testNotEqual'),
+        $this->defineValidityTest('!=', array($this, '_testNotEqual'),
             "Should not equal to {0}.");
-        $this->defineValidityTest('>', array($this, 'testGreaterThan'),
+        $this->defineValidityTest('>', array($this, '_testGreaterThan'),
             "Greater than {0}.");
-        $this->defineValidityTest('>=', array($this, 'testGreaterThanOrEqual'),
+        $this->defineValidityTest('>=', array($this, '_testGreaterThanOrEqual'),
             "Greater than or equals to {0}.");
-        $this->defineValidityTest('<', array($this, 'testLessorThan'),
+        $this->defineValidityTest('<', array($this, '_testLessorThan'),
             "Lessor than {0}.");
-        $this->defineValidityTest('<=', array($this, 'testLessorThanOrEqual'),
+        $this->defineValidityTest('<=', array($this, '_testLessorThanOrEqual'),
             "Lessor than or equals to {0}.");
-        $this->defineValidityTest('match', array($this, 'testMatch'),
+        $this->defineValidityTest('match', array($this, '_testMatch'),
             "Invalid pattern.");
-        $this->defineValidityTest('not-match', array($this, 'testNotMatch'),
+        $this->defineValidityTest('not-match', array($this, '_testNotMatch'),
             "Not allowed pattern.");
-        $this->defineValidityTest('email', array($this, 'testEmail'),
+        $this->defineValidityTest('email', array($this, '_testEmail'),
             "Email only.");
-        $this->defineValidityTest('url', array($this, 'testUrl'),
+        $this->defineValidityTest('url', array($this, '_testUrl'),
             "URL only.");
         
         $this->_target = $target;
@@ -311,33 +318,33 @@ class Pinoco_Validator extends Pinoco_Vars {
     
     /////////////////////////////////////////////////////////////////////
     // builtin tests
-    protected function testPass($target, $name, $exists, $value)
+    private function _testPass($target, $name, $exists, $value)
     {
         return true;
     }
-    protected function testFail($target, $name, $exists, $value)
+    private function _testFail($target, $name, $exists, $value)
     {
         return false;
     }
-    protected function testEmpty($target, $name, $exists, $value)
+    private function _testEmpty($target, $name, $exists, $value)
     {
         if(!$exists || $value === null) { return true; }
         if($value === "0" || $value === 0 || $value === false) { return false; }
         return empty($value);
     }
-    protected function testNotEmpty($target, $name, $exists, $value)
+    private function _testNotEmpty($target, $name, $exists, $value)
     {
-        return !$this->testEmpty($target, $name, $exists, $value);
+        return !$this->_testEmpty($target, $name, $exists, $value);
     }
-    protected function testMaxLength($target, $name, $exists, $value, $cond0=0)
+    private function _testMaxLength($target, $name, $exists, $value, $cond0=0)
     {
         return strlen(strval($value)) <= $cond0;
     }
-    protected function testMinLength($target, $name, $exists, $value, $cond0=0)
+    private function _testMinLength($target, $name, $exists, $value, $cond0=0)
     {
         return strlen(strval($value)) >= $cond0;
     }
-    protected function testIn($target, $name, $exists, $value, $cond0='')
+    private function _testIn($target, $name, $exists, $value, $cond0='')
     {
         $as = explode(',', $cond0);
         foreach($as as $a) {
@@ -345,63 +352,63 @@ class Pinoco_Validator extends Pinoco_Vars {
         }
         return false;
     }
-    protected function testNotIn($target, $name, $exists, $value, $cond0='')
+    private function _testNotIn($target, $name, $exists, $value, $cond0='')
     {
-        return !$this->testIn($target, $name, $exists, $value, $cond0);
+        return !$this->_testIn($target, $name, $exists, $value, $cond0);
     }
-    protected function testNumeric($target, $name, $exists, $value)
+    private function _testNumeric($target, $name, $exists, $value)
     {
         return is_numeric($value);
     }
-    protected function testInteger($target, $name, $exists, $value)
+    private function _testInteger($target, $name, $exists, $value)
     {
         return is_integer($value);
     }
-    protected function testAlpha($target, $name, $exists, $value)
+    private function _testAlpha($target, $name, $exists, $value)
     {
         return ctype_alpha($value);
     }
-    protected function testAlphaNumeric($target, $name, $exists, $value)
+    private function _testAlphaNumeric($target, $name, $exists, $value)
     {
         return ctype_alnum($value);
     }
-    protected function testEqual($target, $name, $exists, $value, $cond0=null)
+    private function _testEqual($target, $name, $exists, $value, $cond0=null)
     {
         return $value == $cond0;
     }
-    protected function testNotEqual($target, $name, $exists, $value, $cond0=null)
+    private function _testNotEqual($target, $name, $exists, $value, $cond0=null)
     {
-        return !$this->testEqual($target, $name, $exists, $value, $cond0);
+        return !$this->_testEqual($target, $name, $exists, $value, $cond0);
     }
-    protected function testGreaterThan($target, $name, $exists, $value, $cond0=0)
+    private function _testGreaterThan($target, $name, $exists, $value, $cond0=0)
     {
         return $value > $cond0;
     }
-    protected function testGreaterThanOrEqual($target, $name, $exists, $value, $cond0=0)
+    private function _testGreaterThanOrEqual($target, $name, $exists, $value, $cond0=0)
     {
         return $value >= $cond0;
     }
-    protected function testLessorThan($target, $name, $exists, $value, $cond0=0)
+    private function _testLessorThan($target, $name, $exists, $value, $cond0=0)
     {
         return $value < $cond0;
     }
-    protected function testLessorThanOrEqual($target, $name, $exists, $value, $cond0=0)
+    private function _testLessorThanOrEqual($target, $name, $exists, $value, $cond0=0)
     {
         return $value <= $cond0;
     }
-    protected function testMatch($target, $name, $exists, $value, $cond0='/^$/')
+    private function _testMatch($target, $name, $exists, $value, $cond0='/^$/')
     {
         return preg_match($cond0, $value);
     }
-    protected function testNotMatch($target, $name, $exists, $value, $cond0='/^$/')
+    private function _testNotMatch($target, $name, $exists, $value, $cond0='/^$/')
     {
-        return !$this->testMatch($target, $name, $exists, $value, $cond0);
+        return !$this->_testMatch($target, $name, $exists, $value, $cond0);
     }
-    protected function testEmail($target, $name, $exists, $value)
+    private function _testEmail($target, $name, $exists, $value)
     {
         return preg_match('/@[A-Z0-9][A-Z0-9_-]*(\.[A-Z0-9][A-Z0-9_-]*)*$/i', $value);
     }
-    protected function testUrl($target, $name, $exists, $value)
+    private function _testUrl($target, $name, $exists, $value)
     {
         return preg_match('/^[A-Z]+:\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)*):?(\d+)?\/?/i', $value);
     }
