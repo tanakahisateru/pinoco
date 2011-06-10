@@ -19,6 +19,13 @@
 require_once dirname(__FILE__) . '/VarsList.php';
 
 /**
+ * Procedual varidation utility.
+ * <code>
+ * $validator = new Pinoco_Validator($data);
+ * $validator->check('name')->is('not-empty')->is('max-length 255');
+ * $validator->check('age')->is('not-empty')->is('integer')->is('>= 21', 'Adult only.');
+ * // check $validator->name->invalid then use $validator->name->message.
+ * </code>
  * @package Pinoco
  */
 class Pinoco_Validator extends Pinoco_Vars {
@@ -30,6 +37,11 @@ class Pinoco_Validator extends Pinoco_Vars {
     private $_current;
     private $_alreadyFixed;
 
+    /**
+     * Constructor
+     * @param string $target
+     * @param string $message
+     */
     public function __construct($target, $messages=array())
     {
         parent::__construct();
@@ -88,6 +100,13 @@ class Pinoco_Validator extends Pinoco_Vars {
         $this->_current = null;
     }
     
+    /**
+     * Defines custom test
+     * @param string $testName
+     * @param callable $callback
+     * @param string $message
+     * @return void
+     */
     public function defineValidityTest($testName, $callback, $message)
     {
         $this->_tests[$testName] = array(
@@ -96,6 +115,11 @@ class Pinoco_Validator extends Pinoco_Vars {
         );
     }
     
+    /**
+     * Overrides messages for l10n
+     * @param array $messages
+     * @return void
+     */
     public function overrideErrorMessages($messages)
     {
         foreach($messages as $test=>$msg) {
@@ -103,6 +127,11 @@ class Pinoco_Validator extends Pinoco_Vars {
         }
     }
     
+    /**
+     * Starts property checking.
+     * @param string $name
+     * @return Pinoco_Validator
+     */
     public function check($name)
     {
         if(!$this->has($name)) {
@@ -207,6 +236,12 @@ class Pinoco_Validator extends Pinoco_Vars {
         }
     }
     
+    /**
+     * Check a field by specified test.
+     * @param string $test
+     * @param string $message
+     * @return Pinoco_Validator
+     */
     public function is($test, $message=false)
     {
         if($this->_alreadyFixed) {
@@ -221,6 +256,10 @@ class Pinoco_Validator extends Pinoco_Vars {
         return $this;
     }
     
+    /**
+     * Chains other tests by logical OR.
+     * @return Pinoco_Validator
+     */
     public function altcheck()
     {
         if($this->_current->valid) {
@@ -234,16 +273,32 @@ class Pinoco_Validator extends Pinoco_Vars {
         return $this;
     }
     
+    /**
+     * Alias for is() method.
+     * @param string $test
+     * @param string $message
+     * @return Pinoco_Validator
+     */
     public function andIs($test, $message=false)
     {
         return $this->is($test, $message);
     }
     
+    /**
+     * Alias for altcheck()->is() combination.
+     * @param string $test
+     * @param string $message
+     * @return Pinoco_Validator
+     */
     public function orIs($test, $message=false)
     {
         return $this->altcheck()->is($test, $message);
     }
     
+    /**
+     * Exports test results that failed.
+     * @return Pinoco_Vars
+     */
     public function errors() {
         $errors = new Pinoco_Vars();
         foreach($this as $field=>$result) {
@@ -255,6 +310,7 @@ class Pinoco_Validator extends Pinoco_Vars {
     }
     
     /////////////////////////////////////////////////////////////////////
+    // builtin tests
     protected function testPass($target, $name, $exists, $value)
     {
         return true;
