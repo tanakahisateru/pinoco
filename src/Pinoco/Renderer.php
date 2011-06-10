@@ -96,8 +96,7 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
         if(!function_exists("phptal_tales_url")) {
             function phptal_tales_url($src, $nothrow)
             {
-                $src = trim($src);
-                $src = preg_match('/^[A-Za-z0-9_]+:/', $src) ? phptal_tales($src, $nothrow) : "'" . $src . "'";
+                $src = phptal_tales('string:' . trim($src), $nothrow);
                 return '$ctx->this->url(' . $src . ')';
             }
         }
