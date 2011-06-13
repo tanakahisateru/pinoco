@@ -18,7 +18,7 @@
  * Variable model
  * @package Pinoco
  */
-class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
+class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     
     private $_vars;
     private $_default_val;
@@ -198,6 +198,15 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess {
     public function __unset($name)
     {
         $this->remove($name);
+    }
+    
+    /**
+     * Returns a number of entries in this object.
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->_vars);
     }
     
     public function getIterator()

@@ -10,6 +10,7 @@ $v->set('foo', 'bar');
 $t->is($v->has('foo'), true, "Vars can check value previously set.");
 $t->is($v->has('xxx'), false, "Vars can check value previously set.");
 $t->is($v->get('foo'), 'bar', "Vars can get value previously set.");
+$t->is(count($v), 1, 'Vars is countable');
 
 $v = new Pinoco_Vars();
 $v->foo = 'bar';
