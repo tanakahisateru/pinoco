@@ -25,21 +25,35 @@ require_once dirname(__FILE__) . '/VarsList.php';
  * $validator->check('name')->is('not-empty')->is('max-length 255');
  * $validator->check('age')->is('not-empty')->is('integer')
  *                         ->is('>= 21', 'Adult only.');
- * // check $validator->name->invalid then use $validator->name->message.
+ * if($validator->failed) {
+ *   if($validator->result->name->valid) {
+ *     echo $validator->result->name->message
+ *   }
+ *   if($validator->result->age->valid) {
+ *     echo $validator->result->age->message
+ *   }
+ * }
  * </code>
  *
  * Builtin tests:
- *   pass, fail, empty, not-empty, max-length, min-length, in, not-in,
- *   numeric, integer, alpha, alpha-numeric, ==, !=, >, >=, <,  <=,
- *   match, not-match, email,url
+ *   pass, fail, empty, not-empty, max-length, min-length, in a,b,c, not-in a,b,c,
+ *   numeric, integer, alpha, alpha-numeric, == n, != n, > n, >= n, < n,  <= n,
+ *   match /regexp/, not-match /regexp/, email, url
  *
  * @package Pinoco
+ * @property-read Pinoco_Vars $result;
+ * @property-read Pinoco_Vars $errors;
+ * @property-read boolean $succeeded;
+ * @property-read boolean $failed;
  */
-class Pinoco_Validator extends Pinoco_Vars {
+class Pinoco_Validator extends Pinoco_DynamicVars {
 
     private $_tests;
     private $_messages;
     private $_target;
+    
+    private $_result;
+    private $_errors;
 
     /**
      * Constructor
@@ -51,9 +65,18 @@ class Pinoco_Validator extends Pinoco_Vars {
         parent::__construct();
         
         $this->_tests = array();
+        $this->_setupBuiltinTests();
+        
         $this->_messages = array();
         $this->overrideErrorMessages($messages);
         
+        $this->_target = $target;
+        $this->_result = new Pinoco_Vars();
+        $this->_errors = null;
+    }
+    
+    private function _setupBuiltinTests()
+    {
         // builtin testers
         $this->defineValidityTest('pass', array($this, '_testPass'),
             "Valid.");
@@ -99,8 +122,6 @@ class Pinoco_Validator extends Pinoco_Vars {
             "Email only.");
         $this->defineValidityTest('url', array($this, '_testUrl'),
             "URL only.");
-        
-        $this->_target = $target;
     }
     
     /**
@@ -119,6 +140,37 @@ class Pinoco_Validator extends Pinoco_Vars {
     }
     
     /**
+     * Overrides error messages
+     * @param array $messages
+     * @return void
+     */
+    public function overrideErrorMessages($messages)
+    {
+        foreach($messages as $test=>$msg) {
+            $this->_messages[$test] = $msg;
+        }
+    }
+    
+    /**
+     * Resolve error message by test name.
+     * @param string $testName
+     * @return string
+     */
+    public function getMessageFor($testName)
+    {
+        if(isset($this->_messages[$testName])) {
+            return $this->_messages[$testName];
+        }
+        else if(isset($this->_tests[$testName])) {
+            return $this->_tests[$testName]['message'];
+        }
+        else {
+            return 'not registered';
+        }
+    }
+    
+    /**
+     * Executes validation test (called by varidation context).
      * @param string $field
      * @param string $testName
      * @param array $params
@@ -126,6 +178,7 @@ class Pinoco_Validator extends Pinoco_Vars {
      */
     public function execValidityTest($field, $testName, $params)
     {
+        $this->_errors = null;
         if(isset($this->_tests[$testName])) {
             $callback = $this->_tests[$testName]['callback'];
         }
@@ -162,59 +215,70 @@ class Pinoco_Validator extends Pinoco_Vars {
     }
     
     /**
-     * Overrides messages for l10n
-     * @param array $messages
-     * @return void
+     * Returns independent validation context.
+     * @param string $name
+     * @return Pinoco_ValidatorContext
      */
-    public function overrideErrorMessages($messages)
+    public function contextFor($name)
     {
-        foreach($messages as $test=>$msg) {
-            $this->_messages[$test] = $msg;
-        }
+        return new Pinoco_ValidatorContext($this, $name);
     }
     
     /**
-     * @param string $testName
-     * @return string
-     */
-    public function getMessageFor($testName)
-    {
-        if(isset($this->_messages[$testName])) {
-            return $this->_messages[$testName];
-        }
-        else if(isset($this->_tests[$testName])) {
-            return $this->_tests[$testName]['message'];
-        }
-        else {
-            return 'not registered';
-        }
-    }
-    
-    /**
-     * Starts property checking.
+     * Starts named property check.
      * @param string $name
      * @return Pinoco_ValidatorContext
      */
     public function check($name)
     {
-        $context = new Pinoco_ValidatorContext($this, $name, $this->get($name));
-        $this->set($name, $context);
-        return $this->get($name);
+        $this->_errors = null;
+        $this->_result->set($name, $this->contextFor($name));
+        return $this->_result->get($name);
+    }
+    
+    /**
+     * Exports test all results.
+     * @return Pinoco_Vars
+     */
+    public function get_result()
+    {
+        return $this->_result;
     }
     
     /**
      * Exports test results only failed.
      * @return Pinoco_Vars
      */
-    public function errors() {
-        $errors = new Pinoco_Vars();
-        foreach($this->keys() as $field) {
-            $result = $this->get($field);
-            if($result->invalid) {
-                $errors->set($field, $result);
+    public function get_errors()
+    {
+        if($this->_errors === null) {
+            $this->_errors = new Pinoco_Vars();
+            foreach($this->_result->keys() as $field) {
+                $result = $this->_result->get($field);
+                if($result->invalid) {
+                    $this->_errors->set($field, $result);
+                }
             }
         }
-        return $errors;
+        return $this->_errors;
+    }
+    
+    /**
+     * Returns which all tests succeeded or not.
+     * @return boolean
+     */
+    public function get_succeeded()
+    {
+        return ($this->get_errors()->keys()->count() == 0);
+    }
+    
+    /**
+     * Returns which validator has one or more failed tests.
+     * @return boolean
+     */
+    public function get_failed()
+    {
+        return ($this->get_errors()->keys() > 0);
     }
     
     /////////////////////////////////////////////////////////////////////
@@ -316,7 +380,11 @@ class Pinoco_Validator extends Pinoco_Vars {
 }
 
 /**
- *
+ * @package Pinoco
+ * @property-read string $test
+ * @property-read boolean $valid
+ * @property-read boolean $invalid
+ * @property-read string $message
  */
 class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     
@@ -327,11 +395,9 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     private $_test;
     private $_message;
     
-    private $_alreadyFixed;
-    
     /**
      * Constructor
-     * @param string $target
+     * @param Pinoco_Validator $validator
      * @param string $name
      */
     public function __construct($validator, $name)
@@ -341,25 +407,43 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         $this->_name = $name;
         
         $this->_valid = true;
-        $this->_test = '';
-        $this->_message = '';
-        
-        $this->_alreadyFixed = false;
+        $this->_test = null;
+        $this->_message = null;
     }
     
-    public function get_test() {
+    /**
+     * Failed test.
+     * @return string
+     */
+    public function get_test()
+    {
         return $this->_test;
     }
     
-    public function get_valid() {
+    /**
+     * is valid or not.
+     * @return boolean
+     */
+    public function get_valid()
+    {
         return $this->_valid;
     }
     
-    public function get_invalid() {
+    /**
+     * inverse of valid.
+     * @return boolean
+     */
+    public function get_invalid()
+    {
         return !$this->_valid;
     }
 
-    public function get_message() {
+    /**
+     * Error message for the first failed check.
+     * @return string
+     */
+    public function get_message()
+    {
         return $this->_message;
     }
     
@@ -374,7 +458,8 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         return str_replace($target, $replacement, $template);
     }
     
-    private function _execute($test, $message=false) {
+    private function _execute($test, $message=false)
+    {
         $params = explode(' ', $test);
         $testName = array_shift($params);
         $result = $this->_validator->execValidityTest($this->_name, $testName, $params);
@@ -387,56 +472,16 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     }
     
     /**
-     * Check a field by specified test.
+     * Check the field by specified test.
      * @param string $test
      * @param string $message
-     * @return Pinoco_Validator
+     * @return Pinoco_ValidatorContext
      */
     public function is($test, $message=false)
     {
-        if(!$this->_alreadyFixed && $this->_valid) {
+        if($this->_valid) {
             $this->_execute($test, $message);
         }
         return $this;
     }
-    
-    /**
-     * Chains other tests by logical OR.
-     * @return Pinoco_Validator
-     */
-    public function altcheck()
-    {
-        if($this->_valid) {
-            $this->_alreadyFixed = true;
-        }
-        else {
-            $this->_valid = true;
-            $this->_test = '';
-            $this->_message = '';
-        }
-        return $this;
-    }
-    
-    /**
-     * Alias for is() method.
-     * @param string $test
-     * @param string $message
-     * @return Pinoco_Validator
-     */
-    public function andIs($test, $message=false)
-    {
-        return $this->is($test, $message);
-    }
-    
-    /**
-     * Alias for altcheck()->is() combination.
-     * @param string $test
-     * @param string $message
-     * @return Pinoco_Validator
-     */
-    public function orIs($test, $message=false)
-    {
-        return $this->altcheck()->is($test, $message);
-    }
-    
 }

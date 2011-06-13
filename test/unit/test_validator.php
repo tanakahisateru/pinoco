@@ -13,7 +13,7 @@ $testee = array(
 $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('empty');
 $v->check('bar')->is('not-empty');
-$t->is($v->errors()->keys()->count(), 0, 'validate array');
+$t->ok($v->succeeded, 'validate array');
 
 $testee = new stdClass();
 $testee->foo = "";
@@ -21,7 +21,7 @@ $testee->bar = "123";
 $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('empty');
 $v->check('bar')->is('not-empty');
-$t->is($v->errors()->keys()->count(), 0, 'validate object');
+$t->ok($v->succeeded, 'validate object');
 
 $testee = array(
     'foo' => 1,
@@ -30,8 +30,8 @@ $testee = array(
 $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('pass');
 $v->check('bar')->is('fail');
-$t->is($v->foo->valid, true, 'constant');
-$t->is($v->bar->valid, false);
+$t->is($v->result->foo->valid, true, 'constant');
+$t->is($v->result->bar->valid, false);
 
 $testee = array(
     'foo' => "0",
@@ -42,7 +42,7 @@ $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('not-empty');
 $v->check('bar')->is('not-empty');
 $v->check('baz')->is('not-empty');
-$t->is($v->errors()->keys()->count(), 0, 'zero is not empty');
+$t->ok($v->succeeded, 'zero is not empty');
 
 $testee = array(
     'foo' => 1,
@@ -55,29 +55,18 @@ $v = new Pinoco_Validator($testee, array(
 $v->check('foo')->is('empty');  // default
 $v->check('bar')->is('not-empty');  // custom
 $v->check('baz')->is('not-empty', "fill baz"); // ad-hoc
-$t->is($v->errors()->keys()->count(), 3, 'messages');
-$t->is($v->foo->message, "Leave as empty.");
-$t->is($v->bar->message, "oops");
-$t->is($v->baz->message, "fill baz");
-
-$v = new Pinoco_Validator($testee);
-$v->check('foo')->is('empty')
-              ->oris('not-empty');
-$t->is($v->errors()->keys()->count(), 0, 'OR');
-
-$v = new Pinoco_Validator($testee);
-$v->check('foo')->is('not-empty')
-              ->oris('empty')->andis('not-empty');
-$t->is($v->errors()->keys()->count(), 0);
-
+$t->is($v->errors->keys()->count(), 3, 'messages');
+$t->is($v->result->foo->message, "Leave as empty.");
+$t->is($v->result->bar->message, "oops");
+$t->is($v->result->baz->message, "fill baz");
 
 $v = new Pinoco_Validator(array('foo'=>"1234"));
 $t->is($v->check('foo')->is('max-length 3')->valid, false, 'builtins');
-$t->is($v->foo->message, "In 3 letters.", 'message template');
+$t->is($v->result->foo->message, "In 3 letters.", 'message template');
 
 $v = new Pinoco_Validator(array('foo'=>"1234"));
 $t->is($v->check('foo')->is('min-length 5')->valid, false);
-$t->is($v->foo->message, "At least 5 letters.", 'message template');
+$t->is($v->result->foo->message, "At least 5 letters.", 'message template');
 
 $v = new Pinoco_Validator(array('foo'=>1));
 $t->is($v->check('foo')->is('in 2,3,4')->valid, false);
@@ -134,18 +123,7 @@ $t->is($v->check('foo')->is('url')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>""));
 $v->check('foo')->is('not-empty')->is('numeric')->is('integer');
-$t->is($v->foo->valid, false, 'priprity');
-$t->is($v->foo->test, 'not-empty');
+$t->is($v->result->foo->valid, false, 'priprity');
+$t->is($v->result->foo->test, 'not-empty');
 
-$v = new Pinoco_Validator(array('foo'=>"abc"));
-$v->check('foo')->is('not-empty')->is('numeric')->is('integer')
-              ->oris('empty');
-$t->is($v->foo->valid, false);
-$t->is($v->foo->test, 'empty');
-
-$v = new Pinoco_Validator(array('foo'=>"abc123"));
-$v->check('foo')->is('not-empty')->is('numeric')->is('integer')
-              ->oris('alpha')->is('match /NaN/');
-$t->is($v->foo->valid, false);
-$t->is($v->foo->test, 'alpha');
 
