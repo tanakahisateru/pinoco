@@ -39,10 +39,7 @@ class Pinoco_Validator extends Pinoco_Vars {
 
     private $_tests;
     private $_messages;
-    
     private $_target;
-    private $_current;
-    private $_alreadyFixed;
 
     /**
      * Constructor
@@ -104,7 +101,6 @@ class Pinoco_Validator extends Pinoco_Vars {
             "URL only.");
         
         $this->_target = $target;
-        $this->_current = null;
     }
     
     /**
@@ -123,6 +119,49 @@ class Pinoco_Validator extends Pinoco_Vars {
     }
     
     /**
+     * @param string $field
+     * @param string $testName
+     * @param array $params
+     * @return boolean
+     */
+    public function execValidityTest($field, $testName, $params)
+    {
+        if(isset($this->_tests[$testName])) {
+            $callback = $this->_tests[$testName]['callback'];
+        }
+        else {
+            return false;
+        }
+        //type check
+        if($this->_target instanceof Pinoco_Vars) {
+            $exists = $this->_target->has($field);
+            $value = $this->_target->get($field);
+        }
+        if($this->_target instanceof Pinoco_List) {
+            $exists = intval($field) < $this->_target->count();
+            $value = $exists ? $this->_target[$field] : null;
+        }
+        else if(is_array($this->_target)) {
+            $exists = isset($this->_target[$field]);
+            $value = $exists ? $this->_target[$field] : null;
+        }
+        else if(is_object($this->_target)) {
+            $exists = isset($this->_target->$field);
+            $value = $exists ? $this->_target->$field : null;
+        }
+        else {
+            return false;
+        }
+        //main
+        $args = $params;
+        array_unshift($args, $value);
+        array_unshift($args, $exists);
+        array_unshift($args, $field);
+        array_unshift($args, $this->_target);
+        return call_user_func_array($callback, $args);
+    }
+    
+    /**
      * Overrides messages for l10n
      * @param array $messages
      * @return void
@@ -135,180 +174,42 @@ class Pinoco_Validator extends Pinoco_Vars {
     }
     
     /**
+     * @param string $testName
+     * @return string
+     */
+    public function getMessageFor($testName)
+    {
+        if(isset($this->_messages[$testName])) {
+            return $this->_messages[$testName];
+        }
+        else if(isset($this->_tests[$testName])) {
+            return $this->_tests[$testName]['message'];
+        }
+        else {
+            return 'not registered';
+        }
+    }
+    
+    /**
      * Starts property checking.
      * @param string $name
-     * @return Pinoco_Validator
+     * @return Pinoco_ValidatorContext
      */
     public function check($name)
     {
-        if(!$this->has($name)) {
-            $r = Pinoco_Vars::fromArray(array(
-                'field'=>$name,
-                'valid'=>true,
-                'invalid'=>false
-            ));
-            $r->setLoose(true);
-            $this->set($name, $r);
-        }
-        $this->_current = $this->get($name);
-        $this->_alreadyFixed = false;
-        return $this;
-    }
-    
-    private function buildMessage($template, $params)
-    {
-        $target = array();
-        $replacement = array();
-        foreach($params as $k=>$v) {
-            $target[] = '{'.$k.'}';
-            $replacement[] = strval($v);
-        }
-        return str_replace($target, $replacement, $template);
-    }
-    
-    private function _execute($test, $message=false) {
-        $params = explode(' ', $test);
-        $testName = array_shift($params);
-        if(!isset($this->_tests[$testName])) {
-            $this->_current->test = $test;
-            $this->_current->valid = false;
-            $this->_current->invalid = true;
-            $this->_current->message = $testName . ' is not registered.';
-        }
-        else {
-            $field = $this->_current->field;
-            //type check
-            if($this->_target instanceof Pinoco_Vars) {
-                $exists = $this->_target->has($field);
-                $value = $this->_target->get($field);
-            }
-            if($this->_target instanceof Pinoco_List) {
-                $exists = intval($field) < $this->_target->count();
-                $value = $exists ? $this->_target[$field] : null;
-            }
-            else if(is_array($this->_target)) {
-                $exists = isset($this->_target[$field]);
-                $value = $exists ? $this->_target[$field] : null;
-            }
-            else if(is_object($this->_target)) {
-                $exists = isset($this->_target->$field);
-                $value = $exists ? $this->_target->$field : null;
-            }
-            else {
-                $pass = true;
-            }
-            // main
-            if(@$pass) {
-                $result = false;
-            }
-            else {
-                $args = $params;
-                array_unshift($args, $value);
-                array_unshift($args, $exists);
-                array_unshift($args, $field);
-                array_unshift($args, $this->_target);
-                $result = call_user_func_array(
-                    $this->_tests[$testName]['callback'], $args);
-            }
-            if($result) {
-                if(isset($this->_messages['pass'])) {
-                    $template = $this->_messages[$testName];
-                }
-                else if(isset($this->_tests['pass'])){
-                    $template = $this->_tests['pass']['message'];
-                }
-                else {
-                    $template = "Valid.";
-                }
-                $this->_current->test = $test;
-                $this->_current->valid = true;
-                $this->_current->invalid = false;
-                $this->_current->message = $this->buildMessage($template, $params);
-            }
-            else {
-                if($message) {
-                    $template = $message;
-                }
-                else if(isset($this->_messages[$testName])) {
-                    $template = $this->_messages[$testName];
-                }
-                else {
-                    $template = $this->_tests[$testName]['message'];
-                }
-                $this->_current->test = $test;
-                $this->_current->valid = false;
-                $this->_current->invalid = true;
-                $this->_current->message = $this->buildMessage($template, $params);
-            }
-        }
+        $context = new Pinoco_ValidatorContext($this, $name, $this->get($name));
+        $this->set($name, $context);
+        return $this->get($name);
     }
     
     /**
-     * Check a field by specified test.
-     * @param string $test
-     * @param string $message
-     * @return Pinoco_Validator
-     */
-    public function is($test, $message=false)
-    {
-        if($this->_alreadyFixed) {
-            return $this;
-        }
-        if($this->_current->valid) {
-            $this->_execute($test, $message);
-        }
-        else {
-            // pass
-        }
-        return $this;
-    }
-    
-    /**
-     * Chains other tests by logical OR.
-     * @return Pinoco_Validator
-     */
-    public function altcheck()
-    {
-        if($this->_current->valid) {
-            $this->_alreadyFixed = true;
-        }
-        else {
-            $this->_current->valid = true;
-            $this->_current->invalid = false;
-            $this->_current->message = 'Fine';
-        }
-        return $this;
-    }
-    
-    /**
-     * Alias for is() method.
-     * @param string $test
-     * @param string $message
-     * @return Pinoco_Validator
-     */
-    public function andIs($test, $message=false)
-    {
-        return $this->is($test, $message);
-    }
-    
-    /**
-     * Alias for altcheck()->is() combination.
-     * @param string $test
-     * @param string $message
-     * @return Pinoco_Validator
-     */
-    public function orIs($test, $message=false)
-    {
-        return $this->altcheck()->is($test, $message);
-    }
-    
-    /**
-     * Exports test results that failed.
+     * Exports test results only failed.
      * @return Pinoco_Vars
      */
     public function errors() {
         $errors = new Pinoco_Vars();
-        foreach($this as $field=>$result) {
+        foreach($this->keys() as $field) {
+            $result = $this->get($field);
             if($result->invalid) {
                 $errors->set($field, $result);
             }
@@ -412,4 +313,130 @@ class Pinoco_Validator extends Pinoco_Vars {
     {
         return preg_match('/^[A-Z]+:\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)*):?(\d+)?\/?/i', $value);
     }
+}
+
+/**
+ *
+ */
+class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
+    
+    private $_validator;
+    private $_name;
+    
+    private $_valid;
+    private $_test;
+    private $_message;
+    
+    private $_alreadyFixed;
+    
+    /**
+     * Constructor
+     * @param string $target
+     * @param string $name
+     */
+    public function __construct($validator, $name)
+    {
+        parent::__construct();
+        $this->_validator = $validator;
+        $this->_name = $name;
+        
+        $this->_valid = true;
+        $this->_test = '';
+        $this->_message = '';
+        
+        $this->_alreadyFixed = false;
+    }
+    
+    public function get_test() {
+        return $this->_test;
+    }
+    
+    public function get_valid() {
+        return $this->_valid;
+    }
+    
+    public function get_invalid() {
+        return !$this->_valid;
+    }
+
+    public function get_message() {
+        return $this->_message;
+    }
+    
+    private function buildMessage($template, $params)
+    {
+        $target = array();
+        $replacement = array();
+        foreach($params as $k=>$v) {
+            $target[] = '{'.$k.'}';
+            $replacement[] = strval($v);
+        }
+        return str_replace($target, $replacement, $template);
+    }
+    
+    private function _execute($test, $message=false) {
+        $params = explode(' ', $test);
+        $testName = array_shift($params);
+        $result = $this->_validator->execValidityTest($this->_name, $testName, $params);
+        if(!$result) {
+            $this->_test = $test;
+            $this->_valid = false;
+            $template = $message ? $message : $this->_validator->getMessageFor($testName);
+            $this->_message = $this->buildMessage($template, $params);
+        }
+    }
+    
+    /**
+     * Check a field by specified test.
+     * @param string $test
+     * @param string $message
+     * @return Pinoco_Validator
+     */
+    public function is($test, $message=false)
+    {
+        if(!$this->_alreadyFixed && $this->_valid) {
+            $this->_execute($test, $message);
+        }
+        return $this;
+    }
+    
+    /**
+     * Chains other tests by logical OR.
+     * @return Pinoco_Validator
+     */
+    public function altcheck()
+    {
+        if($this->_valid) {
+            $this->_alreadyFixed = true;
+        }
+        else {
+            $this->_valid = true;
+            $this->_test = '';
+            $this->_message = '';
+        }
+        return $this;
+    }
+    
+    /**
+     * Alias for is() method.
+     * @param string $test
+     * @param string $message
+     * @return Pinoco_Validator
+     */
+    public function andIs($test, $message=false)
+    {
+        return $this->is($test, $message);
+    }
+    
+    /**
+     * Alias for altcheck()->is() combination.
+     * @param string $test
+     * @param string $message
+     * @return Pinoco_Validator
+     */
+    public function orIs($test, $message=false)
+    {
+        return $this->altcheck()->is($test, $message);
+    }
+    
 }

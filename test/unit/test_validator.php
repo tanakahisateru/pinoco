@@ -72,75 +72,76 @@ $t->is($v->errors()->keys()->count(), 0);
 
 
 $v = new Pinoco_Validator(array('foo'=>"1234"));
-$t->is($v->check('foo')->is('max-length 3')->foo->valid, false, 'builtins');
+$t->is($v->check('foo')->is('max-length 3')->valid, false, 'builtins');
 $t->is($v->foo->message, "In 3 letters.", 'message template');
 
 $v = new Pinoco_Validator(array('foo'=>"1234"));
-$t->is($v->check('foo')->is('min-length 5')->foo->valid, false);
+$t->is($v->check('foo')->is('min-length 5')->valid, false);
 $t->is($v->foo->message, "At least 5 letters.", 'message template');
 
 $v = new Pinoco_Validator(array('foo'=>1));
-$t->is($v->check('foo')->is('in 2,3,4')->foo->valid, false);
+$t->is($v->check('foo')->is('in 2,3,4')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>1));
-$t->is($v->check('foo')->is('in 1,2,3')->foo->valid, true);
+$t->is($v->check('foo')->is('in 1,2,3')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>1));
-$t->is($v->check('foo')->is('not-in 1,2,3')->foo->valid, false);
+$t->is($v->check('foo')->is('not-in 1,2,3')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>1));
-$t->is($v->check('foo')->is('not-in 2,3,4')->foo->valid, true);
+$t->is($v->check('foo')->is('not-in 2,3,4')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>"one"));
-$t->is($v->check('foo')->is('numeric')->foo->valid, false);
+$t->is($v->check('foo')->is('numeric')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>"1.5"));
-$t->is($v->check('foo')->is('integer')->foo->valid, false);
+$t->is($v->check('foo')->is('integer')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>"a123"));
-$t->is($v->check('foo')->is('alpha')->foo->valid, false);
+$t->is($v->check('foo')->is('alpha')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>"a123-"));
-$t->is($v->check('foo')->is('alpha-numeric')->foo->valid, false);
+$t->is($v->check('foo')->is('alpha-numeric')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>1));
-$t->is($v->check('foo')->is('== 2')->foo->valid, false);
+$t->is($v->check('foo')->is('== 2')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>1));
-$t->is($v->check('foo')->is('!= 1')->foo->valid, false);
+$t->is($v->check('foo')->is('!= 1')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>2));
-$t->is($v->check('foo')->is('> 2')->foo->valid, false);
+$t->is($v->check('foo')->is('> 2')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>2));
-$t->is($v->check('foo')->is('>= 3')->foo->valid, false);
+$t->is($v->check('foo')->is('>= 3')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>2));
-$t->is($v->check('foo')->is('< 2')->foo->valid, false);
+$t->is($v->check('foo')->is('< 2')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>2));
-$t->is($v->check('foo')->is('<= 1')->foo->valid, false);
+$t->is($v->check('foo')->is('<= 1')->valid, false);
 
 $v = new Pinoco_Validator(array('foo'=>"abc"));
-$t->is($v->check('foo')->is('match /cd/')->foo->valid, false);
+$t->is($v->check('foo')->is('match /cd/')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>"abc"));
-$t->is($v->check('foo')->is('match /ab/')->foo->valid, true);
+$t->is($v->check('foo')->is('match /ab/')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>"abc"));
-$t->is($v->check('foo')->is('not-match /ab/')->foo->valid, false);
+$t->is($v->check('foo')->is('not-match /ab/')->valid, false);
 $v = new Pinoco_Validator(array('foo'=>"abc"));
-$t->is($v->check('foo')->is('not-match /cd/')->foo->valid, true);
+$t->is($v->check('foo')->is('not-match /cd/')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>"foo@bar"));
-$t->is($v->check('foo')->is('email')->foo->valid, true);
+$t->is($v->check('foo')->is('email')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>"http://foo/bar"));
-$t->is($v->check('foo')->is('url')->foo->valid, true);
+$t->is($v->check('foo')->is('url')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>""));
-$v->check('foo')->is('not-empty')->andis('numeric')->andis('integer');
+$v->check('foo')->is('not-empty')->is('numeric')->is('integer');
 $t->is($v->foo->valid, false, 'priprity');
 $t->is($v->foo->test, 'not-empty');
 
 $v = new Pinoco_Validator(array('foo'=>"abc"));
-$v->check('foo')->is('not-empty')->andis('numeric')->andis('integer');
+$v->check('foo')->is('not-empty')->is('numeric')->is('integer')
+              ->oris('empty');
 $t->is($v->foo->valid, false);
-$t->is($v->foo->test, 'numeric');
+$t->is($v->foo->test, 'empty');
 
 $v = new Pinoco_Validator(array('foo'=>"abc123"));
 $v->check('foo')->is('not-empty')->is('numeric')->is('integer')
