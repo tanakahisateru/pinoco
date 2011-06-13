@@ -1,4 +1,19 @@
 <?php
+/**
+ * Pinoco web site environment
+ * It makes existing static web site dynamic transparently.
+ *
+ * PHP Version 5
+ *
+ * @category Framework
+ * @package  Pinoco
+ * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version  0.4.0
+ * @link     https://github.com/tanakahisateru/pinoco
+ * @filesource
+ */
+
 require_once 'PHPTAL.php';
 
 /**
