@@ -2,7 +2,7 @@
 require_once 'PHPTAL.php';
 
 /**
- * Experimental PHPTAL extensions
+ * PHPTAL extensions
  *
  *   <p pal:content-nl2br="this/var">foo</p> <!-- nl2br text escaped -->
  *   <p pal:content-nl2br="structure this/var">foo</p> <!-- like markdown -->
@@ -19,7 +19,7 @@ class Pinoco_PAL_Namespace extends PHPTAL_Namespace
     public function __construct()
     {
         // namespace
-        parent::__construct('pal', 'http://myfw/ns/pal');
+        parent::__construct('pal', 'http://pinoco.org/ns/pal');
         // attributes in namescape
         $this->addAttribute(new PHPTAL_NamespaceAttributeContent('content-nl2br', 11));
         $this->addAttribute(new PHPTAL_NamespaceAttributeReplace('replace-nl2br', 9));
