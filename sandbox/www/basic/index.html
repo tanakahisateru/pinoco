@@ -11,7 +11,16 @@
         <p pal:content-nl2br="title | default">Value of "title" registerd to autolocal would be shown here.</p>
         
         <div metal:use-macro="/_vardump.html/alltests">
-	    all tests
+        all tests
+        </div>
+        
+        <div tal:define="attr php:1">
+        ${attr}
+        <div class="hoge" pal:attr="class string:${attr/class}_mod; opt attr/class">hoge
+            <div class="fuga" pal:attr="class string:${attr/class}_mod; opt attr/class">fuga
+            </div>
+        </div>
+        ${attr}
         </div>
         
         <p>Sub contents
