@@ -273,7 +273,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
      */
     public function get_valid()
     {
-        return ($this->get_errors()->keys()->count() == 0);
+        return ($this->get_errors()->count() == 0);
     }
     
     /**
@@ -282,7 +282,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
      */
     public function get_invalid()
     {
-        return ($this->get_errors()->keys() > 0);
+        return !$this->get_valid();
     }
     
     /////////////////////////////////////////////////////////////////////
