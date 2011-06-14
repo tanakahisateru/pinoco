@@ -271,7 +271,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
      * Returns which all tests succeeded or not.
      * @return boolean
      */
-    public function get_succeeded()
+    public function get_valid()
     {
         return ($this->get_errors()->keys()->count() == 0);
     }
@@ -280,7 +280,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
      * Returns which validator has one or more failed tests.
      * @return boolean
      */
-    public function get_failed()
+    public function get_invalid()
     {
         return ($this->get_errors()->keys() > 0);
     }

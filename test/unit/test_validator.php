@@ -13,7 +13,7 @@ $testee = array(
 $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('empty');
 $v->check('bar')->is('not-empty');
-$t->ok($v->succeeded, 'validate array');
+$t->ok($v->valid, 'validate array');
 
 $testee = new stdClass();
 $testee->foo = "";
@@ -21,7 +21,7 @@ $testee->bar = "123";
 $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('empty');
 $v->check('bar')->is('not-empty');
-$t->ok($v->succeeded, 'validate object');
+$t->ok($v->valid, 'validate object');
 
 $testee = array(
     'foo' => 1,
@@ -42,7 +42,7 @@ $v = new Pinoco_Validator($testee);
 $v->check('foo')->is('not-empty');
 $v->check('bar')->is('not-empty');
 $v->check('baz')->is('not-empty');
-$t->ok($v->succeeded, 'zero is not empty');
+$t->ok($v->valid, 'zero is not empty');
 
 $testee = array(
     'foo' => 1,
