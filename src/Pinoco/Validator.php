@@ -236,6 +236,20 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     public function check($name)
     {
         $this->_errors = null;
+        if(!$this->_result->has($name)) {
+            $this->_result->set($name, $this->contextFor($name));
+        }
+        return $this->_result->get($name);
+    }
+    
+    /**
+     * Clears previsous result and restarts named property check.
+     * @param string $name
+     * @return Pinoco_ValidatorContext
+     */
+    public function recheck($name)
+    {
+        $this->_errors = null;
         $this->_result->set($name, $this->contextFor($name));
         return $this->_result->get($name);
     }
