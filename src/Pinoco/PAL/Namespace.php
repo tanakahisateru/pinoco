@@ -20,6 +20,11 @@
  */
 
 require_once 'PHPTAL.php';
+require_once 'PHPTAL/Namespace.php';
+require_once 'PHPTAL/Php/Attribute/TAL/Content.php';
+require_once 'PHPTAL/Php/Attribute/TAL/Replace.php';
+require_once 'PHPTAL/Php/Attribute/TAL/Attributes.php';
+require_once 'PHPTAL/Dom/Defs.php';
 
 /**
  * PHPTAL extensions
