@@ -118,7 +118,7 @@ class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes {
         parent::before($codewriter);
         // cleanup
         $codewriter->pushCode('unset($ctx->attr)');
-        $codewriter->pushCode('if(isset($_pal_attr_bak)){$ctx->attr=$_pal_attr_bak;}');
+        $codewriter->pushCode('if(isset($_pal_attr_bak)){$ctx->attr=$_pal_attr_bak;unset($_pal_attr_bak);}');
     }
 }
 
