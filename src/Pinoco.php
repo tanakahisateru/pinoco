@@ -1,17 +1,21 @@
 <?php
 /**
- * Pinoco web site environment
- * It makes existing static web site dynamic transparently.
+ * Pinoco: makes existing static web site dynamic transparently.
+ * Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  *
  * PHP Version 5
  *
- * @category Framework
- * @package  Pinoco
- * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
- * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.4.0
- * @link     https://github.com/tanakahisateru/pinoco
+ * @category   Framework
+ * @author     Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @copyright  Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version    0.5.0
+ * @link       https://github.com/tanakahisateru/pinoco
  * @filesource
+ * @package    Pinoco
  */
 
 /**
@@ -26,6 +30,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  *
  * Install PHPTAL.
  * Make your application directory anywhere.
+ *
  * Put .htaccess in your site root.
  * <code>
  * RewriteEngine On
@@ -35,6 +40,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * RewriteRule ^(.*)$   _gateway.php/$1 [L,QSA]
  * #...or RewriteRule ^(.*)$   _gateway.php?PATH_INFO=$1 [L,QSA]
  * </code>
+ *
  * Put _gateway.php in your site root.
  * <code>
  * require_once 'Pinoco.php';
@@ -45,7 +51,11 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  * //    'directory_index'  => "index.html index.php", // string like DirectoryIndex directive default "index.html index.php"
  * ))->run();
  * </code>
- * 
+ *
+ * Pinoco::create guesses HTTP request to create Pinoco instance.
+ * If this method can't work file in your environment, you can cretae Pinoco
+ * environment manually via "new" operator using your own parameters.
+ *
  * @package Pinoco
  * @property-read string $baseuri Base URI
  * @property-read string $basedir Base directory
@@ -65,7 +75,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  */
 class Pinoco extends Pinoco_DynamicVars {
     
-    const VERSION = "0.4.0";
+    const VERSION = "0.5.0";
     
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system

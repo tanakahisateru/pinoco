@@ -14,9 +14,9 @@
   </maintainer>
  </maintainers>
  <release>
-  <version>0.4.0</version>
-  <date>2011-06-01</date>
-  <license>LGPL</license>
+  <version>0.5.0</version>
+  <date>2011-06-14</date>
+  <license>MIT</license>
   <state>beta</state>
   <notes>Various conceptual changes.</notes>
   <provides type="class" name="Pinoco" />
@@ -32,14 +32,23 @@
     <file role="php" baseinstalldir="" name="Renderer.php"/>
     <file role="php" baseinstalldir="" name="MIMEType.php"/>
     <file role="php" baseinstalldir="" name="PDOWrapper.php"/>
+    <file role="php" baseinstalldir="" name="Validator.php"/>
+    <file role="php" baseinstalldir="" name="PAL/Namespace.php"/>
    </dir>
-   <file role="doc" baseinstalldir="" name="COPYING"/>
+   <file role="doc" baseinstalldir="" name="LICENSE"/>
   </filelist>
  </release>
  <changelog>
    <release>
+    <version>0.5.0</version>
+    <date>2011-06-14</date>
+    <license>MIT</license>
+    <state>beta</state>
+    <notes>Various conceptual changes.</notes>
+   </release>
+   <release>
     <version>0.4.0</version>
-    <date>2010-06-01</date>
+    <date>2011-06-01</date>
     <license>LGPL</license>
     <state>beta</state>
     <notes>Various conceptual changes.</notes>

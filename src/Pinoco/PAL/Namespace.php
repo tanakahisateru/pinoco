@@ -1,17 +1,22 @@
 <?php
 /**
- * Pinoco web site environment
- * It makes existing static web site dynamic transparently.
+ * Pinoco: makes existing static web site dynamic transparently.
+ * Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  *
  * PHP Version 5
  *
- * @category Framework
- * @package  Pinoco
- * @author   Hisateru Tanaka <tanakahisateru@gmail.com>
- * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  0.4.0
- * @link     https://github.com/tanakahisateru/pinoco
+ * @category   Framework
+ * @author     Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @copyright  Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version    0.5.0
+ * @link       https://github.com/tanakahisateru/pinoco
  * @filesource
+ * @package    Pinoco
+ * @subpackage PAL
  */
 
 require_once 'PHPTAL.php';
@@ -19,6 +24,7 @@ require_once 'PHPTAL.php';
 /**
  * PHPTAL extensions
  *
+ * <code>
  *   <p pal:content-nl2br="this/var">foo</p> <!-- nl2br text escaped -->
  *   <p pal:content-nl2br="structure this/var">foo</p> <!-- like markdown -->
  *   <p>
@@ -26,8 +32,10 @@ require_once 'PHPTAL.php';
  *   </p>
  *   <a href="prev.html" pal:attr="href url:/page/${attr/href}">prev</a>
  *   <a href="next.html" pal:attr="href url:/page/${attr/href}">next</a>
+ * </code>
  *
- * @package Pinoco_PAL
+ * @package Pinoco
+ * @subpackage PAL
  */
 class Pinoco_PAL_Namespace extends PHPTAL_Namespace
 {
@@ -55,7 +63,8 @@ class Pinoco_PAL_Namespace extends PHPTAL_Namespace
 
 // attributes def
 /**
- * @package Pinoco_PAL
+ * @package Pinoco
+ * @subpackage PAL
  */
 class Pinoco_PAL_ContentNl2br extends PHPTAL_Php_Attribute_TAL_Content {
     protected function doEchoAttribute(PHPTAL_Php_CodeWriter $codewriter, $code)
@@ -72,7 +81,8 @@ class Pinoco_PAL_ContentNl2br extends PHPTAL_Php_Attribute_TAL_Content {
     }
 }
 /**
- * @package Pinoco_PAL
+ * @package Pinoco
+ * @subpackage PAL
  */
 class Pinoco_PAL_ReplaceNl2br extends PHPTAL_Php_Attribute_TAL_Replace {
     protected function doEchoAttribute(PHPTAL_Php_CodeWriter $codewriter, $code)
@@ -89,7 +99,8 @@ class Pinoco_PAL_ReplaceNl2br extends PHPTAL_Php_Attribute_TAL_Replace {
     }
 }
 /**
- * @package Pinoco_PAL
+ * @package Pinoco
+ * @subpackage PAL
  */
 class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes {
     public function before(PHPTAL_Php_CodeWriter $codewriter)
