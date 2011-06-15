@@ -60,6 +60,13 @@ $t->is($v->result->foo->message, "Leave as empty.");
 $t->is($v->result->bar->message, "oops");
 $t->is($v->result->baz->message, "fill baz");
 
+$v = new Pinoco_Validator(array('foo'=>""));
+$v->check('foo')->is('not-empty');
+$v->uncheck('foo');
+$t->is($v->result->count(), 0, 'uncheck');
+$t->is($v->valid, true);
+
+//////////////////// builtin tests
 $v = new Pinoco_Validator(array('foo'=>"1234"));
 $t->is($v->check('foo')->is('max-length 3')->valid, false, 'builtins');
 $t->is($v->result->foo->message, "In 3 letters.", 'message template');
@@ -120,10 +127,30 @@ $t->is($v->check('foo')->is('email')->valid, true);
 
 $v = new Pinoco_Validator(array('foo'=>"http://foo/bar"));
 $t->is($v->check('foo')->is('url')->valid, true);
+////////////////////////
+
+$v = new Pinoco_Validator(array('foo'=>"abc"));
+$v->check('foo')->is('not-empty')->is('numeric')->is('integer');
+$t->is($v->result->foo->valid, false, 'priority');
+$t->is($v->result->foo->test, 'numeric');
 
 $v = new Pinoco_Validator(array('foo'=>""));
-$v->check('foo')->is('not-empty')->is('numeric')->is('integer');
-$t->is($v->result->foo->valid, false, 'priprity');
-$t->is($v->result->foo->test, 'not-empty');
+$v->check('foo')->is('numeric');
+$t->is($v->valid, true, 'allowing empty');
 
+$next_number = create_function('$v,$p', 'return $v == $p+1;');
+$v = new Pinoco_Validator(array('foo'=>2));
+$v->defineValidityTest('next-number', $next_number, 'xxx');
+$v->check('foo')->is('next-number 1');
+$t->is($v->valid, true, 'custom test');
+
+$v->recheck('foo', 'FOO_FIELD')->is('next-number 3',
+    '{label} should be {param}+1 but {value}');
+$t->is($v->valid, false, 'custom error message');
+$t->is($v->result->foo->message, 'FOO_FIELD should be 3+1 but 2');
+
+$func_msg_tmpl = create_function('$param,$value,$label', 'return $param.$value.$label;');
+$v->recheck('foo', 'FOO_FIELD')->is('next-number 3', $func_msg_tmpl);
+$t->is($v->valid, false, 'custom error message func');
+$t->is($v->result->foo->message, '32FOO_FIELD');
 
