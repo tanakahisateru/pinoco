@@ -82,22 +82,22 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     private function _setupBuiltinTests()
     {
         // builtin testers
-        $this->defineValidityTest('pass', array($this, '_testPass'),
-            "Valid.");
-        $this->defineValidityTest('fail', array($this, '_testFail'),
-            "Invalid.");
-        $this->defineValidityTest('empty', array($this, '_testEmpty'),
-            "Leave as empty.");
-        $this->defineValidityTest('not-empty', array($this, '_testNotEmpty'),
-            "Reqierd.");
+        $this->defineValidityTest('pass', array($this, '_testPassComplex'),
+            "Valid.", true);
+        $this->defineValidityTest('fail', array($this, '_testFailComplex'),
+            "Invalid.", true);
+        $this->defineValidityTest('empty', array($this, '_testEmptyComplex'),
+            "Leave as empty.", true);
+        $this->defineValidityTest('not-empty', array($this, '_testNotEmptyComplex'),
+            "Reqierd.", true);
         $this->defineValidityTest('max-length', array($this, '_testMaxLength'),
-            "In {0} letters.");
+            "In {param} letters.");
         $this->defineValidityTest('min-length', array($this, '_testMinLength'),
-            "At least {0} letters.");
+            "At least {param} letters.");
         $this->defineValidityTest('in', array($this, '_testIn'),
-            "Coose in {0}.");
+            "Coose in {param}.");
         $this->defineValidityTest('not-in', array($this, '_testNotIn'),
-            "Choose else of {0}.");
+            "Choose else of {param}.");
         $this->defineValidityTest('numeric', array($this, '_testNumeric'),
             "By number.");
         $this->defineValidityTest('integer', array($this, '_testInteger'),
@@ -107,17 +107,17 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
         $this->defineValidityTest('alpha-numeric', array($this, '_testAlphaNumeric'),
             "Alphabet or number.");
         $this->defineValidityTest('==', array($this, '_testEqual'),
-            "Shuld equal to {0}.");
+            "Shuld equal to {param}.");
         $this->defineValidityTest('!=', array($this, '_testNotEqual'),
-            "Should not equal to {0}.");
+            "Should not equal to {param}.");
         $this->defineValidityTest('>', array($this, '_testGreaterThan'),
-            "Greater than {0}.");
+            "Greater than {param}.");
         $this->defineValidityTest('>=', array($this, '_testGreaterThanOrEqual'),
-            "Greater than or equals to {0}.");
+            "Greater than or equals to {param}.");
         $this->defineValidityTest('<', array($this, '_testLessorThan'),
-            "Lessor than {0}.");
+            "Lessor than {param}.");
         $this->defineValidityTest('<=', array($this, '_testLessorThanOrEqual'),
-            "Lessor than or equals to {0}.");
+            "Lessor than or equals to {param}.");
         $this->defineValidityTest('match', array($this, '_testMatch'),
             "Invalid pattern.");
         $this->defineValidityTest('not-match', array($this, '_testNotMatch'),
@@ -133,13 +133,15 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
      * @param string $testName
      * @param callable $callback
      * @param string $message
+     * @param boolean $complex
      * @return void
      */
-    public function defineValidityTest($testName, $callback, $message)
+    public function defineValidityTest($testName, $callback, $message, $complex=false)
     {
         $this->_tests[$testName] = array(
             'callback' => $callback,
-            'message' => $message
+            'message' => $message,
+            'complex' => $complex,
         );
     }
     
@@ -177,17 +179,18 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
      * Executes validation test (called by varidation context).
      * @param string $field
      * @param string $testName
-     * @param array $params
-     * @return boolean
+     * @param array $param
+     * @return array
      */
-    public function execValidityTest($field, $testName, $params)
+    public function execValidityTest($field, $testName, $param)
     {
         $this->_errors = null;
         if(isset($this->_tests[$testName])) {
             $callback = $this->_tests[$testName]['callback'];
         }
         else {
-            return false;
+            // test method not registered
+            return array(false, null);
         }
         //type check
         if($this->_target instanceof Pinoco_Vars) {
@@ -207,37 +210,52 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
             $value = $exists ? $this->_target->$field : null;
         }
         else {
-            return false;
+            // test target is not a collection
+            return array(false, null);
         }
         //main
-        $args = $params;
-        array_unshift($args, $value);
-        array_unshift($args, $exists);
-        array_unshift($args, $field);
-        array_unshift($args, $this->_target);
-        return call_user_func_array($callback, $args);
+        if($this->_tests[$testName]['complex']) {
+            // complex test: full information presented
+            //               and should be checked if empty or not
+            return array(call_user_func($callback,
+                $this->_target, $field, $exists,
+                $value, $param
+            ), $value);
+        }
+        else {
+            // simple test: empty always success
+            if(!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false)) {
+                return array(true, $value);
+            }
+            return array(call_user_func($callback,
+                $value,
+                $param
+            ), $value);
+        }
     }
     
     /**
      * Returns independent validation context.
      * @param string $name
+     * @param string $label
      * @return Pinoco_ValidatorContext
      */
-    public function contextFor($name)
+    public function contextFor($name, $label=false)
     {
-        return new Pinoco_ValidatorContext($this, $name);
+        return new Pinoco_ValidatorContext($this, $name, $label);
     }
     
     /**
      * Starts named property check.
      * @param string $name
+     * @param string $label
      * @return Pinoco_ValidatorContext
      */
-    public function check($name)
+    public function check($name, $label=false)
     {
         $this->_errors = null;
         if(!$this->_result->has($name)) {
-            $this->_result->set($name, $this->contextFor($name));
+            $this->_result->set($name, $this->contextFor($name, $label));
         }
         return $this->_result->get($name);
     }
@@ -245,13 +263,27 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     /**
      * Clears previsous result and restarts named property check.
      * @param string $name
+     * @param string $label
      * @return Pinoco_ValidatorContext
      */
-    public function recheck($name)
+    public function recheck($name, $label=false)
     {
         $this->_errors = null;
-        $this->_result->set($name, $this->contextFor($name));
+        $this->_result->set($name, $this->contextFor($name, $label));
         return $this->_result->get($name);
+    }
+    
+    /**
+     * Clears previsous result.
+     * @param string $name
+     * @return void
+     */
+    public function uncheck($name)
+    {
+        $this->_errors = null;
+        if($this->_result->has($name)) {
+            $this->_result->remove($name);
+        }
     }
     
     /**
@@ -301,97 +333,98 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     
     /////////////////////////////////////////////////////////////////////
     // builtin tests
-    private function _testPass($target, $name, $exists, $value)
+    private function _testPassComplex($target, $name, $exists, $value)
     {
         return true;
     }
-    private function _testFail($target, $name, $exists, $value)
+    private function _testFailComplex($target, $name, $exists, $value)
     {
         return false;
     }
-    private function _testEmpty($target, $name, $exists, $value)
+    private function _testEmptyComplex($target, $name, $exists, $value)
     {
         if(!$exists || $value === null) { return true; }
         if($value === "0" || $value === 0 || $value === false) { return false; }
         return empty($value);
     }
-    private function _testNotEmpty($target, $name, $exists, $value)
+    private function _testNotEmptyComplex($target, $name, $exists, $value)
     {
-        return !$this->_testEmpty($target, $name, $exists, $value);
+        return !$this->_testEmptyComplex($target, $name, $exists, $value);
     }
-    private function _testMaxLength($target, $name, $exists, $value, $cond0=0)
+    
+    private function _testMaxLength($value, $param=0)
     {
-        return strlen(strval($value)) <= $cond0;
+        return strlen(strval($value)) <= $param;
     }
-    private function _testMinLength($target, $name, $exists, $value, $cond0=0)
+    private function _testMinLength($value, $param=0)
     {
-        return strlen(strval($value)) >= $cond0;
+        return strlen(strval($value)) >= $param;
     }
-    private function _testIn($target, $name, $exists, $value, $cond0='')
+    private function _testIn($value, $param='')
     {
-        $as = explode(',', $cond0);
+        $as = explode(',', $param);
         foreach($as as $a) {
-            if($value == $a) { return true; }
+            if($value == trim($a)) { return true; }
         }
         return false;
     }
-    private function _testNotIn($target, $name, $exists, $value, $cond0='')
+    private function _testNotIn($value, $param='')
     {
-        return !$this->_testIn($target, $name, $exists, $value, $cond0);
+        return !$this->_testIn($value, $param);
     }
-    private function _testNumeric($target, $name, $exists, $value)
+    private function _testNumeric($value)
     {
         return is_numeric($value);
     }
-    private function _testInteger($target, $name, $exists, $value)
+    private function _testInteger($value)
     {
-        return is_integer($value);
+        return is_integer(0 + $value);
     }
-    private function _testAlpha($target, $name, $exists, $value)
+    private function _testAlpha($value)
     {
         return ctype_alpha($value);
     }
-    private function _testAlphaNumeric($target, $name, $exists, $value)
+    private function _testAlphaNumeric($value)
     {
         return ctype_alnum($value);
     }
-    private function _testEqual($target, $name, $exists, $value, $cond0=null)
+    private function _testEqual($value, $param=null)
     {
-        return $value == $cond0;
+        return $value == $param;
     }
-    private function _testNotEqual($target, $name, $exists, $value, $cond0=null)
+    private function _testNotEqual($value, $param=null)
     {
-        return !$this->_testEqual($target, $name, $exists, $value, $cond0);
+        return !$this->_testEqual($value, $param);
     }
-    private function _testGreaterThan($target, $name, $exists, $value, $cond0=0)
+    private function _testGreaterThan($value, $param=0)
     {
-        return $value > $cond0;
+        return $value > $param;
     }
-    private function _testGreaterThanOrEqual($target, $name, $exists, $value, $cond0=0)
+    private function _testGreaterThanOrEqual($value, $param=0)
     {
-        return $value >= $cond0;
+        return $value >= $param;
     }
-    private function _testLessorThan($target, $name, $exists, $value, $cond0=0)
+    private function _testLessorThan($value, $param=0)
     {
-        return $value < $cond0;
+        return $value < $param;
     }
-    private function _testLessorThanOrEqual($target, $name, $exists, $value, $cond0=0)
+    private function _testLessorThanOrEqual($value, $param=0)
     {
-        return $value <= $cond0;
+        return $value <= $param;
     }
-    private function _testMatch($target, $name, $exists, $value, $cond0='/^$/')
+    private function _testMatch($value, $param='/^$/')
     {
-        return preg_match($cond0, $value);
+        return preg_match($param, $value);
     }
-    private function _testNotMatch($target, $name, $exists, $value, $cond0='/^$/')
+    private function _testNotMatch($value, $param='/^$/')
     {
-        return !$this->_testMatch($target, $name, $exists, $value, $cond0);
+        return !$this->_testMatch($value, $param);
     }
-    private function _testEmail($target, $name, $exists, $value)
+    private function _testEmail($value)
     {
         return preg_match('/@[A-Z0-9][A-Z0-9_-]*(\.[A-Z0-9][A-Z0-9_-]*)*$/i', $value);
     }
-    private function _testUrl($target, $name, $exists, $value)
+    private function _testUrl($value)
     {
         return preg_match('/^[A-Z]+:\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)*):?(\d+)?\/?/i', $value);
     }
@@ -417,12 +450,14 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
      * Constructor
      * @param Pinoco_Validator $validator
      * @param string $name
+     * @param string $label
      */
-    public function __construct($validator, $name)
+    public function __construct($validator, $name, $label=false)
     {
         parent::__construct();
         $this->_validator = $validator;
         $this->_name = $name;
+        $this->_label = $label ? $label : $name;
         
         $this->_valid = true;
         $this->_test = null;
@@ -465,27 +500,31 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         return $this->_message;
     }
     
-    private function buildMessage($template, $params)
+    private function buildMessage($template, $param, $value, $label)
     {
-        $target = array();
-        $replacement = array();
-        foreach($params as $k=>$v) {
-            $target[] = '{'.$k.'}';
-            $replacement[] = strval($v);
+        if(is_callable($template)) {
+            return call_user_func($template, $param, $value, $label);
         }
-        return str_replace($target, $replacement, $template);
+        if(is_string($template)) {
+            return str_replace(
+                array('{param}', '{value}', '{label}'),
+                array(strval($param), strval($value), $label),
+                $template
+            );
+        }
     }
     
     private function _execute($test, $message=false)
     {
-        $params = explode(' ', $test);
-        $testName = array_shift($params);
-        $result = $this->_validator->execValidityTest($this->_name, $testName, $params);
+        $param = explode(' ', $test);
+        $testName = array_shift($param);
+        $param = implode(' ', $param);
+        list($result, $value) = $this->_validator->execValidityTest($this->_name, $testName, $param);
         if(!$result) {
             $this->_test = $test;
             $this->_valid = false;
             $template = $message ? $message : $this->_validator->getMessageFor($testName);
-            $this->_message = $this->buildMessage($template, $params);
+            $this->_message = $this->buildMessage($template, $param, $value, $this->_label);
         }
     }
     
