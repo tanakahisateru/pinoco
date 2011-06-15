@@ -84,10 +84,13 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
             $exclass = class_exists('RuntimeException') ? 'RuntimeException' : 'Exception';
             throw new $exclass("PHPTAL is not installed.");
         }
-        include_once dirname(__FILE__) . '/PAL/Namespace.php';
         
         $template = new PHPTAL($page);
         
+        //pal namespace loading
+        include_once dirname(__FILE__) . '/PAL/NamespaceLoader.php';
+        $template->addPreFilter(new Pinoco_PAL_NamespaceLoader());
+
         //config
         $template->setTemplateRepository($this->_sysref->basedir);
         foreach($this->cfg as $k => $v) {
