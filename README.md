@@ -1,7 +1,7 @@
 Pinoco is a web development framework using PHP and (mainly) PHPTAL.
 
 * Has various usages even in cases OOP based frameworks don't fit.
-* Smaller code-base and lightweight footprint ([[PerformanceComparison]])
+* Smaller code-base and lightweight footprint.
 * Explicit and strict View/Logic isolation (each stored into isolated folders).
 * Designer friendly.
 * Content management workflow similar to that of a static site (Consistency of file paths and URI).
