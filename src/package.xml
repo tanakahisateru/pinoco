@@ -15,7 +15,7 @@
  </maintainers>
  <release>
   <version>0.5.0</version>
-  <date>2011-06-14</date>
+  <date>2011-06-17</date>
   <license>MIT</license>
   <state>beta</state>
   <notes>Various conceptual changes.</notes>
@@ -34,6 +34,7 @@
     <file role="php" baseinstalldir="" name="PDOWrapper.php"/>
     <file role="php" baseinstalldir="" name="Validator.php"/>
     <file role="php" baseinstalldir="" name="PAL/Namespace.php"/>
+    <file role="php" baseinstalldir="" name="PAL/NamespaceLoader.php"/>
    </dir>
    <file role="doc" baseinstalldir="" name="LICENSE"/>
   </filelist>
@@ -41,7 +42,7 @@
  <changelog>
    <release>
     <version>0.5.0</version>
-    <date>2011-06-14</date>
+    <date>2011-06-17</date>
     <license>MIT</license>
     <state>beta</state>
     <notes>Various conceptual changes.</notes>
