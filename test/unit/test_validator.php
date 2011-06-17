@@ -154,3 +154,26 @@ $v->recheck('foo', 'FOO_FIELD')->is('next-number 3', $func_msg_tmpl);
 $t->is($v->valid, false, 'custom error message func');
 $t->is($v->result->foo->message, '32FOO_FIELD');
 
+///////////////////////
+$testee = array(
+    'foo' => " abc ",
+    'bar' => "def"
+);
+$v = new Pinoco_Validator($testee);
+$t->is($v->check('foo')->value, " abc ", 'filter test');
+$t->is($v->check('foo')->is('max-length 3')->valid, false);
+$t->is($v->recheck('foo')->filter('trim')->value, "abc");
+$t->is($v->recheck('foo')->filter('trim')->is('max-length 3')->valid, true);
+$t->is($v->recheck('foo')->filter('trim')->is('max-length 3')->filter('strtoupper')->value, "ABC");
+$t->is_deeply($v->values->toArray(), array('foo' => "ABC"));
+$v->check('bar');
+$t->is_deeply($v->values->toArray(), array('foo' => "ABC", 'bar'=>"def"));
+
+$add_filter = create_function('$v,$p', 'return $v + $p;');
+$testee = array(
+    'foo' => 2,
+);
+$v = new Pinoco_Validator($testee);
+$v->defineFilter('add', $add_filter);
+$t->is($v->check('foo')->filter('add 1')->value, 3, 'user filter test');
+

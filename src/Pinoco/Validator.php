@@ -52,12 +52,14 @@ require_once dirname(__FILE__) . '/VarsList.php';
  */
 class Pinoco_Validator extends Pinoco_DynamicVars {
 
-    private $_tests;
-    private $_messages;
+    protected $_tests;
+    protected $_filters;
+    protected $_messages;
+
     private $_target;
-    
     private $_result;
     private $_errors;
+    private $_values;
 
     /**
      * Constructor
@@ -71,12 +73,16 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
         $this->_tests = array();
         $this->_setupBuiltinTests();
         
+        $this->_filters = array();
+        $this->_setupBuiltinFilters();
+        
         $this->_messages = array();
         $this->overrideErrorMessages($messages);
         
         $this->_target = $target;
         $this->_result = new Pinoco_Vars();
         $this->_errors = null;
+        $this->_values = null;
     }
     
     private function _setupBuiltinTests()
@@ -128,6 +134,14 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
             "URL only.");
     }
     
+    private function _setupBuiltinFilters()
+    {
+        // builtin filters
+        $this->defineFilter('trim', array($this, '_filterTrim'));
+        $this->defineFilter('ltrim', array($this, '_filterLtrim'));
+        $this->defineFilter('rtrim', array($this, '_filterRtrim'));
+    }
+    
     /**
      * Defines custom test
      * @param string $testName
@@ -141,6 +155,21 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
         $this->_tests[$testName] = array(
             'callback' => $callback,
             'message' => $message,
+            'complex' => $complex,
+        );
+    }
+    
+    /**
+     * Defines custom filter
+     * @param string $filterName
+     * @param callable $callback
+     * @param boolean $complex
+     * @return void
+     */
+    public function defineFilter($filterName, $callback, $complex=false)
+    {
+        $this->_filters[$filterName] = array(
+            'callback' => $callback,
             'complex' => $complex,
         );
     }
@@ -176,62 +205,151 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     }
     
     /**
-     * Executes validation test (called by varidation context).
+     * Check existence and fetch value at the same time.
+     * (called by self and varidation context)
+     * @param string $name
+     * @return array
+     */
+    public function fetchExistenceAndValue($name)
+    {
+        //type check
+        if($this->_target instanceof Pinoco_Vars) {
+            $exists = $this->_target->has($name);
+            $value = $this->_target->get($name);
+        }
+        else if($this->_target instanceof Pinoco_List) {
+            $exists = intval($field) < $this->_target->count();
+            $value = $exists ? $this->_target[$name] : null;
+        }
+        else if(is_array($this->_target)) {
+            $exists = isset($this->_target[$name]);
+            $value = $exists ? $this->_target[$name] : null;
+        }
+        else if(is_object($this->_target)) {
+            $exists = isset($this->_target->$name);
+            $value = $exists ? $this->_target->$name : null;
+        }
+        else {
+            return null;
+        }
+        return array($exists, $value);
+    }
+    
+    /**
+     * Executes validation test.
+     * (called by varidation context)
      * @param string $field
+     * @param boolean $filtered
+     * @param mixed $filteredValue
      * @param string $testName
      * @param array $param
      * @return array
      */
-    public function execValidityTest($field, $testName, $param)
+    public function execValidityTest($field, $filtered, $filteredValue, $testName, $param)
     {
         $this->_errors = null;
+        $this->_values = null;
         if(isset($this->_tests[$testName])) {
             $callback = $this->_tests[$testName]['callback'];
+            $complex = $this->_tests[$testName]['complex'];
+            $params = array($param);
+        }
+        else if(is_callable($testName)) {
+            $callback = $testName;
+            $complex = false;
+            $params = $param ? explode(' ', $param) : array();
         }
         else {
             // test method not registered
             return array(false, null);
         }
-        //type check
-        if($this->_target instanceof Pinoco_Vars) {
-            $exists = $this->_target->has($field);
-            $value = $this->_target->get($field);
-        }
-        if($this->_target instanceof Pinoco_List) {
-            $exists = intval($field) < $this->_target->count();
-            $value = $exists ? $this->_target[$field] : null;
-        }
-        else if(is_array($this->_target)) {
-            $exists = isset($this->_target[$field]);
-            $value = $exists ? $this->_target[$field] : null;
-        }
-        else if(is_object($this->_target)) {
-            $exists = isset($this->_target->$field);
-            $value = $exists ? $this->_target->$field : null;
+        
+        // fetch
+        if($filtered) {
+            $exists = true;
+            $value = $filteredValue;
         }
         else {
-            // test target is not a collection
-            return array(false, null);
+            if(($r = $this->fetchExistenceAndValue($field)) === null) {
+                return array(false, null);
+            }
+            list($exists, $value) = $r;
         }
-        //main
-        if($this->_tests[$testName]['complex']) {
+        
+        if($complex) {
             // complex test: full information presented
             //               and should be checked if empty or not
-            return array(call_user_func($callback,
-                $this->_target, $field, $exists,
-                $value, $param
-            ), $value);
+            $args = array($this->_target, $field, $exists, $value);
         }
         else {
             // simple test: empty always success
             if(!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false)) {
                 return array(true, $value);
             }
-            return array(call_user_func($callback,
-                $value,
-                $param
-            ), $value);
+            $args = array($value);
         }
+        foreach($params as $p) {
+            $args[] = $p;
+        }
+        return array(call_user_func_array($callback, $args), $value);
+    }
+    
+    /**
+     * Executes filter.
+     * (called by varidation context)
+     * @param string $field
+     * @param boolean $filtered
+     * @param mixed $filteredValue
+     * @param mixed $filterName
+     * @param array $param
+     * @return array
+     */
+    public function execFilter($field, $filtered, $filteredValue, $filterName, $param)
+    {
+        $this->_errors = null;
+        $this->_values = null;
+        if(isset($this->_filters[$filterName])) {
+            $callback = $this->_filters[$filterName]['callback'];
+            $complex = $this->_filters[$filterName]['complex'];
+            $params = array($param);
+        }
+        else if(is_callable($filterName)) {
+            $callback = $filterName;
+            $complex = false;
+            $params = $param ? explode(' ', $param) : array();
+        }
+        else {
+            return array(true, null);
+        }
+        
+        // fetch
+        if($filtered) {
+            $exists = true;
+            $value = $filteredValue;
+        }
+        else {
+            if(($r = $this->fetchExistenceAndValue($field)) === null) {
+                return array(true, null);
+            }
+            list($exists, $value) = $r;
+        }
+        
+        if($complex) {
+            // complex filter: full information presented
+            //               and should be checked if empty or not
+            $args = array($this->_target, $field, $exists, $value);
+        }
+        else {
+            // simple filter: empty passes through
+            if(!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false)) {
+                return array(true, $value);
+            }
+            $args = array($value);
+        }
+        foreach($params as $p) {
+            $args[] = $p;
+        }
+        return array(true, call_user_func_array($callback, $args));
     }
     
     /**
@@ -254,6 +372,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     public function check($name, $label=false)
     {
         $this->_errors = null;
+        $this->_values = null;
         if(!$this->_result->has($name)) {
             $this->_result->set($name, $this->contextFor($name, $label));
         }
@@ -269,6 +388,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     public function recheck($name, $label=false)
     {
         $this->_errors = null;
+        $this->_values = null;
         $this->_result->set($name, $this->contextFor($name, $label));
         return $this->_result->get($name);
     }
@@ -281,6 +401,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     public function uncheck($name)
     {
         $this->_errors = null;
+        $this->_values = null;
         if($this->_result->has($name)) {
             $this->_result->remove($name);
         }
@@ -311,6 +432,22 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
             }
         }
         return $this->_errors;
+    }
+    
+    /**
+     * Exports test results only failed.
+     * @return Pinoco_Vars
+     */
+    public function get_values()
+    {
+        if($this->_values === null) {
+            $this->_values = new Pinoco_Vars();
+            foreach($this->_result->keys() as $field) {
+                $result = $this->_result->get($field);
+                $this->_values->set($field, $result->value);
+            }
+        }
+        return $this->_values;
     }
     
     /**
@@ -428,6 +565,21 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
     {
         return preg_match('/^[A-Z]+:\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)*):?(\d+)?\/?/i', $value);
     }
+
+    /////////////////////////////////////////////////////////////////////
+    // builtin filters
+    private function _filterTrim($value)
+    {
+        return trim($value);
+    }
+    private function _filterLtrim($value)
+    {
+        return ltrim($value);
+    }
+    private function _filterRtrim($value)
+    {
+        return rtrim($value);
+    }
 }
 
 /**
@@ -441,6 +593,10 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     
     private $_validator;
     private $_name;
+    private $_label;
+    
+    private $_filtered;
+    private $_filteredValue;
     
     private $_valid;
     private $_test;
@@ -459,9 +615,30 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         $this->_name = $name;
         $this->_label = $label ? $label : $name;
         
+        $this->_filtered = false;
+        $this->_filteredValue = null;
+        
         $this->_valid = true;
         $this->_test = null;
         $this->_message = null;
+    }
+    
+    /**
+     * Test target value.
+     * @return mixed
+     */
+    public function get_value()
+    {
+        if($this->_filtered) {
+            return $this->_filteredValue;
+        }
+        else {
+            if(($r = $this->_validator->fetchExistenceAndValue($this->_name)) === null) {
+                return null;
+            }
+            list($exists, $value) = $r;
+            return $exists ? $value : null;
+        }
     }
     
     /**
@@ -514,20 +691,6 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         }
     }
     
-    private function _execute($test, $message=false)
-    {
-        $param = explode(' ', $test);
-        $testName = array_shift($param);
-        $param = implode(' ', $param);
-        list($result, $value) = $this->_validator->execValidityTest($this->_name, $testName, $param);
-        if(!$result) {
-            $this->_test = $test;
-            $this->_valid = false;
-            $template = $message ? $message : $this->_validator->getMessageFor($testName);
-            $this->_message = $this->buildMessage($template, $param, $value, $this->_label);
-        }
-    }
-    
     /**
      * Check the field by specified test.
      * @param string $test
@@ -536,8 +699,43 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
      */
     public function is($test, $message=false)
     {
-        if($this->_valid) {
-            $this->_execute($test, $message);
+        if(!$this->_valid) {
+            return $this;
+        }
+        $param = explode(' ', trim($test));
+        $testName = array_shift($param);
+        $param = count($param) == 0 ? null : implode(' ', $param);
+        list($result, $value) = $this->_validator->execValidityTest(
+            $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
+        );
+        if(!$result) {
+            $this->_test = $test;
+            $this->_valid = false;
+            $template = $message ? $message : $this->_validator->getMessageFor($testName);
+            $this->_message = $this->buildMessage($template, $param, $value, $this->_label);
+        }
+        return $this;
+    }
+    
+    /**
+     * Converts value format for trailing statements.
+     * @param mixed $filter
+     * @return Pinoco_ValidatorContext
+     */
+    public function filter($filter)
+    {
+        if(!$this->_valid) {
+            return $this;
+        }
+        $param = explode(' ', trim($filter));
+        $filterName = array_shift($param);
+        $param = count($param) == 0 ? null : implode(' ', $param);
+        list($filtered, $value) = $this->_validator->execFilter(
+            $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
+        );
+        if($filtered) {
+            $this->_filtered = $this->_filtered || true;
+            $this->_filteredValue = $value;
         }
         return $this;
     }
