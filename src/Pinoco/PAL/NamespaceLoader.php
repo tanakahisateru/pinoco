@@ -20,6 +20,7 @@
  */
 
 require_once 'PHPTAL.php';
+require_once 'PHPTAL/PreFilter.php';
 
 /**
  * @package Pinoco
