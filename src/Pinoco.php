@@ -12,7 +12,7 @@
  * @author     Hisateru Tanaka <tanakahisateru@gmail.com>
  * @copyright  Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @version    0.5.0
+ * @version    0.5.1
  * @link       https://github.com/tanakahisateru/pinoco
  * @filesource
  * @package    Pinoco
@@ -75,7 +75,7 @@ require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
  */
 class Pinoco extends Pinoco_DynamicVars {
     
-    const VERSION = "0.5.0";
+    const VERSION = "0.5.1";
     
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system

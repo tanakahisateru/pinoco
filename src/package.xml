@@ -14,11 +14,11 @@
   </maintainer>
  </maintainers>
  <release>
-  <version>0.5.0</version>
-  <date>2011-06-17</date>
+  <version>0.5.1</version>
+  <date>2011-06-20</date>
   <license>MIT</license>
   <state>beta</state>
-  <notes>Various conceptual changes.</notes>
+  <notes>Hotfix: PHPTAL 1.2.1 support.</notes>
   <provides type="class" name="Pinoco" />
   <provides type="function" name="Pinoco::create" />
   <deps>
@@ -40,6 +40,13 @@
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.5.1</version>
+    <date>2011-06-20</date>
+    <license>MIT</license>
+    <state>beta</state>
+    <notes>Hotfix: PHPTAL 1.2.1 support.</notes>
+   </release>
    <release>
     <version>0.5.0</version>
     <date>2011-06-17</date>
