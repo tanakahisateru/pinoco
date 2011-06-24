@@ -1146,6 +1146,7 @@ class Pinoco extends Pinoco_DynamicVars {
                         }
                     }
                 }
+                $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
             }
             catch(Pinoco_FlowControlTerminate $ex) {
             }
@@ -1197,6 +1198,7 @@ class Pinoco extends Pinoco_DynamicVars {
                     $this->error(500, "Internal Server Error", "File not found: " . $this->_page);
                 }
             }
+            $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
         }
         catch(Pinoco_FlowControlHttpError $ex) { // contains Redirect
             $ex->respond($this);
@@ -1211,6 +1213,7 @@ class Pinoco extends Pinoco_DynamicVars {
             // leave (All flow control exceptions work as skip exception)
             try {
                 $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
+                $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
             }
             catch(Pinoco_FlowControl $ex) { }
             
