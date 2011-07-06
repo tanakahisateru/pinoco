@@ -12,7 +12,7 @@
  * @author     Hisateru Tanaka <tanakahisateru@gmail.com>
  * @copyright  Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
  * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @version    0.5.1
+ * @version    0.5.2
  * @link       https://github.com/tanakahisateru/pinoco
  * @filesource
  * @package    Pinoco
