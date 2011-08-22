@@ -3,3 +3,4 @@ RewriteEngine On
 RewriteRule ^(.*?)\/(.*)$   $1/htdocs/$2 [L]
 
 php_flag display_errors On
+php_value include_path .:../../../src:/opt/local/lib/php
