@@ -1,3 +1,9 @@
-.DS_Store
-sandbox/app/tmp/*
+/build/
+/sandbox/app/tmp/*
 .htaccess
+
+.project
+.buildpath
+/.idea/
+/.settings/
+/nbproject/

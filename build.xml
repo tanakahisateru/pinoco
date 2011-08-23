@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Phing build file -->
+<project name="Pinoco" default="dist">
+    <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2"/>
+    
+    <property name="product" value="Pinoco"/>
+    <property name="version" value="0.5.2"/>
+    <property name="stability" value="beta"/>
+    <property name="lead.user" value="tanakahisateru"/>
+    <property name="lead.name" value="Hisateru Tanaka"/>
+    <property name="lead.email" value="tanakahisateru@gmail.com"/>
+    
+    <target name="dist" depends="doc,package"/>
+    
+    <target name="test">
+        <exec command="php all.php" dir="./test/unit" logoutput="true"/>
+    </target>
+    
+    <target name="doc">
+        <delete file="./build/${product}-${version}-doc.tgz" />
+        <delete dir="./build/doc" />
+        <mkdir dir="./build/doc"/>
+        <phpdoc title="${product} ${version} Documentation"
+            destdir="./build/doc"
+            output="HTML:frames:default"
+            quiet="true">
+           <fileset dir="./src">
+              <include name="**/*.php" />
+           </fileset>
+        </phpdoc>
+        <tar destfile="./build/${product}-${version}-doc.tgz" compression="gzip">
+            <fileset dir="./build/doc" />
+        </tar>
+    </target>
+    
+    <target name="package">
+        <delete dir="./build/package" />
+        <copy todir="./build/package">
+            <fileset dir="./src">
+                <include name="**/*.php"/>
+            </fileset>
+        </copy>
+        <copy file="./src/LICENSE" todir="./build/package/doc"/>
+        <d51pearpkg2 dir="./build/package" baseinstalldir="/">
+            <name>${product}</name>
+            <summary>${product} web site environment</summary>
+            <channel>__uri</channel>
+            <description>${product} makes existing static web site dynamic transparently.</description>
+            <notes>${product} ${version} released.</notes>
+            <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
+            <version release="${version}" api="${version}"/>
+            <stability release="${stability}" api="${stability}"/>
+            <lead user="${lead.user}" name="${lead.name}" email="${lead.email}"/>
+            <dependencies>
+                <php minimum_version="5.1.0"/>
+                <pear minimum_version="1.4.3"/>
+            </dependencies>            
+            <dirroles key="doc" value="doc"/>
+            <release>
+                <install name="doc/LICENSE" as="${product}/LICENSE"/>
+            </release>
+        </d51pearpkg2>
+        <exec command="pear package package/package.xml" dir="./build" />
+    </target>
+    
+</project>
