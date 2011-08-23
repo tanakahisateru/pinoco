@@ -1,2 +1,2 @@
 <?php
-$this->message = "World";
+$this->message = "Smarty";

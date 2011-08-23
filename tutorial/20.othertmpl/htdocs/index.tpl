@@ -1,2 +1,5 @@
     <p>Hello {$this->message}.</p>
-    <a href="{'sub/option.html'|url}">index</a>
+    <ul>
+        <li><a href="{'sub/option.html'|url}">option</a></li>
+        <li><a href="{'twig/'|url}">twig</a></li>
+    </ul>

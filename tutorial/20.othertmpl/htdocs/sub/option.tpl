@@ -1,2 +1,2 @@
     <p>Hello {$this->message}.</p>
-    <a href="{'../'|url}">index</a>
+    <a href="{'../'|url}">back</a>
