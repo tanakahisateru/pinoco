@@ -58,7 +58,7 @@
             </dependencies>            
             <dirroles key="doc" value="doc"/>
             <release>
-                <install name="doc/LICENSE" as="${product}/LICENSE"/>
+                <install name="doc/LICENSE" as="LICENSE"/>
             </release>
         </d51pearpkg2>
         <exec command="pear package package/package.xml" dir="./build" />
