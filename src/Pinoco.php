@@ -632,30 +632,22 @@ class Pinoco extends Pinoco_DynamicVars {
         if($path != '') {
             $path = $this->resolvePath($path);
         }
+        $renderable = $this->isRenderablePath($path) ||
+            !is_file($this->_basedir . $path) ||
+            is_dir($this->_basedir . $path);
+
         // guess to use gateway script but not in use mod_rewrite.
-        if($this->_dispatcher != "") {
-            if(
-                $this->isRenderablePath($path) ||
-                !is_file($this->_basedir . $path) ||
-                is_dir($this->_basedir . $path)
-            ) {
-                // join both url params of dispatcher and path if they have "?" commonly.
-                $dqpos = strpos($this->_dispatcher, "?");
-                $pqpos = strpos($path, "?");
-                if($dqpos !== FALSE && $pqpos !== FALSE) {
-                    $path = substr($path, 0, $pqpos) . "&" . substr($path, $pqpos + 1);
-                }
-                $url = rtrim($this->_baseuri, "/") . $this->_dispatcher . $path;
-                $renderable = TRUE;
+        if($this->_dispatcher != "" && $renderable) {
+            // join both url params of dispatcher and path if they have "?" commonly.
+            $dqpos = strpos($this->_dispatcher, "?");
+            $pqpos = strpos($path, "?");
+            if($dqpos !== FALSE && $pqpos !== FALSE) {
+                $path = substr($path, 0, $pqpos) . "&" . substr($path, $pqpos + 1);
             }
-            else {
-                $url = rtrim($this->_baseuri, "/") . $path;
-                $renderable = FALSE;
-            }
+            $url = rtrim($this->_baseuri, "/") . $this->_dispatcher . $path;
         }
         else {
             $url = rtrim($this->_baseuri, "/") . $path;
-            $renderable = TRUE;
         }
         return $this->_url_modifier ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
     }
