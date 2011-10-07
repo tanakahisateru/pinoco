@@ -625,9 +625,10 @@ class Pinoco extends Pinoco_DynamicVars {
     /**
      * Returns host based URI from site based or sub-path based relateve one.
      * @param string $path
+     * @param boolean $pure cancels to call user modifier if TRUE
      * @return string
      */
-    public function url($path='')
+    public function url($path='', $pure=FALSE)
     {
         if($path != '') {
             $path = $this->resolvePath($path);
@@ -649,7 +650,7 @@ class Pinoco extends Pinoco_DynamicVars {
         else {
             $url = rtrim($this->_baseuri, "/") . $path;
         }
-        return $this->_url_modifier ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
+        return (!$pure && $this->_url_modifier) ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
     }
     
     /**
