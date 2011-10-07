@@ -5,6 +5,6 @@
 <p><a href="sub/index.html" tal:attributes="href url:sub/">Link to sub/</a> <span>(in-place rel)</span></p>
 <p><a href="sub/index.html" tal:attributes="href url:/sub/index.html?foo=1&bar=2">Link to sub/index.html with parameres</a></p>
 <p>URL for sub contents is ${url:/sub/}.</p>
-<p><a href="sub/index.html" tal:attributes="href url:path:this/relpath_to_sub">Link to sub/</a> <span>(path in context)</span></p>
+<p><a href="sub/index.html" tal:attributes="href url:${this/relpath_to_sub}">Link to sub/</a> <span>(variable in context)</span></p>
 <p><a href="sub/index.html" tal:attributes="href this/url_for_sub">Link to sub/</a> <span>(pre-processed)</span></p>
 </tal:block>
