@@ -625,7 +625,7 @@ class Pinoco extends Pinoco_DynamicVars {
     /**
      * Returns host based URI from site based or sub-path based relateve one.
      * @param string $path
-     * @param boolean $pure cancels to call user modifier if TRUE
+     * @param bool $pure cancels to call user modifier if TRUE
      * @return string
      */
     public function url($path='', $pure=FALSE)
