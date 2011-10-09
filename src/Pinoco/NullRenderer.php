@@ -19,10 +19,17 @@
  */
 
 /**
- * Flow control object
+ * Null renderer.
  * @package Pinoco
- * @internal
  */
-class Pinoco_FlowControl extends Exception {
+class Pinoco_NullRenderer extends Pinoco_Renderer {
+    /**
+     * @param string $page
+     * @param array $extravars
+     * @return void
+     */
+    public function render($page, $extravars=array())
+    {
+    }
 }
 

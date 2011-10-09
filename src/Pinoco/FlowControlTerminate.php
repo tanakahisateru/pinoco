@@ -23,6 +23,6 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_FlowControl extends Exception {
+class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
 }
 

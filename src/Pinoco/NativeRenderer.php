@@ -19,10 +19,26 @@
  */
 
 /**
- * Flow control object
+ * Default HTML page renderer using native PHP.
  * @package Pinoco
- * @internal
  */
-class Pinoco_FlowControl extends Exception {
+class Pinoco_NativeRenderer extends Pinoco_Renderer {
+    
+    /**
+     * @param string $page
+     * @param array $extravars
+     * @return void
+     */
+    public function render($page, $extravars=array())
+    {
+        $vars = $this->_sysref->autolocal->toArray();
+        foreach($extravars as $k=>$v) {
+            $vars[$k] = $v;
+        }
+        $orig_dir  = getcwd();
+        chdir($this->_sysref->parentPath($this->_sysref->basedir . "/" . $page));
+        $this->_sysref->includeWithThis($this->_sysref->basedir . "/" . $page, $vars);
+        chdir($orig_dir);
+    }
 }
 

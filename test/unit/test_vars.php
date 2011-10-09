@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/../lib/lime.php';
-require_once dirname(__FILE__) . '/../../src/Pinoco/VarsList.php';
+require_once dirname(__FILE__) . '/../../src/Pinoco.php';
 
 $t = new lime_test();
 $t->diag("Pinoco_Vars Test");

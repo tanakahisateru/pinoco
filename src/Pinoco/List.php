@@ -1,0 +1,394 @@
+<?php
+/**
+ * Pinoco: makes existing static web site dynamic transparently.
+ * Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * PHP Version 5
+ *
+ * @category   Framework
+ * @author     Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @copyright  Copyright 2010-2011, Hisateru Tanaka <tanakahisateru@gmail.com>
+ * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version    0.5.2
+ * @link       https://github.com/tanakahisateru/pinoco
+ * @filesource
+ * @package    Pinoco
+ */
+
+/**
+ * List model
+ * @package Pinoco
+ */
+class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
+    
+    private $_arr;
+    private $_default_val;
+
+    /**
+     * Constructor to make an empty instance.
+     */
+    public function __construct()
+    {
+        $this->_arr = array();
+        $this->_default_val = null;
+    }
+    
+    /**
+     * Makes a new object from Array.
+     * @param mixed $src
+     * @return Pinoco_List
+     */
+    public static function fromArray($src)
+    {
+        $self = new Pinoco_List();
+        $self->concat($src);
+        return $self;
+    }
+    
+    /**
+     * Wraps an existing Array.
+     * @param array &$srcref
+     * @return Pinoco_List
+     */
+    public static function wrap(&$srcref)
+    {
+        $self = new Pinoco_List();
+        $self->_arr = &$srcref;
+        return $self;
+    }
+    
+    /**
+     * Appends a value to tail.
+     * @param mixed $value,...
+     * @return void
+     */
+    public function push($value /*[, $value1[, ...]]*/)
+    {
+        $n = func_num_args();
+        for($i = 0; $i < $n; $i++) {
+            $a = func_get_arg($i);
+            array_push($this->_arr, $a);
+        }
+    }
+    
+    /**
+     * Removes and return a value from tail.
+     * @return mixed
+     */
+    public function pop()
+    {
+        return array_pop($this->_arr);
+    }
+    
+    /**
+     * Inserts a value to head.
+     * @param mixed $value,...
+     * @return void
+     */
+    public function unshift($value /*[, $value1[, ...]]*/)
+    {
+        $n = func_num_args();
+        for($i = 0; $i < $n; $i++) {
+            $a = func_get_arg($i);
+            array_unshift($this->_arr, $a);
+        }
+    }
+    
+    /**
+     * Removes and return a value from head.
+     * @return mixed
+     */
+    public function shift()
+    {
+        return array_shift($this->_arr);
+    }
+    
+    /**
+     * Concatinates another iteratable object.
+     * @param mixed $source
+     * @return void
+     */
+    public function concat($source /*[, $source1[, ...]]*/)
+    {
+        $n = func_num_args();
+        for($i = 0; $i < $n; $i++) {
+            $arg = func_get_arg($i);
+            foreach($arg as $e) {
+                array_push($this->_arr, $e);
+            }
+        }
+    }
+    
+    /**
+     * Sorts this list.
+     * @param callback|false $callable
+     * @return void
+     */
+    public function sort($callable=FALSE)
+    {
+        if($callable) {
+            sort($this->_arr);
+        }
+        else {
+            usort($this->_arr, $callable);
+        }
+    }
+    
+    /**
+     * Returns a number of element of this list.
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->_arr);
+    }
+    
+    /**
+     * Converts this list to string.
+     * @param string $sep
+     * @return string
+     */
+    public function join($sep=",")
+    {
+        return implode($sep, $this->_arr);
+    }
+    
+    /**
+     * Returns a reversed list.
+     * @return void
+     */
+    public function reverse()
+    {
+        return self::fromArray(array_reverse($this->_arr));
+    }
+    
+    /**
+     * Returns a slice.
+     * @param int $offset
+     * @param int $length
+     * @return Pinoco_List
+     */
+    public function slice($offset /*[, $length]*/) {
+        if(func_num_args() >= 2) {
+            $a1 = func_get_arg(1);
+            return self::fromArray(array_slice($this->_arr, $offset, $a1));
+        }
+        else {
+            return self::fromArray(array_slice($this->_arr, $offset));
+        }
+    }
+    
+    /**
+     * Removes elements by range and inserts another.
+     * @param int $offset
+     * @param int $length
+     * @param array $replacement
+     * @return Pinoco_List;
+     */
+    public function splice($offset, $length /*[, $replacement]*/) { // $replacement
+        if(func_num_args() >= 3) {
+            $a2 = func_get_arg(2);
+            return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
+        }
+        else {
+            return self::fromArray(array_splice($this->_arr, $offset, $length));
+        }
+    }
+    
+    /**
+     * Inserts another.
+     * @param int $offset
+     * @param mixed $value
+     * @return void
+     */
+    public function insert($offset, $value /*[, $value1[, ...]]*/)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        array_splice($this->_arr, $offset, 0, $args);
+    }
+    
+    /**
+     * Removes by range.
+     * @param int $offset
+     * @param int $length
+     * @return void
+     */
+    public function remove($offset, $length=1)
+    {
+        array_splice($this->_arr, $offset, $length);
+    }
+    
+    /**
+     * Returns the first position where value found in this list.
+     * @param mixed $value
+     * @return int
+     */
+    public function index($value)
+    {
+        $r = array_search($value, $this->_arr);
+        return $r===FALSE ? -1 : $r;
+    }
+    
+    /**
+     * Returns value by position.
+     * @param int $idx
+     * @param mixed $default
+     * @return unknown_type
+     */
+    public function get($idx /*[, $default]*/)
+    {
+        if(isset($this->_arr[$idx])) {
+            return $this->_arr[$idx];
+        }
+        else {
+            return func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+        }
+    }
+    
+    /**
+     * Stes value by position.
+     * @param int $idx
+     * @param mixed $value
+     * @param mixed $default
+     * @return void
+     */
+    public function set($idx, $value /*[, $default]*/)
+    {
+        for($i = count($this->_arr); $i < $idx; $i++) {
+            $this->_arr[$i] = func_num_args() > 2 ? func_get_arg(2) : $this->_default_val; //default??
+        }
+        $this->_arr[$idx] = $value;
+    }
+    
+    /**
+     * Sets a default value for overflow access.
+     * @param mixed $value
+     * @return void
+     */
+    public function setDefault($value)
+    {
+        $this->_default_val = $value;
+    }
+    
+    /**
+     * Exports elements to Array.
+     * @param array|null $modifier
+     * @return array
+     */
+    public function toArray($modifier=null)
+    {
+        $arr = array();
+        if($modifier) {
+            foreach($this->_arr as $i=>$v) {
+                $name = (strpos($modifier, "%") !== FALSE) ? sprintf($modifier, $i) : (
+                    is_callable($modifier) ? call_user_func($modifier, $i) : ($modifier . $i)
+                );
+                $arr[$name] = $v;
+            }
+        }
+        else {
+            foreach($this->_arr as $i=>$v) {
+                $arr[$i] = $v;
+            }
+        }
+        return $arr;
+    }
+    
+    /**
+     * Exports properties to Array recursively.
+     * @param int $depth
+     * @return array
+     */
+    public function toArrayRecurse($depth=false)
+    {
+        if($depth !== false && $depth == 0) { return $this; }
+        $arr = array();
+        foreach($this->_arr as $i=>$v) {
+            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+            }
+            $arr[$i] = $v;
+        }
+        return $arr;
+    }
+    
+    /**
+     * Fold operation for each elements.
+     * @param callback $callable
+     * @param mixed $initial
+     * @return mixed
+     */
+    public function reduce($callable, $initial=null)
+    {
+        return array_reduce($this->_arr, $callable, $initial);
+    }
+    
+    /**
+     * Some operation for each elements.
+     * @param callback $callable
+     * @return void
+     */
+    public function each($callable)
+    {
+        foreach($this->_arr as $e){
+            call_user_func($callable, $e);
+        }
+    }
+    
+    /**
+     * Regenerates list from this list which elements are applied given fnction.
+     * @param callback $callable
+     * @return Pinoco_List
+     */
+    public function map($callable)
+    {
+        return self::fromArray(array_map($callable, $this->_arr));
+    }
+    
+    /**
+     * Regenerates list from this list which elements are filterd by given fnction.
+     * @param callback $callable
+     * @return Pinoco_List
+     */
+    public function filter($callable)
+    {
+        return self::fromArray(array_filter($this->_arr, $callable));
+    }
+    /*
+    public function any($callable)
+    {
+    }
+    public function all($callable)
+    {
+    }
+    */
+    
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+    public function offsetExists($offset)
+    {
+        return $offset < count($this->_arr);
+    }
+    public function offsetUnset($offset)
+    {
+        array_splice($this->_arr, $offset, 1);
+    }
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+    
+    public function getIterator()
+    {
+        return new Pinoco_Iterator($this->_arr);
+    }
+    
+    public function __toString() { return __CLASS__; } // TODO: dump vars name/values
+}
+

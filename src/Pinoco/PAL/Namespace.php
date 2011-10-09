@@ -21,9 +21,6 @@
 
 require_once 'PHPTAL.php';
 require_once 'PHPTAL/Namespace.php';
-require_once 'PHPTAL/Php/Attribute/TAL/Content.php';
-require_once 'PHPTAL/Php/Attribute/TAL/Replace.php';
-require_once 'PHPTAL/Php/Attribute/TAL/Attributes.php';
 require_once 'PHPTAL/Dom/Defs.php';
 
 /**
@@ -63,67 +60,6 @@ class Pinoco_PAL_Namespace extends PHPTAL_Namespace
         );
         $class = $attrNames[$att->getLocalName()];
         return new $class($tag, $expression);
-    }
-}
-
-// attributes def
-/**
- * @package Pinoco
- * @subpackage PAL
- */
-class Pinoco_PAL_ContentNl2br extends PHPTAL_Php_Attribute_TAL_Content {
-    protected function doEchoAttribute(PHPTAL_Php_CodeWriter $codewriter, $code)
-    {
-        if ($code !== "''") {
-            if ($this->_echoType === self::ECHO_TEXT) {
-                $codewriter->flush();
-                $codewriter->pushCode('echo nl2br('.$codewriter->escapeCode($code).')');
-            }
-            else {
-                $codewriter->pushCode('echo nl2br('.$codewriter->stringifyCode($codewriter->interpolateHTML($code)).')');
-            }
-        }
-    }
-}
-/**
- * @package Pinoco
- * @subpackage PAL
- */
-class Pinoco_PAL_ReplaceNl2br extends PHPTAL_Php_Attribute_TAL_Replace {
-    protected function doEchoAttribute(PHPTAL_Php_CodeWriter $codewriter, $code)
-    {
-        if ($code !== "''") {
-            if ($this->_echoType === self::ECHO_TEXT) {
-                $codewriter->flush();
-                $codewriter->pushCode('echo nl2br('.$codewriter->escapeCode($code).')');
-            }
-            else {
-                $codewriter->pushCode('echo nl2br('.$this->stringifyCode($this->interpolateHTML($code)).')');
-            }
-        }
-    }
-}
-/**
- * @package Pinoco
- * @subpackage PAL
- */
-class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
-    {
-        // prepare
-        $codewriter->pushCode('if(isset($ctx->attr)){$_pal_attr_bak=$ctx->attr;}');
-        $codewriter->doSetVar('$ctx->attr', 'array()');
-        $attrs = $this->phpelement->getAttributeNodes();
-        foreach ($attrs as $attr) {
-            $qname = $attr->getQualifiedName();
-            $default_attr = $attr->getValueEscaped();
-            $codewriter->doSetVar('$ctx->attr[\'' . $qname . '\']', '\''. addcslashes($default_attr, "\\$\'\"\\\0\n\r\t") . '\'');
-        }
-        // main
-        parent::before($codewriter);
-        // cleanup
-        $codewriter->pushCode('unset($ctx->attr)');
-        $codewriter->pushCode('if(isset($_pal_attr_bak)){$ctx->attr=$_pal_attr_bak;unset($_pal_attr_bak);}');
     }
 }
 

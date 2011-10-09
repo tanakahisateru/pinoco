@@ -19,10 +19,17 @@
  */
 
 /**
+ * SPL autoload implementation for Pinoco libs
+ * @param string $class
+ * @return void
  */
-require_once dirname(__FILE__) . '/Pinoco/VarsList.php';
-require_once dirname(__FILE__) . '/Pinoco/Renderer.php';
-require_once dirname(__FILE__) . '/Pinoco/FlowControl.php';
+function __pinoco_autoload_impl($class)
+{
+    if(substr($class, 0, 7) === 'Pinoco_') {
+        require_once dirname(__FILE__) . '/' . strtr($class, "_", "/") . '.php';
+    }
+}
+spl_autoload_register('__pinoco_autoload_impl');
 
 /**
  * Pinoco web site environment
