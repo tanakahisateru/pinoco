@@ -14,7 +14,11 @@
     <target name="dist" depends="doc,package"/>
     
     <target name="test">
-        <exec command="php all.php" dir="./test/unit" logoutput="true"/>
+        <phpunit haltonerror="true" haltonfailure="true" printsummary="true">
+            <batchtest>
+                <fileset dir="test/unit/" includes="*.php" />
+            </batchtest>
+        </phpunit>
     </target>
     
     <target name="doc">
