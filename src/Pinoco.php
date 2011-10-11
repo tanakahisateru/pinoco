@@ -353,33 +353,6 @@ class Pinoco extends Pinoco_DynamicVars {
         );
     }
     
-    /**
-     * It reads and executes another PHP file with any local variables.
-     * It can read already executed file.
-     * @param string $script_abs_path must be absolute pathe for local file system.
-     * @param array $localvars
-     * @return bool
-     */
-    public function includeWithThis($script_abs_path, $localvars=array())
-    {
-        // script path must be absolute and exist.
-        if(!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
-            !is_file($script_abs_path)) {
-            return FALSE;
-        }
-        
-        if(!is_array($this->_script_include_stack)) {
-            $this->_script_include_stack = array();
-        }
-        array_push($this->_script_include_stack, $script_abs_path);
-        unset($script_abs_path);
-        extract($localvars);
-        unset($localvars);
-        include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
-        array_pop($this->_script_include_stack);
-        return TRUE;
-    }
-    
     // reserved props
     /**
      * Web site root URI.
@@ -987,6 +960,60 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
+     * It reads and executes another PHP file with any local variables.
+     * It can read already executed file.
+     * @param string $script_abs_path must be absolute pathe for local file system.
+     * @param array $localvars
+     * @return bool
+     */
+    private function includeWithThis($script_abs_path, $localvars=array())
+    {
+        // script path must be absolute and exist.
+        if(!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
+            !is_file($script_abs_path)) {
+            return FALSE;
+        }
+        
+        if(!is_array($this->_script_include_stack)) {
+            $this->_script_include_stack = array();
+        }
+        array_push($this->_script_include_stack, $script_abs_path);
+        unset($script_abs_path);
+        extract($localvars);
+        unset($localvars);
+        include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
+        array_pop($this->_script_include_stack);
+        return TRUE;
+    }
+    
+    /**
+     * Execute an external script in isolated variable scope.
+     * @param string $script Script filename absolute path or relative based on current script.
+     * @return bool
+     */
+    public function subscript($script)
+    {
+        if($script[0] != '/') {
+            $script = dirname($this->_script) . '/' . $script;
+        }
+        $prev_script = $this->_script;
+        $this->_script = $script;
+        try {
+            $this->updateIncdir();
+            $this->includeWithThis($this->_script, $this->_autolocal->toArray());
+        }
+        catch(Pinoco_FlowControlSkip $ex) {
+        }
+        catch(Pinoco_FlowControl $ex) {
+            $this->_activity->push($this->_script);
+            $this->_script = $prev_script;
+            throw $ex;
+        }
+        $this->_activity->push($this->_script);
+        $this->_script = $prev_script;
+    }
+    
+    /**
      * Runs a hook script.
      * @param string $script
      * @param string $subpath
@@ -995,23 +1022,15 @@ class Pinoco extends Pinoco_DynamicVars {
     private function _run_hook_if_exists($script, $subpath)
     {
         if(is_file($script)) {
-            $this->_script = $script;
             $this->_subpath = $subpath;
             try {
-                $this->updateIncdir();
-                $this->includeWithThis($this->_script, $this->_autolocal->toArray());
-            }
-            catch(Pinoco_FlowControlSkip $ex) {
+                $this->subscript($script);
             }
             catch(Pinoco_FlowControl $ex) {
-                $this->_activity->push($this->_script);
                 $this->_subpath = "";
-                $this->_script = null;
                 throw $ex;
             }
-            $this->_activity->push($this->_script);
             $this->_subpath = "";
-            $this->_script = null;
             return TRUE;
         }
         else {
