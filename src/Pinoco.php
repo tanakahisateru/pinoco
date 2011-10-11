@@ -707,7 +707,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $ext = pathinfo($page, PATHINFO_EXTENSION);
         if($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
             $renderer = $this->_renderers[$ext];
-            $renderer->render($page);
+            $renderer->prepareAndRender($page);
         }
         else {
             $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
