@@ -5,7 +5,8 @@ $this->renderers->html->cfg->encoding = "UTF-8";
 
 header("Content-Type:text/html;charset=utf-8");
 
-$this->autolocal->title = sprintf("Pinoco Test\n(%s)", basename(dirname($_SERVER['SCRIPT_NAME'])));
+$this->subscript('_title.php');
+//$this->autolocal->title = sprintf("Pinoco Test\n(%s)", basename(dirname($_SERVER['SCRIPT_NAME'])));
 
 //echo "<html>";
 //trigger_error("My error", E_USER_WARNING);
