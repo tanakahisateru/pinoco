@@ -87,7 +87,7 @@ abstract class Pinoco_Renderer {
      }
      
     /**
-     * HTML page renderring implementation.
+     * Executes rendering with calling before_rendering handler.
      * @param string $page
      * @param array $extravars
      * @return void
