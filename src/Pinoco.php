@@ -966,7 +966,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param array $localvars
      * @return bool
      */
-    private function includeWithThis($script_abs_path, $localvars=array())
+    public function _includeWithThis($script_abs_path, $localvars=array())
     {
         // script path must be absolute and exist.
         if(!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
@@ -1000,7 +1000,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->_script = $script;
         try {
             $this->updateIncdir();
-            $this->includeWithThis($this->_script, $this->_autolocal->toArray());
+            $this->_includeWithThis($this->_script, $this->_autolocal->toArray());
         }
         catch(Pinoco_FlowControlSkip $ex) {
         }

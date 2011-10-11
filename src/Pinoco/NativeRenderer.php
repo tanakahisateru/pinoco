@@ -37,7 +37,8 @@ class Pinoco_NativeRenderer extends Pinoco_Renderer {
         }
         $orig_dir  = getcwd();
         chdir($this->_sysref->parentPath($this->_sysref->basedir . "/" . $page));
-        $this->_sysref->includeWithThis($this->_sysref->basedir . "/" . $page, $vars);
+        $this->_sysref->updateIncdir();
+        $this->_sysref->_includeWithThis($this->_sysref->basedir . "/" . $page, $vars);
         chdir($orig_dir);
     }
 }
