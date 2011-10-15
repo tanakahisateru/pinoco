@@ -543,6 +543,42 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
+     * Serves static file or send 304 no-modified response automatically.
+     * This method terminates hook script flow.
+     *
+     * @param string $filename
+     * @param bool $no_cache
+     * @param string $mime_type
+     * @return void
+     */
+    public function serveStatic($filename, $no_cache=false, $mime_type=false)
+    {
+        if(!is_file($filename)) {
+            $this->error(404);
+        }
+        $stat = stat($filename);
+        $last_modified = max($stat['mtime'], $stat['ctime']);
+        $etag = md5($filename . $last_modified);
+        header('Last-modified: ' . gmdate('D, d M Y H:i:s T', $last_modified));
+        header('ETag: ' . $etag);
+        if(!$no_cache && @$_SERVER['HTTP_PRAGMA']!='no-cache' && @$_SERVER['HTTP_CAHCE_CONTROL']!='no-cache') {
+            if(
+                isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'] ||
+                isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $last_modified <= strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])
+            ) {
+                $this->error('304');
+            }
+        }
+        if(!$mime_type) {
+            $mime_type = self::mimeType($filename);
+        }
+        header('Content-type: ' . $mime_type);
+        readfile($filename);
+        $this->render(false);
+        $this->terminate();
+    }
+    
+    /**
      * Utility to get the parent path.
      * @param string $path
      * @return string
@@ -715,7 +751,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         $this->_manually_rendered = true;
     }
-        
+    
     /**
      * MIME type of file.
      * @param string $filename
@@ -1197,10 +1233,13 @@ class Pinoco extends Pinoco_DynamicVars {
                         $this->render($page);
                     }
                     else {
-                        header('Content-Type:' . $this->mimeType($this->_basedir . $page));
-                        //$st = stat($this->_basedir . $page);
-                        //header('Last-Modified:' . str_replace('+0000', 'GMT', gmdate("r", $st['mtime'])));
-                        readfile($this->_basedir . $page);  // TODO: streaming
+                        try {
+                            $this->serveStatic($this->_basedir . $page);
+                        }
+                        catch(Pinoco_FlowControlHttpError $ex) {
+                            throw $ex;
+                        }
+                        catch(Pinoco_FlowControl $ex) { }
                     }
                 }
                 else if(!$proccessed) {
