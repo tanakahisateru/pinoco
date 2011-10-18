@@ -212,7 +212,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->_incdir = self::newList();
         $this->_incdir->push($this->sysdir . "/lib"); // default lib dir
         
-        $this->_system_incdir = ini_get('include_path');
+        $this->_system_incdir = get_include_path();
         
         if($this->_path[strlen($this->_path) - 1] != '/' &&
             (is_dir($this->_basedir . $this->_path) || is_dir($this->_sysdir . "/hooks" . $this->_path))) {
@@ -864,23 +864,13 @@ class Pinoco extends Pinoco_DynamicVars {
         $runinc = array();
         
         array_push($runinc, dirname($this->script));
+        $cwd = getcwd();
+        chdir($this->sysdir);
+        $runinc = array_merge($runinc, array_map('realpath', $this->_incdir->toArray()));
+        chdir($cwd);
+        array_push($runinc, $this->_system_incdir);
         
-        foreach($this->_incdir as $dir) {
-            $cwd = getcwd();
-            chdir($this->sysdir);
-            array_push($runinc, realpath($dir));
-            chdir($cwd);
-        }
-        
-        $sysinc = explode($sep, $this->_system_incdir);
-        foreach($sysinc as $dir) {
-            $cwd = getcwd();
-            chdir($this->basedir);
-            array_push($runinc, realpath($dir));
-            chdir($cwd);
-        }
-        
-        ini_set('include_path', implode($sep, $runinc));
+        set_include_path(implode($sep, $runinc));
     }
     
     /**
@@ -1098,7 +1088,7 @@ class Pinoco extends Pinoco_DynamicVars {
             ob_start();
         }
         
-        $this->_system_incdir = ini_get('include_path');
+        $this->_system_incdir = get_include_path();
         
         $this->_manually_rendered = false;
         try {
@@ -1277,7 +1267,7 @@ class Pinoco extends Pinoco_DynamicVars {
             
         } while(count($process) > 0);
         
-        ini_set('include_path', $this->_system_incdir);
+        set_include_path($this->_system_incdir);
         
         if($output_buffering) {
             ob_end_flush();
