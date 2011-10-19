@@ -25,13 +25,13 @@
  * $validator->check('name')->is('not-empty')->is('max-length 255');
  * $validator->check('age')->is('not-empty')->is('integer')
  *                         ->is('>= 21', 'Adult only.');
- * if($validator->failed) {
- *   if($validator->result->name->valid) {
- *     echo $validator->result->name->message
- *   }
- *   if($validator->result->age->valid) {
- *     echo $validator->result->age->message
- *   }
+ * if($validator->valid) {
+ *    echo "OK";
+ * }
+ * else {
+ *     foreach($validator->errors as $field=>$context) {
+ *         echo $field . ":" . $context->message . "\n";
+ *     }
  * }
  * </code>
  *
@@ -41,10 +41,11 @@
  *   match /regexp/, not-match /regexp/, email, url
  *
  * @package Pinoco
- * @property-read Pinoco_Vars $result;
- * @property-read Pinoco_Vars $errors;
- * @property-read boolean $succeeded;
- * @property-read boolean $failed;
+ * @property-read Pinoco_Vars $result All context objects.
+ * @property-read Pinoco_Vars $errors Invalid context objects only.
+ * @property-read Pinoco_Vars $values Validated values unwrapped.
+ * @property-read boolean $valid   Totally valid or not.
+ * @property-read boolean $invalid Totally invalid or not.
  */
 class Pinoco_Validator extends Pinoco_DynamicVars {
 

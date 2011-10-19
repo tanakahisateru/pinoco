@@ -20,10 +20,11 @@
 
 /**
  * @package Pinoco
- * @property-read string $test
- * @property-read boolean $valid
- * @property-read boolean $invalid
- * @property-read string $message
+ * @property-read string $value Validated value.
+ * @property-read string $test Reason of failed by test name.
+ * @property-read boolean $valid Totally valid.
+ * @property-read boolean $invalid Totally invalid.
+ * @property-read string $message Error message when invalid.
  */
 class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     
