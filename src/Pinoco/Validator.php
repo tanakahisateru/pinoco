@@ -26,7 +26,7 @@
  * $validator->check('age')->is('not-empty')->is('integer')
  *                         ->is('>= 21', 'Adult only.');
  * if($validator->valid) {
- *    echo "OK";
+ *     echo "OK";
  * }
  * else {
  *     foreach($validator->errors as $field=>$context) {
