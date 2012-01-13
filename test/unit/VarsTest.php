@@ -180,5 +180,21 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertSame($v->a, $tmp['a']);
         $this->assertSame($v->b, $tmp['b']);
     }
+    
+    public function testNothing()
+    {
+        $v = Pinoco_NothingVars::instance();
+        $this->assertTrue($v->has('a'));
+        $this->assertSame($v, $v->get('a'));
+        $this->assertSame($v, $v->get('a', 'default'));
+        $this->assertSame($v, $v->get('a')->get('b'));
+        $v->set('a', 1);
+        $this->assertSame($v, $v->get('a'));
+        $this->assertEquals(0, count($v));
+        $this->assertEquals(0, count($v->keys()));
+        $this->assertEquals(array(), $v->toArray());
+        $this->assertEquals(array(), $v->toArrayRecurse());
+        $this->assertEquals('', strval($v));
+    }
 }
 

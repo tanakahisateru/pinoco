@@ -270,6 +270,15 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
+     * It provides the NothingVars object.
+     * @return Pinoco_NothingVars
+     */
+    public static function newNothing()
+    {
+        return Pinoco_NothingVars::instance();
+    }
+    
+    /**
      * It provides a Vars object as existing Array wrapper.
      * @param array &$ref
      * @return Pinoco_Vars
