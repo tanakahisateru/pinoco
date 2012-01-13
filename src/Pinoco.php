@@ -18,18 +18,7 @@
  * @package    Pinoco
  */
 
-/**
- * SPL autoload implementation for Pinoco libs
- * @param string $class
- * @return void
- */
-function __pinoco_autoload_impl($class)
-{
-    if(substr($class, 0, 7) === 'Pinoco_') {
-        require_once dirname(__FILE__) . '/' . strtr($class, "_", "/") . '.php';
-    }
-}
-spl_autoload_register('__pinoco_autoload_impl');
+require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
 
 /**
  * Pinoco web site environment

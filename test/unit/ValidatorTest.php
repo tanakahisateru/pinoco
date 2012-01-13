@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . '/../../src/Pinoco.php';
+require_once dirname(__FILE__) . '/../../src/Pinoco/_bootstrap.php';
 
 class ValidatorTest extends PHPUnit_Framework_TestCase
 {
