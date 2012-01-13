@@ -15,3 +15,6 @@ $this->subscript('_title.php');
 //echo "<html>";
 //trigger_error("My error", E_USER_WARNING);
 //throw new RuntimeException('My exception');
+
+$this->nothing = Pinoco::newNothing();
+
