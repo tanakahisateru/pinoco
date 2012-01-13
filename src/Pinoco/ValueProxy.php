@@ -19,57 +19,50 @@
  */
 
 /**
- * Lazy value proxy
+ * Value proxy
  * @package Pinoco
  * @internal
  */
-class Pinoco_LazyValueProxy {
+class Pinoco_ValueProxy {
     
     private $callback;
+    private $owner;
     private $context;
     private $oneshot;
     private $freeze;
     private $value;
     
     /**
-     * Constructor to make an lazy value proxy.
+     * Constructor to make a value proxy.
      *
      * @param callable $callback
+     * @param mixed $owner
      * @param boolean $oneshot
      * @param array $context
      */
-    public function __construct($callback, $oneshot=false, $context=array())
+    public function __construct($callback, $owner, $oneshot=false, $context=array())
     {
-        if(is_callable($callback)) {
-            $this->callback = $callback;
-            $this->oneshot = $oneshot;
-            $this->context = !empty($context) ? $context : array();
-            $this->freeze = false;
-            $this->value = null;
-        }
-        else {
-            $this->freeze = true;
-            $this->value = $callback;
-        }
+        $this->callback = $callback;
+        $this->owner = $owner;
+        $this->oneshot = $oneshot;
+        $this->context = !empty($context) ? $context : array();
+        $this->freeze = false;
+        $this->value = null;
     }
     
     /**
      * Evalute real value.
      *
-     * @param mixed $ovner
      * @return mixed
      */
-    public function fetch($owner=null)
+    public function fetch()
     {
         if($this->oneshot && $this->freeze) {
             return $this->value;
         }
         $args = $this->context;
-        array_unshift($args, $owner);
+        array_unshift($args, $this->owner);
         $result = call_user_func_array($this->callback, $args);
-        if($result instanceof Pinoco_LazyValueProxy) {
-            $result = $result->fetch($owner);
-        }
         if($this->oneshot) {
             $this->freeze = true;
             $this->value = $result;

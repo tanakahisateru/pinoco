@@ -1,19 +1,19 @@
 <?php
 require_once dirname(__FILE__) . '/../../src/Pinoco/_bootstrap.php';
 
-class LazyValueProxyTest extends PHPUnit_Framework_TestCase
+class ValueProxyTest extends PHPUnit_Framework_TestCase
 {
     public function testFetch()
     {
         $fetcher = create_function('$owner', 'return "lazy value";');
-        $p = new Pinoco_LazyValueProxy($fetcher);
+        $p = new Pinoco_ValueProxy($fetcher, null);
         $this->assertEquals('lazy value', $p->fetch());
     }
 
     public function testMutableFetcherForDynamic()
     {
         $mutable_fetcher = create_function('$owner', 'global $ccc; return ++$ccc;');
-        $p = new Pinoco_LazyValueProxy($mutable_fetcher);
+        $p = new Pinoco_ValueProxy($mutable_fetcher, null);
         $this->assertEquals(1, $p->fetch());
         $this->assertEquals(2, $p->fetch());
     }
@@ -21,7 +21,7 @@ class LazyValueProxyTest extends PHPUnit_Framework_TestCase
     public function testMutableFetcherForLazy()
     {
         $mutable_fetcher = create_function('$owner', 'global $ccc2; return ++$ccc2;');
-        $p = new Pinoco_LazyValueProxy($mutable_fetcher, true);
+        $p = new Pinoco_ValueProxy($mutable_fetcher, null, true);
         $this->assertEquals(1, $p->fetch());
         $this->assertEquals(1, $p->fetch());
     }
@@ -30,23 +30,23 @@ class LazyValueProxyTest extends PHPUnit_Framework_TestCase
     {
         $o = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
         $fetcher = create_function('$owner', 'return $owner->a;');
-        $p = new Pinoco_LazyValueProxy($fetcher);
-        $this->assertEquals(1, $p->fetch($o));
+        $p = new Pinoco_ValueProxy($fetcher, $o);
+        $this->assertEquals(1, $p->fetch());
     }
 
     public function testOwnerReferenceWithContext()
     {
         $o = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
         $fetcher = create_function('$owner,$a1,$a2', 'return $owner->b+$a1+$a2;');
-        $p = new Pinoco_LazyValueProxy($fetcher, false, array(3, 4));
-        $this->assertEquals(9, $p->fetch($o));
+        $p = new Pinoco_ValueProxy($fetcher, $o, false, array(3, 4));
+        $this->assertEquals(9, $p->fetch());
     }
 
     public function testWithHostObject()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
         $fetcher = create_function('$owner', 'return $owner->a;');
-        $v->lazyprop = new Pinoco_LazyValueProxy($fetcher);
+        $v->lazyprop = new Pinoco_ValueProxy($fetcher, $v);
         $this->assertEquals(3, $v->keys()->count());
         $this->assertEquals(1, $v->lazyprop);
         $this->assertEquals(1, $v->lazyprop);

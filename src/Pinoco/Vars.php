@@ -72,8 +72,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     {
         if(array_key_exists($name, $this->_vars)) {
             $r = $this->_vars[$name];
-            if($r instanceof Pinoco_LazyValueProxy) {
-                $r = $r->fetch($this);
+            if($r instanceof Pinoco_ValueProxy) {
+                $r = $r->fetch();
             }
             return $r;
         }
@@ -128,7 +128,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function registerAsDynamic($name, $callback, $context=array())
     {
-        $this->_vars[$name] = new Pinoco_LazyValueProxy($callback, false, $context);
+        $this->_vars[$name] = new Pinoco_ValueProxy($callback, $this, false, $context);
     }
     
     /**
@@ -141,7 +141,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function registerAsLazy($name, $callback, $context=array())
     {
-        $this->_vars[$name] = new Pinoco_LazyValueProxy($callback, true, $context);
+        $this->_vars[$name] = new Pinoco_ValueProxy($callback, $this, true, $context);
     }
     
     /**
@@ -153,7 +153,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     public function markAsDirty($name)
     {
         if(array_key_exists($name, $this->_vars) &&
-            $this->_vars[$name] instanceof Pinoco_LazyValueProxy
+            $this->_vars[$name] instanceof Pinoco_ValueProxy
         ) {
             $this->_vars[$name]->dirty();
         }
