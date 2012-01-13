@@ -465,6 +465,25 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
         return !$this->get_valid();
     }
     
+    /**
+     * Returns all succeeded checking results to be used in form's initial state.
+     * If you fetch a field not given by $values, you will get a passed checking
+     * context instead.
+     * @param array $values
+     * @return Pinoco_Vars
+     */
+    public static function emptyResult($values=array())
+    {
+        $validator = new self($values);
+        foreach($values as $name=>$value) {
+            $validator->check($name)->is('pass');
+        }
+        $result = $validator->result;
+        $result->setDefault($validator->contextFor('any')->is('pass'));
+        $result->setLoose(true);
+        return $result;
+    }
+    
     /////////////////////////////////////////////////////////////////////
     // builtin tests
     private function _testPassComplex($target, $name, $exists, $value)

@@ -212,7 +212,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->check('bar');
         $this->assertEquals(array('foo' => "ABC", 'bar'=>"def"), $v->values->toArray());
     }
-
+    
     public function testExtendingNamedFilter()
     {
         $add_filter = create_function('$v,$p', 'return $v + $p;');
@@ -222,5 +222,16 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v = new Pinoco_Validator($testee);
         $v->defineFilter('add', $add_filter);
         $this->assertEquals(3, $v->check('foo')->filter('add 1')->value);
+    }
+    
+    public function testEmptyResult()
+    {
+        $form = Pinoco_Validator::emptyResult();
+        $this->assertTrue($form->foo->valid);
+        $this->assertFalse($form->foo->invalid);
+        $this->assertSame(null, $form->foo->value);
+        $form = Pinoco_Validator::emptyResult(array('foo'=>"init"));
+        $this->assertEquals('init', $form->foo->value);
+        $this->assertEquals(null, $form->bar->value);
     }
 }
