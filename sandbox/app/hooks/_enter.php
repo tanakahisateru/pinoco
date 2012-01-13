@@ -18,3 +18,4 @@ $this->subscript('_title.php');
 
 $this->nothing = Pinoco::newNothing();
 
+$this->form = Pinoco_Validator::emptyResult(array('foo'=>1234));

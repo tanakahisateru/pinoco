@@ -45,5 +45,14 @@
         </p>
         
         <p>NothigVars: ${this/nothing/foo/bar}</p>
+        
+        <form>
+            <label>foo</label>
+            <input type="text" name="foo" value="${this/form/foo/value}" />
+            <span tal:condition="this/form/foo/valid">${this/form/foo/message}</span>
+            <label>bar</label>
+            <input type="text" name="bar" value="${this/form/bar/value}" />
+            <span tal:condition="this/form/bar/valid">${this/form/bar/message}</span>
+        </form>
     </body>
 </html>
