@@ -72,6 +72,17 @@ class Pinoco_NothingVars extends Pinoco_Vars {
      * Every values pased to Nothing would be lost.
      * @param string $name
      * @param callable $callback
+     * @return void
+     */
+    public function registerAsMethod($name, $callback)
+    {
+        $this->_vars[$name] = new Pinoco_MethodProxy($callback, $this);
+    }
+    
+    /**
+     * Every values pased to Nothing would be lost.
+     * @param string $name
+     * @param callable $callback
      * @param array $context
      * @return void
      */
