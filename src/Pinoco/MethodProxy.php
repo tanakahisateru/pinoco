@@ -37,9 +37,9 @@ class Pinoco_MethodProxy {
     public function __construct($callback, $owner)
     {
         // If closure, PHP 5.4 can bind $this with it.
-        if(is_object($this->callback) && method_exists($this->callback, 'bindTo')) {
-            $callback = $this->callback->bindTo($this->owner);
-        }
+        // if(is_object($this->callback) && method_exists($this->callback, 'bindTo')) {
+        //     $callback = $this->callback->bindTo($this->owner);
+        // }
         $this->callback = $callback;
         $this->owner = $owner;
     }
