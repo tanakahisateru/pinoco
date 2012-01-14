@@ -119,6 +119,19 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     }
     
     /**
+     * Extends existing instance with any callable object.
+     * The instance would be passed to the 1st argument of callback, then
+     * trailings are filled as is just like Python's OOP.
+     * @param string $name
+     * @param callable $callback
+     * @return void
+     */
+    public function registerAsMethod($name, $callback)
+    {
+        $this->_vars[$name] = new Pinoco_MethodProxy($callback, $this);
+    }
+    
+    /**
      * Sets a value to this object as given named dynamic value.
      * The callback evaluted every time when fetched.
      * @param string $name
@@ -202,6 +215,21 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     public function __unset($name)
     {
         $this->remove($name);
+    }
+    
+    public function __call($name, $arguments)
+    {
+        if(array_key_exists($name, $this->_vars)) {
+            $m = $this->_vars[$name];
+            if($m instanceof Pinoco_MethodProxy) {
+                return $m->call($arguments);
+            }
+            elseif(is_callable($m)) {
+                return call_user_func_array($m, $arguments);
+            }
+        }
+        $exclass = class_exists('BadMethodCallException') ? 'BadMethodCallException' : 'Exception';
+        throw new $exclass("The Vars object has no such method: $name.");
     }
     
     /**
