@@ -1,5 +1,0 @@
-RewriteEngine On
-
-# nested mod_rewrite test.
-RewriteRule ^(.*)$   ../basic/$1 [L] 
-
