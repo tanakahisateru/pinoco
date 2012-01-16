@@ -83,6 +83,48 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     }
     
     /**
+     * Returns a value or default by tree expression.
+     * @param string $expression
+     * @param mixed $default
+     * @return mixed
+     */
+    public function rget($expression /*[, $default]*/)
+    {
+        $default = func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+        $es = explode('/', $expression);
+        $v = $this;
+        while(count($es) > 0) {
+            $name = trim(array_shift($es));
+            if($name === "") {
+                continue;
+            }
+            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+                $v = $v->get($name, $default);
+            }
+            elseif(is_object($v)) {
+                if(property_exists($v, $name)) {
+                    $v = $v->$name;
+                }
+                else {
+                    return $default;
+                }
+            }
+            elseif(is_array($v)) {
+                if(array_key_exists($name, $v)) {
+                    $v = $v[$name];
+                }
+                else {
+                    return $default;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $v;
+    }
+    
+    /**
      * Checks if this object has certain property or not.
      * If setloose is set true then it returns true always.
      * @param string $name

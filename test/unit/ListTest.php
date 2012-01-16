@@ -234,4 +234,23 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertSame($l[0], $tmp[0]);
         $this->assertSame($l[1], $tmp[1]);
     }
+    
+    public function testExpressionAccess()
+    {
+        $obj = new stdClass;
+        $obj->c = '1';
+        $v = Pinoco_List::fromArray(array(
+            0,
+            array(
+                'a'=>Pinoco_Vars::fromArray(array(
+                    'b'=>$obj,
+                )),
+            ),
+            2
+        ));
+        $this->assertEquals(0, $v->rget('0'));
+        $this->assertEquals(1, $v->rget('1/a/b/c'));
+        $this->assertEquals('none', $v->rget('1/a/b/d', 'none'));
+        $this->assertEquals('none', $v->rget('2/a/b/c', 'none'));
+    }
 }

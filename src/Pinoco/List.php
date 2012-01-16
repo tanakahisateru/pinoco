@@ -234,7 +234,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     }
     
     /**
-     * Returns value by position.
+     * Returns value or default by position.
      * @param int $idx
      * @param mixed $default
      * @return unknown_type
@@ -247,6 +247,48 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
         else {
             return func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
         }
+    }
+    
+    /**
+     * Returns a value or default by tree expression.
+     * @param string $expression
+     * @param mixed $default
+     * @return mixed
+     */
+    public function rget($expression /*[, $default]*/)
+    {
+        $default = func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+        $es = explode('/', $expression);
+        $v = $this;
+        while(count($es) > 0) {
+            $name = trim(array_shift($es));
+            if($name === "") {
+                continue;
+            }
+            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+                $v = $v->get($name, $default);
+            }
+            elseif(is_object($v)) {
+                if(property_exists($v, $name)) {
+                    $v = $v->$name;
+                }
+                else {
+                    return $default;
+                }
+            }
+            elseif(is_array($v)) {
+                if(array_key_exists($name, $v)) {
+                    $v = $v[$name];
+                }
+                else {
+                    return $default;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $v;
     }
     
     /**

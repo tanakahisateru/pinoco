@@ -196,5 +196,21 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $v->toArrayRecurse());
         $this->assertEquals('', strval($v));
     }
+    
+    public function testExpressionAccess()
+    {
+        $obj = new stdClass;
+        $obj->c = '1';
+        $v = Pinoco_Vars::fromArray(array(
+            'a'=>array(
+                'b'=>Pinoco_List::fromArray(array(
+                    0, $obj, 2
+                )),
+            ),
+        ));
+        $this->assertEquals(0, $v->rget('a/b/0'));
+        $this->assertEquals(1, $v->rget('a/b/1/c'));
+        $this->assertEquals('none', $v->rget('a/b/1/d', 'none'));
+    }
 }
 
