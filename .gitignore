@@ -1,6 +1,6 @@
 /build/
 /sandbox/app/tmp/*
-.htaccess
+/.htaccess
 
 .project
 .buildpath
