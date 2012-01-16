@@ -988,14 +988,14 @@ class Pinoco extends Pinoco_DynamicVars {
      * It can read already executed file.
      * @param string $script_abs_path must be absolute pathe for local file system.
      * @param array $localvars
-     * @return bool
+     * @return mixed
      */
     public function _includeWithThis($script_abs_path, $localvars=array())
     {
         // script path must be absolute and exist.
         if(!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
             !is_file($script_abs_path)) {
-            return FALSE;
+            return;
         }
         
         if(!is_array($this->_script_include_stack)) {
@@ -1005,15 +1005,15 @@ class Pinoco extends Pinoco_DynamicVars {
         unset($script_abs_path);
         extract($localvars);
         unset($localvars);
-        include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
+        $retval = include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
         array_pop($this->_script_include_stack);
-        return TRUE;
+        return $retval;
     }
     
     /**
      * Execute an external script in isolated variable scope.
      * @param string $script Script filename absolute path or relative based on current script.
-     * @return bool
+     * @return mixed
      */
     public function subscript($script)
     {
@@ -1022,19 +1022,23 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         $prev_script = $this->_script;
         $this->_script = $script;
+        $this->updateIncdir();
         try {
-            $this->updateIncdir();
-            $this->_includeWithThis($this->_script, $this->_autolocal->toArray());
+            $retval = $this->_includeWithThis($this->_script, $this->_autolocal->toArray());
+            $this->_activity->push($this->_script);
+            $this->_script = $prev_script;
+            return $retval;
         }
         catch(Pinoco_FlowControlSkip $ex) {
+            $this->_activity->push($this->_script);
+            $this->_script = $prev_script;
+            return;
         }
         catch(Pinoco_FlowControl $ex) {
             $this->_activity->push($this->_script);
             $this->_script = $prev_script;
             throw $ex;
         }
-        $this->_activity->push($this->_script);
-        $this->_script = $prev_script;
     }
     
     /**
