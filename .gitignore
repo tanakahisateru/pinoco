@@ -1,5 +1,4 @@
 /build/
-/sandbox/app/tmp/*
 /.htaccess
 
 .project
