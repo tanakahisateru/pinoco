@@ -859,7 +859,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * Writes Pinoco credit into HTTP header.
      * @return void
      */
-    private function _credit_into_x_powerd_by()
+    public static function credit_into_header()
     {
         $CREDIT_LOGO = __CLASS__ . "/" . self::VERSION;
         if(!headers_sent()) {
@@ -867,7 +867,9 @@ class Pinoco extends Pinoco_DynamicVars {
             foreach(headers_list() as $http_header) {
                 if(preg_match('/^X-Powered-By:/', $http_header)) {
                     $found = true;
-                    header($http_header . " " . $CREDIT_LOGO);
+                    if(!preg_match('/ ' . preg_quote($CREDIT_LOGO, '/') . '/', $http_header)) {
+                        header($http_header . " " . $CREDIT_LOGO);
+                    }
                     break;
                 }
             }
@@ -1119,9 +1121,6 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public function run($output_buffering=TRUE)
     {
-        // insert credit into X-Powered-By header
-        $this->_credit_into_x_powerd_by();
-        
         self::$_current_instance = $this;
         
         if(!(function_exists('xdebug_is_enabled') && xdebug_is_enabled())
