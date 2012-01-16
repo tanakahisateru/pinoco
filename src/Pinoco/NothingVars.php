@@ -106,7 +106,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
      * @param mixed $src
      * @return void
      */
-    public function import($src)
+    public function import($src, $filter=false, $default=null, $modifier="%s")
     {
     }
     
@@ -114,7 +114,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
      * Nothig as Array is empty array.
      * @return array
      */
-    public function toArray()
+    public function toArray($filter=false, $default=null, $modifier="%s")
     {
         return array();
     }
