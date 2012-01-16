@@ -10,8 +10,8 @@ class PinocoTest extends PHPUnit_Framework_TestCase
             $base,
             $dispatcher,
             $path,
-            $project . '/sandbox/www',
-            $project . '/sandbox/app'
+            $project . '/test/sandbox/www',
+            $project . '/test/sandbox/app'
         );
         return $pinoco;
     }
