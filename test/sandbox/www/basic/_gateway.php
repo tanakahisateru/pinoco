@@ -10,6 +10,9 @@ $pinoco = Pinoco::create("../../app", array(
 //    'use_path_info'    => TRUE,  // TRUE or FALSE default TRUE
 //    'custom_path_info' => FALSE, // FALSE(auto) or string default FALSE
 //    'directory_index'  => "index.html index.php", // string like DirectoryIndex directive default "index.html index.php"
-));
-$pinoco->run();
+))
+->config('cfg', 'config/main.ini')
+->config('cfg', 'config/override.php')
+->config('cfg', array('baz'=>300))
+->run();
 

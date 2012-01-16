@@ -54,5 +54,10 @@
             <input type="text" name="bar" value="${this/form/bar/value}" />
             <span tal:condition="this/form/bar/valid">${this/form/bar/message}</span>
         </form>
+        
+        <pre>${php:print_r(this.rget('cfg').toArray(), true)}</pre>
+        <p>cfg/mail/auther ${php:this.rget('cfg/mail/auther')}</p>
+        
+        <pre>${php:print_r(this.activity.toArray(), true)}</pre>
     </body>
 </html>

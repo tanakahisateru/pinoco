@@ -248,6 +248,54 @@ class Pinoco extends Pinoco_DynamicVars {
     
     public function __toString() { return __CLASS__ . " " . self::VERSION; }
     
+    /**
+     * Imports named attribute from file or array.
+     * load $name
+     * @param string $name Attribute name of Pinoco instance.
+     * @param mixed $source Config file path based on the app dir or array.
+     * @return Pinoco
+     */
+    public function config($name, $source)
+    {
+        $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
+        if(is_string($source)) {
+            $file = $this->_sysdir . '/' . ltrim($source, '/');
+            if(!is_file($file)) {
+                return $this; // pass configuration if file not exists
+            }
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            switch($ext) {
+                case 'ini':
+                    $source = parse_ini_file($file, true);
+                    if($source === FALSE) {
+                        throw new $exclass('Can\'t load counfig file: ' . $source);
+                    }
+                    foreach($source as $k=>&$v) {
+                        if(is_array($v)) {
+                            $v = Pinoco_Vars::fromArray($v);
+                        }
+                    }
+                    break;
+                case 'php':
+                    $source = require $file;
+                    if(!(is_array($source) || is_object($source) && ($source instanceof Pinoco_Vars || $source instanceof Pinoco_List))) {
+                        throw new $exclass('Can\'t load counfig file: ' . $source);
+                    }
+                    break;
+                default:
+                    throw new $exclass('Can\'t load counfig file: ' . $source);
+            }
+        }
+        elseif(!is_array($source)) {
+            throw new $exclass('Can\'t load counfig.');
+        }
+        if(!$this->has($name)) {
+            $this->set($name, new Pinoco_Vars());
+        }
+        $this->get($name)->import($source);
+        return $this;
+    }
+    
     // factory
     /**
      * It provides a new Vars object (that can be filled with existing Array).
@@ -1022,20 +1070,18 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         $prev_script = $this->_script;
         $this->_script = $script;
+        $this->_activity->push($this->_script);
         $this->updateIncdir();
         try {
             $retval = $this->_includeWithThis($this->_script, $this->_autolocal->toArray());
-            $this->_activity->push($this->_script);
             $this->_script = $prev_script;
             return $retval;
         }
         catch(Pinoco_FlowControlSkip $ex) {
-            $this->_activity->push($this->_script);
             $this->_script = $prev_script;
             return;
         }
         catch(Pinoco_FlowControl $ex) {
-            $this->_activity->push($this->_script);
             $this->_script = $prev_script;
             throw $ex;
         }
