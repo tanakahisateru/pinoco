@@ -1,9 +1,11 @@
 <?php
-function setupTALRenderer($renderer) {
-    $pinoco = Pinoco::instance();
-    $renderer->cfg->phpCodeDestination = $pinoco->sysdir . "/tmp";
-    $renderer->cfg->encoding = "UTF-8";
-    //$renderer->cfg->outputMode = 11;  // XHTML=11, XML=22, HTML5=55
+if(!function_exists('setupTALRenderer')) {
+    function setupTALRenderer($renderer) {
+        $pinoco = Pinoco::instance();
+        $renderer->cfg->phpCodeDestination = $pinoco->sysdir . "/tmp";
+        $renderer->cfg->encoding = "UTF-8";
+        //$renderer->cfg->outputMode = 11;  // XHTML=11, XML=22, HTML5=55
+    }
 }
 $this->renderers->html->before_rendering = 'setupTALRenderer';
 

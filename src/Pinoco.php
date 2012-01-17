@@ -200,6 +200,9 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->_dispatcher = $dispatcher;
         $this->_path = $path;
         $this->_basedir = realpath($basedir);
+        if(!is_dir($this->_basedir)) {
+            throw new InvalidArgumentException("Invalid base directory:" . $basedir . " does not exist.");
+        }
         $this->_sysdir = realpath($sysdir);
         if(!is_dir($this->_sysdir)) {
             throw new InvalidArgumentException("Invalid system directory:" . $sysdir . " does not exist.");
@@ -1391,5 +1394,27 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         self::$_current_instance = null;
     }
+    
+    /**
+     * @param string $sysdir
+     * @param string $basedir
+     * @param string $baseuri
+     * @return Pinoco
+     */
+    public static function testenv($basedir, $sysdir, $baseuri="/", $dispatcher="")
+    {
+        return new self($baseuri, $dispatcher, '/', $basedir, $sysdir, true);
+    }
+    
+    /**
+     * @param string $path
+     * @return Pinoco
+     */
+    public function testrun($path)
+    {
+        $this->_path = $path;
+        $this->run();
+    }
+    
 }
 
