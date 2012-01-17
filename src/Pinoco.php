@@ -771,9 +771,11 @@ class Pinoco extends Pinoco_DynamicVars {
     
     /**
      * Returns default page file considerd with directory index.
+     * @param string $path
+     * @param string $last_pathelem
      * @return string|false
      */
-    public function _page_from_path_with_directory_index($path)
+    public function _page_from_path_with_directory_index($path, $last_pathelem=null)
     {
         $page = "";
         $pes = explode("/", $path);
@@ -794,14 +796,20 @@ class Pinoco extends Pinoco_DynamicVars {
         
         if($page[strlen($page) - 1] == "/") {
             $di = "";
-            foreach(explode(" ", $this->_directory_index) as $idx) {
-                if(is_file($this->_basedir . $page . $idx)) {
-                    $di = $idx;
-                    break;
+            $idxs = explode(" ", $this->_directory_index);
+            if($last_pathelem && in_array($last_pathelem, $idxs)) {
+                $di = $last_pathelem;
+            }
+            if($di == "") {
+                foreach($idxs as $idx) {
+                    if(is_file($this->_basedir . $page . $idx)) {
+                        $di = $idx;
+                        break;
+                    }
                 }
             }
             if($di == "") {
-                foreach(explode(" ", $this->_directory_index) as $idx) {
+                foreach($idxs as $idx) {
                     $deffile = "_default." . pathinfo($idx, PATHINFO_EXTENSION);
                     if(is_file($this->_basedir . $page . $deffile)) {
                         $di = $deffile;
@@ -1305,7 +1313,7 @@ class Pinoco extends Pinoco_DynamicVars {
                 
                 if($this->_page != "<default>") {
                     $pagepath = $this->resolvePath($this->_page);
-                    $page = $this->_page_from_path_with_directory_index($pagepath);
+                    $page = $this->_page_from_path_with_directory_index($pagepath, $proccessed ? $fename : false);
                 }
                 else {
                     $pagepath = $this->_path;
@@ -1314,7 +1322,7 @@ class Pinoco extends Pinoco_DynamicVars {
                         $pagepath = call_user_func($this->_page_modifier, $pagepath);
                     }
                     if($pagepath) {
-                        $page = $this->_page_from_path_with_directory_index($pagepath);
+                        $page = $this->_page_from_path_with_directory_index($pagepath, $proccessed ? $fename : false);
                     }
                     else {
                         $page = FALSE;

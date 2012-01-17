@@ -1,2 +1,4 @@
 <?php
-echo "This script will not be prccessed. Because index.html is not exist in base dir.";
+echo __FILE__;
+echo '<br/>';
+echo "This script will use index.html not index.php. But index.html is not exist in base dir.";
