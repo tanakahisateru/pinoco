@@ -232,14 +232,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         */
         
-        $this->_request = self::newVars();
-        $this->_request->server = self::wrapVars($_SERVER);
-        $this->_request->get = self::wrapVars($_GET);
-        $this->_request->post = self::wrapVars($_POST);
-        $this->_request->cookie = self::wrapVars($_COOKIE);
-        $this->_request->files = self::wrapVars($_FILES);
-        //$this->_request->session = self::wrapVars($_SESSION); // TODO lazy fetch after session_begin
-        $this->_request->env = self::wrapVars($_ENV);
+        $this->_request = new Pinoco_HttpRequestVars();
         
         $this->_script = null;
         $this->_activity = self::newList();
