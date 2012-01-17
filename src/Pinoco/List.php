@@ -56,8 +56,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
     public static function wrap(&$srcref)
     {
         if(!is_array($srcref)) {
-            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
-            throw new $exclass("Non array variable was given.");
+            throw new InvalidArgumentException("Non array variable was given.");
         }
         $self = new Pinoco_List();
         $self->_arr = &$srcref;

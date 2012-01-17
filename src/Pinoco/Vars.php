@@ -58,8 +58,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     public static function wrap(&$srcref)
     {
         if(!is_array($srcref)) {
-            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
-            throw new $exclass("Non array variable was given.");
+            throw new InvalidArgumentException("Non array variable was given.");
         }
         $self = new Pinoco_Vars();
         $self->_vars = &$srcref;
@@ -274,8 +273,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
                 return call_user_func_array($m, $arguments);
             }
         }
-        $exclass = class_exists('BadMethodCallException') ? 'BadMethodCallException' : 'Exception';
-        throw new $exclass("The Vars object has no such method: $name.");
+        throw new BadMethodCallException("The Vars object has no such method: $name.");
     }
     
     /**
@@ -374,8 +372,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
             $srcarr = get_object_vars($src);
         }
         else {
-            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
-            throw new $exclass("Can't import from scalar variable.");
+            throw new InvalidArgumentException("Can't import from scalar variable.");
         }
         $ks = $filter ? $filter : array_keys($srcarr);
         foreach($ks as $k) {

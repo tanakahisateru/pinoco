@@ -7,8 +7,7 @@ class TwigRenderer extends Pinoco_Renderer {
     {
         include_once 'Twig/Autoloader.php';
         if(!class_exists('Twig_Autoloader')){
-            $exclass = class_exists('RuntimeException') ? 'RuntimeException' : 'Exception';
-            throw new $exclass("Twig is not installed.");
+            throw new RuntimeException("Twig is not installed.");
         }
         Twig_Autoloader::register();
 

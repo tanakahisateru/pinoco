@@ -92,8 +92,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
             call_user_func(array($this, 'set_' . $name), $value);
         }
         else if(method_exists($this, 'get_' . $name)) {
-            $exclass = class_exists('RuntimeException') ? 'RuntimeException' : 'Exception';
-            throw new $exclass("Cannot reassign to ". $name . ".");
+            throw new InvalidArgumentException("Cannot reassign to ". $name . ".");
         }
         else {
             parent::set($name, $value);

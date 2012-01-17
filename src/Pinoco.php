@@ -202,8 +202,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->_basedir = realpath($basedir);
         $this->_sysdir = realpath($sysdir);
         if(!is_dir($this->_sysdir)) {
-            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
-            throw new $exclass("Invalid system directory:" . $sysdir . " does not exist.");
+            throw new InvalidArgumentException("Invalid system directory:" . $sysdir . " does not exist.");
         }
         
         $this->_incdir = self::newList();
@@ -268,7 +267,6 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public function config($name, $source)
     {
-        $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
         if(is_string($source)) {
             $file = $this->_sysdir . '/' . ltrim($source, '/');
             if(!is_file($file)) {
@@ -279,7 +277,7 @@ class Pinoco extends Pinoco_DynamicVars {
                 case 'ini':
                     $source = parse_ini_file($file, true);
                     if($source === FALSE) {
-                        throw new $exclass('Can\'t load counfig file: ' . $source);
+                        throw new InvalidArgumentException('Can\'t load counfig file: ' . $source);
                     }
                     foreach($source as $k=>&$v) {
                         if(is_array($v)) {
@@ -290,15 +288,15 @@ class Pinoco extends Pinoco_DynamicVars {
                 case 'php':
                     $source = require $file;
                     if(!(is_array($source) || is_object($source) && ($source instanceof Pinoco_Vars || $source instanceof Pinoco_List))) {
-                        throw new $exclass('Can\'t load counfig file: ' . $source);
+                        throw new InvalidArgumentException('Can\'t load counfig file: ' . $source);
                     }
                     break;
                 default:
-                    throw new $exclass('Can\'t load counfig file: ' . $source);
+                    throw new InvalidArgumentException('Can\'t load counfig file: ' . $source);
             }
         }
         elseif(!is_array($source)) {
-            throw new $exclass('Can\'t load counfig.');
+            throw new InvalidArgumentException('Can\'t load counfig.');
         }
         if(!$this->has($name)) {
             $this->set($name, new Pinoco_Vars());
@@ -382,12 +380,11 @@ class Pinoco extends Pinoco_DynamicVars {
             return $object;
         }
         else {
-            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
             if($seppos !== FALSE) {
-                throw new $exclass($class . " may not be defined on " . $srcfile . ".");
+                throw new InvalidArgumentException($class . " may not be defined on " . $srcfile . ".");
             }
             else {
-                throw new $exclass($class . " is not defined.");
+                throw new InvalidArgumentException($class . " is not defined.");
             }
             return null;
         }
@@ -851,8 +848,7 @@ class Pinoco extends Pinoco_DynamicVars {
             }
         }
         else {
-            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
-            throw new $exclass("File $page is not exists or not renderable.");
+            throw new InvalidArgumentException("File $page is not exists or not renderable.");
         }
         $this->_manually_rendered = true;
     }
@@ -908,8 +904,7 @@ class Pinoco extends Pinoco_DynamicVars {
             return call_user_func_array(array($instance, $name), $arguments);
         }
         else {
-            $exclass = class_exists('BadMethodCallException') ? 'BadMethodCallException' : 'Exception';
-            throw new $exclass(__CLASS__ . " method called in invalid state");
+            throw new BadMethodCallException(__CLASS__ . " method called in invalid state");
         }
     }
     
