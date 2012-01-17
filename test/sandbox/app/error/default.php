@@ -1,6 +1,5 @@
 <?php
-header("HTTP/1.0 " . $code . " " . $title);
-header("Content-Type: text/html; charset=iso-8859-1");
+$this->header("Content-Type: text/html; charset=iso-8859-1");
 ?>
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html>

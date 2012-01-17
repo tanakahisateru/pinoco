@@ -121,7 +121,11 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
      */
     public function respond($pinoco)
     {
-        $pinoco->header("HTTP/1.0 " . $this->code . " " . $this->title);
+        $protocol = $pinoco->request->server->get('SERVER_PROTOCOL', 'HTTP/1.0');
+        if(!preg_match('/^HTTP\/.*$/', $protocol)) {
+            $protocol = 'HTTP/1.0';
+        }
+        $pinoco->header($protocol . " " . $this->code . " " . $this->title);
         
         $pref = $pinoco->sysdir . "/error/";
         foreach(array($this->code . '.php', 'default.php') as $errfile) {
