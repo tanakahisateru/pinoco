@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 if(function_exists('xdebug_disable')){ xdebug_disable(); }
 
 require_once '../../../../src/Pinoco.php';
-//Pinoco::credit_into_header();
+Pinoco::creditIntoHeader();
 $pinoco = Pinoco::create("../../app", array(
 //    'use_mod_rewrite'  => TRUE,  // TRUE or FALSE default TRUE
 //    'use_path_info'    => TRUE,  // TRUE or FALSE default TRUE

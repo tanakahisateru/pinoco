@@ -925,7 +925,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * Writes Pinoco credit into HTTP header.
      * @return void
      */
-    public static function credit_into_header()
+    public static function creditIntoHeader()
     {
         $CREDIT_LOGO = __CLASS__ . "/" . self::VERSION;
         if(!headers_sent()) {

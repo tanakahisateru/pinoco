@@ -1,6 +1,6 @@
 <?php
 require_once '_app/lib/Pinoco.php';
-Pinoco::credit_into_header();
+Pinoco::creditIntoHeader();
 Pinoco::create("_app", array(
 //    'use_mod_rewrite'  => TRUE,  // TRUE or FALSE default TRUE
 //    'use_path_info'    => TRUE,  // TRUE or FALSE default TRUE
