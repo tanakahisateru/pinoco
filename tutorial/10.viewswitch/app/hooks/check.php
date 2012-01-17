@@ -1,5 +1,6 @@
 <?php
-if(trim($_POST['usertext']) == "") {
+$post = $this->request->post;
+if(trim($post->get('usertext', "")) == "") {
     $this->page = '_fail.html';
 }
 else {

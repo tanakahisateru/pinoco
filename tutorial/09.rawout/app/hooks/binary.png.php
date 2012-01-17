@@ -1,5 +1,7 @@
 <?php
 $img = $this->sysdir . "/PinocoFlow.png";
-header("Content-Type:" . $this->mimeType($img));
-readfile($img);
+$this->header("Content-Type:" . $this->mimeType($img));
+if(!$this->testing) {
+    readfile($img);
+}
 
