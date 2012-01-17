@@ -56,10 +56,13 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * @property-read string $baseuri Base URI
  * @property-read string $basedir Base directory
  * @property-read string $sysdir  Application directory
+ * @property-read book $testing  Test mode flag
  * @property Pinoco_List $incdir  Include pathes
+ * @property-read Pinoco_Vars $request Request related global variables wrapper
  * @property-read string $path    Path under base URI
  * @property-read string $script  Current hook script
  * @property-read Pinoco_List $activity  Activity history of hook scripts
+ * @property-read Pinoco_List $sent_headers  Sent headers via Pinoco
  * @property-read string $subpath Sub path under current hook script
  * @property-read Pinoco_List $pathargs Path elements matches _default[.*] hooks
  * @property string $directory_index Space separated directory index files(like Apache)
@@ -76,12 +79,15 @@ class Pinoco extends Pinoco_DynamicVars {
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
     private $_sysdir;    // R base directory for scripts
+    private $_testing;   // R test mode flag
     
     private $_incdir;  // R/W include search directories
+    private $_request;  // R request related global variables wrapper
     
     private $_path;      // R string
     private $_script;    // R string
     private $_activity;  // R list
+    private $_sent_headers; //R list
     private $_subpath;   // R string
     private $_pathargs;  // R list
     private $_directory_index;  // R/W string
@@ -183,11 +189,13 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $path
      * @param string $basedir
      * @param string $sysdir
-     * @param array $directory_index
+     * @param bool $testing
      * @see src/Pinoco#create($sysdir, $options)
      */
-    function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir)
+    function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir, $testing=false)
     {
+        $this->_testing = $testing;
+        
         $this->_baseuri = $baseuri;
         $this->_dispatcher = $dispatcher;
         $this->_path = $path;
@@ -224,8 +232,18 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         */
         
+        $this->_request = self::newVars();
+        $this->_request->server = self::wrapVars($_SERVER);
+        $this->_request->get = self::wrapVars($_GET);
+        $this->_request->post = self::wrapVars($_POST);
+        $this->_request->cookie = self::wrapVars($_COOKIE);
+        $this->_request->files = self::wrapVars($_FILES);
+        $this->_request->session = self::wrapVars($_SESSION);
+        $this->_request->env = self::wrapVars($_ENV);
+        
         $this->_script = null;
         $this->_activity = self::newList();
+        $this->_sent_headers = self::newList();
         $this->_subpath = "";
         $this->_pathargs = self::newList();
         
@@ -419,10 +437,22 @@ class Pinoco extends Pinoco_DynamicVars {
     public function get_sysdir()  { return $this->_sysdir; }
     
     /**
+     * Test mode flag.
+     * @return bool
+     */
+    public function get_testing()  { return $this->_testing; }
+    
+    /**
      * Include search directories.
      * @return Pinoco_List
      */
     public function get_incdir() { return $this->_incdir; }
+    
+    /**
+     * Request related global variables wrapper.
+     * @return Pinoco_Vars
+     */
+    public function get_request() { return $this->_request; }
     
     /**
      * Local resource path under base URI.
@@ -441,6 +471,12 @@ class Pinoco extends Pinoco_DynamicVars {
      * @return Pinoco_List
      */
     public function get_activity(){ return $this->_activity; }
+    
+    /**
+     * Sent headers via Pinoco's method.
+     * @return Pinoco_List
+     */
+    public function get_sent_headers(){ return $this->_sent_headers; }
     
     /**
      * Partial path under current script.
@@ -605,12 +641,12 @@ class Pinoco extends Pinoco_DynamicVars {
         $stat = stat($filename);
         $last_modified = max($stat['mtime'], $stat['ctime']);
         $etag = md5($filename . $last_modified);
-        header('Last-modified: ' . gmdate('D, d M Y H:i:s T', $last_modified));
-        header('ETag: ' . $etag);
-        if(!$no_cache && @$_SERVER['HTTP_PRAGMA']!='no-cache' && @$_SERVER['HTTP_CAHCE_CONTROL']!='no-cache') {
+        $this->header('Last-modified: ' . gmdate('D, d M Y H:i:s T', $last_modified));
+        $this->header('ETag: ' . $etag);
+        if(!$no_cache && $this->request->server->get('HTTP_PRAGMA')!='no-cache' && $this->request->server->get('HTTP_CAHCE_CONTROL')!='no-cache') {
             if(
-                isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'] ||
-                isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $last_modified <= strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])
+                $etag == $this->request->server->get('HTTP_IF_NONE_MATCH') ||
+                $last_modified <= strtotime($this->request->server->get('HTTP_IF_MODIFIED_SINCE'))
             ) {
                 $this->error('304');
             }
@@ -618,8 +654,10 @@ class Pinoco extends Pinoco_DynamicVars {
         if(!$mime_type) {
             $mime_type = self::mimeType($filename);
         }
-        header('Content-type: ' . $mime_type);
-        readfile($filename);
+        $this->header('Content-type: ' . $mime_type);
+        if(!$this->_testing) {
+            readfile($filename);
+        }
         $this->render(false);
         $this->terminate();
     }
@@ -682,6 +720,32 @@ class Pinoco extends Pinoco_DynamicVars {
         if($sepp !== FALSE) { $path = substr($path, 0, $sepp); }
         $ext = pathinfo($path, PATHINFO_EXTENSION);
         return $ext && $this->_renderers->has($ext);
+    }
+    
+    /**
+     * PHP's header function wrapper.
+     * @param string $string
+     * @param bool $replace
+     * @param int $http_response_code
+     */
+    public function header($string, $replace=true /*, $http_response_code */)
+    {
+        $record = self::newVars(array('string'=>$string));
+        if($replace) {
+            $record->replace = TRUE;
+        }
+        if($this->_testing || headers_sent()) {
+            $record->pending = TRUE;
+            $this->_sent_headers->push($record);
+            return;
+        }
+        if(func_num_args() >= 3) {
+            header($string, $replace, func_get_arg(2));
+        }
+        else {
+            header($string, $replace);
+        }
+        $this->_sent_headers->push($record);
     }
     
     /**
@@ -789,7 +853,9 @@ class Pinoco extends Pinoco_DynamicVars {
         $ext = pathinfo($page, PATHINFO_EXTENSION);
         if($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
             $renderer = $this->_renderers[$ext];
-            $renderer->prepareAndRender($page);
+            if(!$this->_testing) {
+                $renderer->prepareAndRender($page);
+            }
         }
         else {
             $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
@@ -1156,8 +1222,11 @@ class Pinoco extends Pinoco_DynamicVars {
                     array_shift($uris);
                     
                     // For mod_rewrite users: direct access to gateway should be rejected.
-                    if($this->_dispatcher == "") { // No dispatcher indicates to force to use mod_rewrite.
-                        if(strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) !== FALSE) {
+                    if(!$this->_testing && $this->_dispatcher == "") { // No dispatcher indicates to force to use mod_rewrite.
+                        if(strpos(
+                            $this->request->server->get('REQUEST_URI'),
+                            "/" . basename($this->request->server->get('SCRIPT_NAME'))
+                        ) !== FALSE) {
                             $this->forbidden();
                         }
                     }

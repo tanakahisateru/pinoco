@@ -42,12 +42,13 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
      */
     public function respond($pinoco)
     {
-        $protocol = (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS']) ? "https" : "http";
-        $server_prefix = $protocol . '://' . $_SERVER['SERVER_NAME'];
-        if ($protocol == "http" && $_SERVER['SERVER_PORT'] != "80") {
-            $server_prefix = $server_prefix . ":" . $_SERVER['SERVER_PORT'];
-        } else if ($protocol == "https" && $_SERVER['SERVER_PORT'] != "443") {
-            $server_prefix = $server_prefix . ":" . $_SERVER['SERVER_PORT'];
+        $s = $pinoco->request->server;
+        $protocol = $s->get('HTTPS') ? "https" : "http";
+        $server_prefix = $protocol . '://' . $s->get('SERVER_NAME');
+        if ($protocol == "http" && $s->get('SERVER_PORT') != "80") {
+            $server_prefix = $server_prefix . ":" . $s->get('SERVER_PORT');
+        } else if ($protocol == "https" && $s->get('SERVER_PORT') != "443") {
+            $server_prefix = $server_prefix . ":" . $s->get('SERVER_PORT');
         }
         $fixedurl = "";
         if(preg_match('/^\w+:\/\/[^\/]/', $this->url)) {
@@ -67,6 +68,6 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
         else {
             $fixedurl = $server_prefix. $pinoco->url($this->url);
         }
-        header('Location: ' . $fixedurl);
+        $pinoco->header('Location: ' . $fixedurl);
     }
 }
