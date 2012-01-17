@@ -57,6 +57,10 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
      */
     public static function wrap(&$srcref)
     {
+        if(!is_array($srcref)) {
+            $exclass = class_exists('InvalidArgumentException') ? 'InvalidArgumentException' : 'Exception';
+            throw new $exclass("Non array variable was given.");
+        }
         $self = new Pinoco_Vars();
         $self->_vars = &$srcref;
         return $self;
