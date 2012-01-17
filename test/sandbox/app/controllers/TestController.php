@@ -15,7 +15,7 @@ class TestController {
     }
     
     function show($pinoco) {
-        $id = isset($_GET['id']) ? $_GET['id'] : "x";
+        $id = $this->request->get->get('id', 'x');
         if($this->data->has($id)) {
             $pinoco->item = $this->data[$id];
         }

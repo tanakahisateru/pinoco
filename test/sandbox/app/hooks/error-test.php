@@ -1,6 +1,6 @@
 <?php
-if(isset($_GET['err'])){
-    $this->error($_GET['err']);
+if($this->request->get->has('err')){
+    $this->error($this->request->get->get('err'));
 }
 else {
     echo "No errors";

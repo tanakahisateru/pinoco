@@ -12,7 +12,7 @@ $this->header("Content-Type: text/html; charset=iso-8859-1");
 
 <hr>
 <pre><?php
-var_dump($this);
+var_dump($this->toArrayRecurse(20));
 ?></pre>
 
 </body>

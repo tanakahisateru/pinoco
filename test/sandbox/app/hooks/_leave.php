@@ -1,6 +1,6 @@
 <?php
 // How to show status after page rendering (buffering must be enabled)
-if(!preg_match('/\sFirePHP\//', $_SERVER['HTTP_USER_AGENT'])) {
+if(!preg_match('/\sFirePHP\//', $this->request->server->get('HTTP_USER_AGENT'))) {
     $this->skip(); // cancel this script here
 }
 
