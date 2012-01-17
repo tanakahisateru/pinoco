@@ -11,7 +11,7 @@
     <property name="lead.name" value="Hisateru Tanaka"/>
     <property name="lead.email" value="tanakahisateru@gmail.com"/>
     
-    <target name="dist" depends="doc,package"/>
+    <target name="dist" depends="test,doc,package,empty-project"/>
     
     <target name="test">
         <phpunit haltonerror="true" haltonfailure="true" printsummary="true">
@@ -57,15 +57,24 @@
             <stability release="${stability}" api="${stability}"/>
             <lead user="${lead.user}" name="${lead.name}" email="${lead.email}"/>
             <dependencies>
-                <php minimum_version="5.1.0"/>
+                <php minimum_version="5.1.2"/>
                 <pear minimum_version="1.4.3"/>
-            </dependencies>            
+            </dependencies>
             <dirroles key="doc" value="doc"/>
             <release>
                 <install name="doc/LICENSE" as="LICENSE"/>
             </release>
         </d51pearpkg2>
         <exec command="pear package package/package.xml" dir="./build" />
+    </target>
+    
+    <target name="empty-project">
+        <tar destfile="./build/empty-project-min.tgz" compression="gzip">
+            <fileset dir="./empty-project-min" />
+        </tar>
+        <tar destfile="./build/empty-project-prod.tgz" compression="gzip">
+            <fileset dir="./empty-project-prod" />
+        </tar>
     </target>
     
 </project>
