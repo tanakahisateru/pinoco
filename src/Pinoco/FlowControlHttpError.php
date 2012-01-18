@@ -123,6 +123,8 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
         }
         $pinoco->header($protocol . " " . $this->code . " " . $this->title);
         
+        if($pinoco->testing) { return; }
+        
         $pref = $pinoco->sysdir . "/error/";
         foreach(array($this->code . '.php', 'default.php') as $errfile) {
             if(file_exists($pref . $errfile)) {
@@ -132,15 +134,13 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
         }
         
         $pinoco->header("Content-Type: text/html; charset=iso-8859-1");
-        if(!$pinoco->testing) {
-            echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' . "\n";
-            echo "<html><head>\n";
-            echo "<title>" . $this->code . " " . $this->title . "</title>\n";
-            echo "</head><body>\n";
-            echo "<h1>" . $this->code . " " . $this->title . "</h1>\n";
-            echo "<p>" . $this->message . "</p>\n";
-            echo "</body></html>";
-        }
+        echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' . "\n";
+        echo "<html><head>\n";
+        echo "<title>" . $this->code . " " . $this->title . "</title>\n";
+        echo "</head><body>\n";
+        echo "<h1>" . $this->code . " " . $this->title . "</h1>\n";
+        echo "<p>" . $this->message . "</p>\n";
+        echo "</body></html>";
     }
 }
 
