@@ -1392,24 +1392,16 @@ class Pinoco extends Pinoco_DynamicVars {
     }
     
     /**
+     * Provides a testable Pinoco instance for unit test.
      * @param string $sysdir
      * @param string $basedir
      * @param string $baseuri
+     * @param string $dispatcher
      * @return Pinoco
      */
     public static function testenv($basedir, $sysdir, $baseuri="/", $dispatcher="")
     {
-        return new self($baseuri, $dispatcher, '/', $basedir, $sysdir, true);
-    }
-    
-    /**
-     * @param string $path
-     * @return Pinoco
-     */
-    public function testrun($path)
-    {
-        $this->_path = $path;
-        $this->run();
+        return new Pinoco_TestEnvironment($basedir, $sysdir, $baseuri, $dispatcher);
     }
     
 }

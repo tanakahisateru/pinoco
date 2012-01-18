@@ -3,22 +3,19 @@ require_once dirname(__FILE__) . '/../../src/Pinoco/_bootstrap.php';
 
 class PinocoTest extends PHPUnit_Framework_TestCase
 {
-    private function pinoco($base, $path, $dispatcher='')
+    protected function setUp()
     {
         $project = dirname(dirname(dirname(__FILE__)));
-        $pinoco = new Pinoco(
-            $base,
-            $dispatcher,
-            $path,
+        $this->testenv = Pinoco::testenv(
             $project . '/test/sandbox/www',
-            $project . '/test/sandbox/app'
+            $project . '/test/sandbox/app',
+            '/pub'
         );
-        return $pinoco;
     }
     
     public function testPathesUnderSiteRoot()
     {
-        $p = $this->pinoco('/pub', '/page.html');
+        $p = $this->testenv->create('/page.html');
         $this->assertEquals('/pub',       $p->baseuri);
         $this->assertEquals('/page.html', $p->path);
         $this->assertEquals('/pub/',                $p->url('/'));
@@ -33,7 +30,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
     
     public function testPathesUnderSubDirectory()
     {
-        $p = $this->pinoco('/pub', '/sub/page.html');
+        $p = $this->testenv->create('/sub/page.html');
         $this->assertEquals('/pub/',             $p->url('/'));
         $this->assertEquals('/pub/sub/',         $p->url('./'));
         $this->assertEquals('/pub/',             $p->url('../'));

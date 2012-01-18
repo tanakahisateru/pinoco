@@ -8,41 +8,47 @@ class HookTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $prefix = realpath(dirname(__FILE__) . '/../../');
-        $this->pinoco = Pinoco::testenv(
+        $this->testenv = Pinoco::testenv(
             $prefix . '/www/basic',
             $prefix . '/app'
-        )->config('cfg', 'config/main.ini')
-         ->config('cfg', 'config/override.php')
-         ->config('cfg', array('baz'=>300));
+        )->initBy(array($this, 'init'));
+    }
+    
+    public function init($pinoco)
+    {
+        $pinoco->config('cfg', 'config/main.ini');
+        $pinoco->config('cfg', 'config/override.php');
+        $pinoco->config('cfg', array('baz'=>300));
     }
     
     public function testSiteRootGet()
     {
-        $p = $this->pinoco;
-        $p->testrun('/');
+        $p = $this->testenv->create('/');
+        $p->run();
         $this->assertEquals("Pinoco Test (/)", $p->autolocal->title);
+        $this->assertEquals(300, $p->cfg->baz);
     }
     
     public function testIndexHtmlGet()
     {
-        $p = $this->pinoco;
-        $p->testrun('/index.html');
+        $p = $this->testenv->create('/index.html');
+        $p->run();
         $this->assertEquals("Pinoco Test (/index.html)", $p->autolocal->title);
     }
     
     public function testSub2IndexHtmlGet()
     {
-        $p = $this->pinoco;
         ob_start();
-        $p->testrun('/sub2/index.html');
+        $p = $this->testenv->create('/sub2/index.html');
+        $p->run();
         ob_end_clean();
     }
     
     public function testSub2IndexPhpGet()
     {
-        $p = $this->pinoco;
         ob_start();
-        $p->testrun('/sub2/index.php');
+        $p = $this->testenv->create('/sub2/index.php');
+        $p->run();
         ob_end_clean();
     }
 }

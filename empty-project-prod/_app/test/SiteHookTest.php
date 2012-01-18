@@ -5,16 +5,22 @@ class SiteHookTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $prefix = dirname(dirname(dirname(__FILE__)));
-        $this->pinoco = Pinoco::testenv(
-            $prefix, // basedir
-            $prefix . '/_app' // sysdir
-        )->config('config', 'config.ini');
+        $basedir = dirname(dirname(dirname(__FILE__)));
+        $this->testenv = Pinoco::testenv(
+            $basedir,
+            $basedir . '/_app'
+        )->initBy(array($this, 'init'));
+    }
+    
+    public function init($pinoco)
+    {
+        $pinoco->config('config', 'config.ini');
     }
     
     public function testSiteRootGet()
     {
-        $this->pinoco->testrun('/');
-        // Do your assertions to: $this->pinoco
+        $pinoco = $this->testenv->create('/');
+        $pinoco->run();
+        // Do your assertions to: $pinoco
     }
 }
