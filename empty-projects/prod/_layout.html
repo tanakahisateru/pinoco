@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html metal:define-macro="all">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${title} - Example Website</title>
+<!--! global css and js -->
+<link href="css/style.css" rel="stylesheet" type="text/css" pal:attr="href url:${attr/href}" />
+<tal:block metal:define-slot="head">
+</tal:block>
+</head>
+<body>
+<div class="wrapper">
+    <div id="header">
+        <h1>Example Website</h1>
+        <p>Replace this HTML code to yours.</p>
+    </div>
+    <ul id="nav" class="clearfix">
+        <li><a href="index.html" pal:attr="href url:/">Home</a></li>
+        <li><a href="about.html" pal:attr="href url:/${attr/href}">About</a></li>
+    </ul>
+    <div class="layout clearfix">
+        <div class="layout-left">
+            <ul id="breadclumb" class="clearfix" metal:define-slot="breadclumb">
+                <li>Home</li>
+            </ul>
+            <div id="main" metal:define-slot="main">
+                <p>Under construction...</p>
+            </div>
+        </div>
+        <div class="layout-right">
+            <div class="panel">
+                <h3>Panel</h3>
+                <div class="panel-content">
+                    <p>Panel content</p>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>Panel</h3>
+                <div class="panel-content">
+                    <p>Panel content</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div>Copyright &copy; 201x My Company All Rights Reserved.</div>
+    </div>
+</div>
+</body>
+</html>

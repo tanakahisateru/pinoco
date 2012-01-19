@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html metal:use-macro="_layout.html/all" tal:define="
+    title 'Home';
+">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--! hint css -->
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<tal:block metal:fill-slot="head">
+<!--! local css and js -->
+</tal:block>
+</head>
+<body>
+<div class="wrapper">
+    <div id="breadclumb" metal:fill-slot="breadclumb">
+        <span>Home</span>
+    </div>
+    <div id="main" metal:fill-slot="main">
+        <h2>Home</h2>
+        <p>TODO fill content here!</p>
+    </div>
+</div>
+</body>
+</html>
+
