@@ -1128,7 +1128,11 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public function subscript($script)
     {
-        if($script[0] != '/') {
+        $is_abs = $script[0] != '/';
+        if(strncasecmp(PHP_OS, 'win', 3)) {
+            $is_abs |= !preg_match('/^[A-Z]:(\\\\|\\/)/i', $script);
+        }
+        if($this->_script && $is_abs) {
             $script = dirname($this->_script) . '/' . $script;
         }
         $prev_script = $this->_script;
