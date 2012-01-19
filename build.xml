@@ -70,10 +70,10 @@
     
     <target name="empty-project">
         <tar destfile="./build/empty-project-min.tgz" compression="gzip">
-            <fileset dir="./empty-project-min" />
+            <fileset dir="./empty-projects/min" />
         </tar>
         <tar destfile="./build/empty-project-prod.tgz" compression="gzip">
-            <fileset dir="./empty-project-prod" />
+            <fileset dir="./empty-projects/prod" />
         </tar>
     </target>
     
