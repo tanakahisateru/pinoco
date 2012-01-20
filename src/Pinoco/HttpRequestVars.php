@@ -28,31 +28,31 @@
 class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
     public function get_server()
     {
-        return empty($_SERVER) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_SERVER);
+        return empty($_SERVER) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_SERVER);
     }
     public function get_get()
     {
-        return empty($_GET) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_GET);
+        return empty($_GET) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_GET);
     }
     public function get_post()
     {
-        return empty($_POST) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_POST);
+        return empty($_POST) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_POST);
     }
     public function get_cookie()
     {
-        return empty($_COOKIE) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_COOKIE);
+        return empty($_COOKIE) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_COOKIE);
     }
     public function get_files()
     {
-        return empty($_FILES) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_FILES);
+        return empty($_FILES) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_FILES);
     }
     public function get_session()
     {
-        return empty($_SESSION) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_SESSION);
+        return empty($_SESSION) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_SESSION);
     }
     public function get_env()
     {
-        return empty($_ENV) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_ENV);
+        return empty($_ENV) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_ENV);
     }
 }
 
