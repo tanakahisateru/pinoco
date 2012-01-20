@@ -38,17 +38,19 @@ class HookTest extends PHPUnit_Framework_TestCase
     
     public function testSub2IndexHtmlGet()
     {
-        ob_start();
         $p = $this->testenv->create('/sub2/index.html');
         $p->run();
-        ob_end_clean();
     }
     
     public function testSub2IndexPhpGet()
     {
-        ob_start();
         $p = $this->testenv->create('/sub2/index.php');
         $p->run();
-        ob_end_clean();
+    }
+    
+    public function testLogoJpgGet()
+    {
+        $p = $this->testenv->create('/logo.jpg');
+        $p->run();
     }
 }

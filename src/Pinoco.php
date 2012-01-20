@@ -644,9 +644,7 @@ class Pinoco extends Pinoco_DynamicVars {
             $mime_type = self::mimeType($filename);
         }
         $this->header('Content-type: ' . $mime_type);
-        if(!$this->_testing) {
-            readfile($filename);
-        }
+        readfile($filename);
         $this->render(false);
         $this->terminate();
     }
@@ -850,9 +848,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $ext = pathinfo($page, PATHINFO_EXTENSION);
         if($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
             $renderer = $this->_renderers[$ext];
-            if(!$this->_testing) {
-                $renderer->prepareAndRender($page);
-            }
+            $renderer->prepareAndRender($page);
         }
         else {
             throw new InvalidArgumentException("File $page is not exists or not renderable.");
@@ -1204,7 +1200,7 @@ class Pinoco extends Pinoco_DynamicVars {
             set_exception_handler(array($this, "_exception_handler"));
         }
         
-        if($output_buffering) {
+        if($output_buffering || $this->testing) {
             ob_start();
         }
         
@@ -1392,8 +1388,13 @@ class Pinoco extends Pinoco_DynamicVars {
         
         set_include_path($this->_system_incdir);
         
-        if($output_buffering) {
-            ob_end_flush();
+        if($output_buffering || $this->testing) {
+            if($this->testing) {
+                $all_output_while_running = ob_get_clean();
+            }
+            else {
+                ob_end_flush();
+            }
         }
         
         if(isset($special_error_handler_enabled)) {
@@ -1401,6 +1402,10 @@ class Pinoco extends Pinoco_DynamicVars {
             restore_error_handler();
         }
         self::$_current_instance = null;
+        
+        if($this->testing) {
+            return $all_output_while_running;
+        }
     }
     
     /**
