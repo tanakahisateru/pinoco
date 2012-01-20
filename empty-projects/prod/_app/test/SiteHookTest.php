@@ -1,5 +1,6 @@
 <?php
-require_once dirname(dirname(__FILE__)) . '/lib/Pinoco.php';
+// Use _bootstrap.php in Pinoco package to run PHPUnit.
+// $ phpunit --bootstrap _app/lib/Pinoco/_bootstrap.php _app/test/
 
 class SiteHookTest extends PHPUnit_Framework_TestCase
 {

@@ -69,11 +69,27 @@
     </target>
     
     <target name="empty-project">
-        <tar destfile="./build/empty-project-min.tgz" compression="gzip">
+        <copy todir="./build/empty-project-min">
             <fileset dir="./empty-projects/min" />
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="\.\./\.\./src/Pinoco" replace="_app/lib/Pinoco"/>
+                </replaceregexp>
+            </filterchain>
+        </copy>
+        <tar destfile="./build/empty-project-min.tgz" compression="gzip">
+            <fileset dir="./build/empty-project-min" />
         </tar>
-        <tar destfile="./build/empty-project-prod.tgz" compression="gzip">
+        <copy todir="./build/empty-project-prod">
             <fileset dir="./empty-projects/prod" />
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="\.\./\.\./src/Pinoco" replace="_app/lib/Pinoco"/>
+                </replaceregexp>
+            </filterchain>
+        </copy>
+        <tar destfile="./build/empty-project-prod.tgz" compression="gzip">
+            <fileset dir="./build/empty-project-prod" />
         </tar>
     </target>
     
