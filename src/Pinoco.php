@@ -717,22 +717,37 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public function header($string, $replace=true /*, $http_response_code */)
     {
-        $record = self::newVars(array('string'=>$string));
-        if($replace) {
-            $record->replace = TRUE;
+        $name = NULL;
+        $is_http = preg_match('/^HTTP\\//', $string);
+        if(!$is_http && preg_match('/^(.+?)\\s*:/', $string, $m)) {
+            $name = $m[1];
         }
-        if($this->_testing || headers_sent()) {
-            $record->pending = TRUE;
-            $this->_sent_headers->push($record);
-            return;
-        }
-        if(func_num_args() >= 3) {
-            header($string, $replace, func_get_arg(2));
+        
+        if($is_http || $replace) {
+            $tmp = self::newList();
+            foreach($this->_sent_headers as $h) {
+                if($is_http && preg_match('/^HTTP\\//', $h) ||
+                    $name !== NULL && preg_match('/^' . preg_quote($name) . '\\s*:/i', $h)
+                ) {
+                    continue;
+                }
+                $tmp->push($h);
+            }
+            $tmp->push($string);
+            $this->_sent_headers = $tmp;
         }
         else {
-            header($string, $replace);
+            $this->_sent_headers->push($string);
         }
-        $this->_sent_headers->push($record);
+        
+        if(!$this->_testing && !headers_sent()) {
+            if(func_num_args() >= 3) {
+                header($string, $replace, func_get_arg(2));
+            }
+            else {
+                header($string, $replace);
+            }
+        }
     }
     
     /**
