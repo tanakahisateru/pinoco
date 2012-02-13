@@ -1041,7 +1041,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         if($errno & (E_ERROR | E_USER_ERROR)) {
             if (!headers_sent()) {
-                $protocol = $pinoco->request->server->get('SERVER_PROTOCOL', 'HTTP/1.0');
+                $protocol = $this->request->server->get('SERVER_PROTOCOL', 'HTTP/1.0');
                 if(!preg_match('/^HTTP\/.*$/', $protocol)) {
                     $protocol = 'HTTP/1.0';
                 }
@@ -1065,7 +1065,7 @@ class Pinoco extends Pinoco_DynamicVars {
     public function _exception_handler($e)
     {
         if (!headers_sent()) {
-            $protocol = $pinoco->request->server->get('SERVER_PROTOCOL', 'HTTP/1.0');
+            $protocol = $this->request->server->get('SERVER_PROTOCOL', 'HTTP/1.0');
             if(!preg_match('/^HTTP\/.*$/', $protocol)) {
                 $protocol = 'HTTP/1.0';
             }
