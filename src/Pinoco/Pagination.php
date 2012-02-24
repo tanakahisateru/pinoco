@@ -15,26 +15,36 @@
  */
 
 /**
- * Pagination object designed for PHPTAL
+ * Pagination object designed for PHPTAL.
+ * This object is independent from RDBMS. You can use it with any data source.
  *
  * <code>
- * $this->autolocal->pagination = new Pinoco_Pagination(
- *     function() {
- *         return Pinoco::instance()->db->query("SELECT count(id) as c FROM ...")->fetchOne()->c;
+ * $pagination = new Pinoco_Pagination(
+ *     // How many elements?
+ *     function($pagination) {
+ *         return $pagination->db->prepare(
+ *             "SELECT count(id) as c FROM ..."
+ *         )->query()->fetchOne()->c;
  *     },
- *     function($offset, $limit) {
- *         return Pinoco::instance()->db->query("SELECT * FROM ... LIMIT $offset, $limit")->fetchAll();
+ *     // What to be shown?
+ *     function($pagination, $offset, $limit) {
+ *         return $pagination->db->prepate(
+ *             "SELECT * FROM ... LIMIT $offset, $limit"
+ *         )->query()->fetchAll();
  *     },
- *     function($page) {
- *         return Pinoco::instance()->url('list?page=' . $page);
+ *     // How the page number is formatted in navigation?
+ *     function($pagination, $page) {
+ *         return 'list' . ($page > 1 ? '?page=' . $page : '');
  *     },
  *     array(
  *         'elementsPerPage' => 20,
+ *         'db' => $db, // you can pass any custom property to pagination.
  *     )
  * );
- * $this->autolocal->pagination->page = 1;
+ * $pagination->page = 1;
  * </code>
  *
+ * PHPTAL example
  * <code>
  * <tal:block tal:repeat="element pagination/data">
  *    ${element/prop}
@@ -43,13 +53,13 @@
  *     tal:define="prev pagination/prev; pages pagination/pages; next pagination/next">
  *     <!--! prev button -->
  *     <a href="" tal:condition="not:prev/current"
- *        tal:attributes="href prev/href">PREV</a>
+ *        tal:attributes="href url:${prev/href}">PREV</a>
  *     <span class="disabled" tal:condition="prev/current">PREV</span>
  *     <!--! page link buttons -->
  *     <tal:block tal:repeat="page pages">
  *         <tal:block tal:condition="not:page/padding">
  *             <a href="" tal:condition="not:page/current"
- *                tal:attributes="href page/href"
+ *                tal:attributes="href url:${page/href}"
  *                tal:content="page/number">1</a>
  *             <span class="current" tal:condition="page/current"
  *                tal:content="page/number">1</span>
@@ -58,23 +68,23 @@
  *     </tal:block>
  *     <!--! next button -->
  *     <a href="" tal:condition="next/enabled"
- *        tal:attributes="href next/href">NEXT</a>
+ *        tal:attributes="href url:${next/href}">NEXT</a>
  *     <span class="disabled" tal:condition="not:next/enabled">NEXT</span>
  * </div>
  * </code>
  *
  * @package Pinoco
- * @property integer $page
- * @property integer $elementsPerPage
- * @property integer $pagesAfterFirst
- * @property integer $pagesAroundCurrent
- * @property integer $pagesBeforeLast
- * @property-read integer $totalCount
- * @property-read integer $totalPages
- * @property-read mixed $data
- * @property-read Pinoco_List $pages
- * @property-read Pinoco_Vars $prev
- * @property-read Pinoco_Vars $next
+ * @property integer $page The page number that starts with 1. (not 0!)
+ * @property integer $elementsPerPage Amount of data shown in single page.
+ * @property integer $pagesAfterFirst How many buttons after the first page. (-1: hides first page)
+ * @property integer $pagesAroundCurrent How many buttons around current page.
+ * @property integer $pagesBeforeLast How many buttons before the last page. (-1: hides last page)
+ * @property-read integer $totalCount Total number of elements.
+ * @property-read integer $totalPages Total number of pages.
+ * @property-read mixed $data Elements in paginated range.
+ * @property-read Pinoco_List $pages Navigation information of each page buttons.
+ * @property-read Pinoco_Vars $prev Navigation information of the prev button.
+ * @property-read Pinoco_Vars $next Navigation information of the prev button.
  */
 class Pinoco_Pagination extends Pinoco_DynamicVars {
 
@@ -91,7 +101,12 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     private $_data;
     
     /**
+     * Creates pagination object from user codes.
      *
+     * @param callback $totalCountCallback
+     * @param callback $dataFetchCallback
+     * @param callback $urlFormatCallback
+     * @param array $options
      */
     public function __construct($totalCountCallback, $dataFetchCallback,
         $urlFormatCallback, $options=array())
@@ -107,102 +122,84 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         $this->_totalCount = null;
         $this->_data = null;
         foreach($options as $name=>$value) {
-            if($this->has($name)) {
-                $this->set($name, $value);
-            }
+            $this->set($name, $value);
         }
     }
     
-    /**
-     *
-     */
     public function get_page()
     {
-        return $this->_curentPage;
+        return $this->_currentPage;
     }
-    
-    /**
-     *
-     */
     public function set_page($value)
     {
-        $this->_curentPage = $value;
-        $this->_data = null;
+        if($value < 1) { $value = 1; }
+        if($value > $this->totalPages) { $value = $this->totalPages; }
+        if($value != $this->_currentPage) {
+            $this->_data = null;
+        }
+        $this->_currentPage = $value;
     }
     
-    /**
-     *
-     */
     public function get_elementsPerPage()
     {
         return $this->_elementsPerPage;
     }
-    
-    /**
-     *
-     */
     public function set_elementsPerPage($value)
     {
         $this->_elementsPerPage = $value;
         $this->_data = null;
     }
     
-    /**
-     *
-     */
     public function get_pagesAfterFirst()
     {
         return $this->_pagesAfterFirst;
     }
-    
-    /**
-     *
-     */
     public function set_pagesAfterFirst($value)
     {
         $this->_pagesAfterFirst = $value;
     }
     
-    /**
-     *
-     */
     public function get_pagesAroundCurrent()
     {
         return $this->_pagesAroundCurrent;
     }
-    
-    /**
-     *
-     */
     public function set_pagesAroundCurrent($value)
     {
         $this->_pagesAroundCurrent = $value;
     }
     
-    /**
-     *
-     */
     public function get_pagesBeforeLast()
     {
         return $this->_pagesBeforeLast;
     }
-    
-    /**
-     *
-     */
     public function set_pagesBeforeLast($value)
     {
         $this->_pagesBeforeLast = $value;
     }
     
     /**
-     *
+     * Total number of elements.
+     * @return integer
+     */
+    public function get_totalCount()
+    {
+        if(is_null($this->_totalCount)) {
+            $this->_totalCount = call_user_func($this->totalCountCallback, $this);
+        }
+        return $this->_totalCount;
+    }
+    
+    /**
+     * Elements in paginated range.
+     * The fetched result is cached before changing current page.
+     * @return mixed
      */
     public function get_data()
     {
         if(is_null($this->_data)) {
             $this->_data = call_user_func(
                 $this->dataFetchCallback,
+                $this,
                 ($this->page - 1) * $this->elementsPerPage, // offset
                 $this->elementsPerPage // limit
             );
@@ -211,18 +208,8 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     
     /**
-     *
-     */
-    public function get_totalCount()
-    {
-        if(is_null($this->_totalCount)) {
-            $this->_totalCount = call_user_func($this->totalCountCallback);
-        }
-        return $this->_totalCount;
-    }
-    
-    /**
-     *
+     * Force to clear cached data.
+     * @return void
      */
     public function reset()
     {
@@ -231,41 +218,66 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     
     /**
-     *
+     * Total number of pages.
+     * @return integer
      */
     public function get_totalPages()
     {
-        return max(1, ($this->totalCount - 1) / $this->elementsPerPage + 1);
+        return max(1, intval(($this->totalCount - 1) / $this->elementsPerPage) + 1);
     }
     
     /**
-     *
+     * Navigation information of each page buttons.
+     * @return Pinoco_List
      */
     public function get_pages()
     {
-        // FIXME use pagesAfterFirst, pagesAroundCurrent and pagesBeforeLast
         $pages = Pinoco::newList();
+        $leftpad = false;
+        $rightpad = false;
         for($i = 1; $i <= $this->totalPages; $i++) {
-            $pages->push(Pinoco::newVars(array(
-                'padding' => false,
-                'number'  => $i,
-                'href'    => call_user_func($this->urlFormatCallback, $i),
-                'current' => $i == $this->_currentPage,
-            )));
+            $skipped = false;
+            if(!$leftpad && $i > 1 + $this->_pagesAfterFirst) {
+                $leftpad = true;
+                if(abs($i - $this->_currentPage) > $this->_pagesAroundCurrent) {
+                    $skipped = true;
+                    $skipto = max($i+1, $this->_currentPage - $this->_pagesAroundCurrent);
+                }
+            }
+            if($leftpad && !$rightpad && $i > $this->_currentPage + $this->_pagesAroundCurrent) {
+                $rightpad = true;
+                if($i < $this->totalPages - $this->_pagesBeforeLast) {
+                    $skipped = true;
+                    $skipto = max($i, $this->totalPages - $this->_pagesBeforeLast);
+                }
+            }
+            if(!$skipped) {
+                $pages->push(Pinoco::newVars(array(
+                    'padding' => false,
+                    'number'  => $i,
+                    'href'    => call_user_func($this->urlFormatCallback, $this, $i),
+                    'current' => $i == $this->_currentPage,
+                )));
+            }
+            else {
+                $pages->push(Pinoco::newVars(array('padding' => true)));
+                $i = $skipto - 1;
+            }
         }
         return $pages;
     }
     
     /**
-     *
+     * Navigation information of the prev button.
+     * @return Pinoco_Vars
      */
     public function get_prev()
     {
         if($this->_currentPage > 1) {
             return Pinoco::newVars(array(
-                'number'  => $this->_currentPage - 1,
-                'href'    => call_user_func($this->urlFormatCallback, $this->_currentPage - 1),
                 'enabled' => true,
+                'number'  => $this->_currentPage - 1,
+                'href'    => call_user_func($this->urlFormatCallback, $this, $this->_currentPage - 1),
             ));
         }
         else {
@@ -276,15 +288,16 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     
     /**
-     *
+     * Navigation information of the next button.
+     * @return Pinoco_Vars
      */
     public function get_next()
     {
         if($this->_currentPage < $this->totalPages) {
             return Pinoco::newVars(array(
-                'number'  => $this->_currentPage + 1,
-                'href'    => call_user_func($this->urlFormatCallback, $this->_currentPage + 1),
                 'enabled' => true,
+                'number'  => $this->_currentPage + 1,
+                'href'    => call_user_func($this->urlFormatCallback, $this, $this->_currentPage + 1),
             ));
         }
         else {
