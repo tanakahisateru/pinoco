@@ -62,4 +62,29 @@ class PinocoTest extends PHPUnit_Framework_TestCase
             $p->sent_headers->toArray()
         );
     }
+    
+    public function testCookie()
+    {
+        $p = $this->testenv->create('/');
+        $p->setcookie('foo', 'bar');
+        $this->assertEquals(
+            array('Set-Cookie: foo=bar; path=/pub/'),
+            $p->sent_headers->toArray()
+        );
+        
+        $p = $this->testenv->create('/');
+        $p->setcookie('foo', null);
+        $this->assertRegExp(
+            '/^Set-Cookie: foo=; expires=/',
+            $p->sent_headers->get(0)
+        );
+
+        $p = $this->testenv->create('/');
+        $p->request->session->foo = 'bar';
+        $this->assertEquals('bar', $p->request->session->foo);
+        $this->assertRegExp(
+            '/^Set-Cookie: ' . session_name() . '=/',
+            $p->sent_headers->get(0)
+        );
+    }
 }

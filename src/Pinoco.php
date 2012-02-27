@@ -230,7 +230,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         */
         
-        $this->_request = new Pinoco_HttpRequestVars();
+        $this->_request = new Pinoco_HttpRequestVars($this);
         
         $this->_script = null;
         $this->_activity = self::newList();
@@ -714,6 +714,7 @@ class Pinoco extends Pinoco_DynamicVars {
      * @param string $string
      * @param bool $replace
      * @param int $http_response_code
+     * @return boolean
      */
     public function header($string, $replace=true /*, $http_response_code */)
     {
@@ -742,12 +743,48 @@ class Pinoco extends Pinoco_DynamicVars {
         
         if(!$this->_testing && !headers_sent()) {
             if(func_num_args() >= 3) {
-                header($string, $replace, func_get_arg(2));
+                @header($string, $replace, func_get_arg(2));
             }
             else {
-                header($string, $replace);
+                @header($string, $replace);
+            }
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * PHP's setcookie function wrapper.
+     */
+    public function setcookie($name, $value=null, $expire=0, $path=null, $domain=null, $secure=false, $httponly=false)
+    {
+        $tmp = array();
+        if(!empty($value)) {
+            $tmp[] = urlencode($name) . '=' . urlencode($value);
+            if ($expire != 0) {
+                $tmp[] = 'expires=' . gmdate("D, d-M-Y H:i:s T", $expire);
             }
         }
+        else {
+            // you can easily delete a cookie value by setting null.
+            $tmp[] = urlencode($name) . '=';
+            $tmp[] = 'expires=' . gmdate("D, d-M-Y H:i:s T", time() - 31536001);
+        }
+        
+        if(empty($path)) {
+            $tmp[] = 'path=' . rtrim($this->baseuri, '/') . '/'; // setcookie's default is based on front controller.
+        }
+        else {
+            $tmp[] = 'path=' . $path;
+        }
+        
+        if (!empty($domain)) { $tmp[] = 'domain=' . $domain; }
+        if ($secure)         { $tmp[] = 'secure'; }
+        if ($httponly)       { $tmp[] = 'httponly'; }
+        
+        return $this->header('Set-Cookie: ' . implode('; ', $tmp), false);
     }
     
     /**
