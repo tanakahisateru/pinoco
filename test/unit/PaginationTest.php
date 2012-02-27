@@ -253,4 +253,25 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(1,null,11,12), $pages);
         $this->assertEquals(12, $curr);
     }
+
+    public function testExpandAllPages()
+    {
+        $this->total = 119;
+        $pn = new Pinoco_Pagination(
+            array($this, 'mockCount'),
+            array($this, 'mockFetch'),
+            array($this, 'mockFormatUrl'),
+            array(
+                'elementsPerPage' => 20,
+                'pagesAroundCurrent' => -1,
+                'baseuri' => 'test/list',
+            )
+        );
+        
+        $pn->page = 2;
+        $pages = $pn->pages->map(array($this, 'page2num'))->toArray();
+        $curr  = $pn->pages->reduce(array($this, 'currentNumber'));
+        $this->assertEquals(array(1,2,3,4,5,6), $pages);
+        $this->assertEquals(2, $curr);
+    }
 }

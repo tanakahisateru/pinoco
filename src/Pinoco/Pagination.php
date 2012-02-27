@@ -77,7 +77,7 @@
  * @property integer $page The page number that starts with 1. (not 0!)
  * @property integer $elementsPerPage Amount of data shown in single page.
  * @property integer $pagesAfterFirst How many buttons after the first page. (-1: hides first page)
- * @property integer $pagesAroundCurrent How many buttons around current page.
+ * @property integer $pagesAroundCurrent How many buttons around current page. (-1: expand all pages)
  * @property integer $pagesBeforeLast How many buttons before the last page. (-1: hides last page)
  * @property-read integer $totalCount Total number of elements.
  * @property-read integer $totalPages Total number of pages.
@@ -165,6 +165,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     public function set_pagesAroundCurrent($value)
     {
+        if($value < -1) { $value = -1; }
         $this->_pagesAroundCurrent = $value;
     }
     
@@ -236,33 +237,34 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         $leftpad = false;
         $rightpad = false;
         for($i = 1; $i <= $this->totalPages; $i++) {
-            $skipped = false;
-            if(!$leftpad && $i > 1 + $this->_pagesAfterFirst) {
-                $leftpad = true;
-                if(abs($i - $this->_currentPage) > $this->_pagesAroundCurrent) {
-                    $skipped = true;
-                    $skipto = max($i+1, $this->_currentPage - $this->_pagesAroundCurrent);
+            if($this->_pagesAroundCurrent >= 0) {
+                $skipped = false;
+                if(!$leftpad && $i > 1 + $this->_pagesAfterFirst) {
+                    $leftpad = true;
+                    if(abs($i - $this->_currentPage) > $this->_pagesAroundCurrent) {
+                        $skipped = true;
+                        $skipto = max($i+1, $this->_currentPage - $this->_pagesAroundCurrent);
+                    }
+                }
+                if($leftpad && !$rightpad && $i > $this->_currentPage + $this->_pagesAroundCurrent) {
+                    $rightpad = true;
+                    if($i < $this->totalPages - $this->_pagesBeforeLast) {
+                        $skipped = true;
+                        $skipto = max($i, $this->totalPages - $this->_pagesBeforeLast);
+                    }
+                }
+                if($skipped) {
+                    $pages->push(Pinoco::newVars(array('padding' => true)));
+                    $i = $skipto - 1;
+                    continue;
                 }
             }
-            if($leftpad && !$rightpad && $i > $this->_currentPage + $this->_pagesAroundCurrent) {
-                $rightpad = true;
-                if($i < $this->totalPages - $this->_pagesBeforeLast) {
-                    $skipped = true;
-                    $skipto = max($i, $this->totalPages - $this->_pagesBeforeLast);
-                }
-            }
-            if(!$skipped) {
-                $pages->push(Pinoco::newVars(array(
-                    'padding' => false,
-                    'number'  => $i,
-                    'href'    => call_user_func($this->urlFormatCallback, $this, $i),
-                    'current' => $i == $this->_currentPage,
-                )));
-            }
-            else {
-                $pages->push(Pinoco::newVars(array('padding' => true)));
-                $i = $skipto - 1;
-            }
+            $pages->push(Pinoco::newVars(array(
+                'padding' => false,
+                'number'  => $i,
+                'href'    => call_user_func($this->urlFormatCallback, $this, $i),
+                'current' => $i == $this->_currentPage,
+            )));
         }
         return $pages;
     }
