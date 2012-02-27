@@ -260,8 +260,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     
     public function __call($name, $arguments)
     {
-        if(array_key_exists($name, $this->_vars)) {
-            $m = $this->_vars[$name];
+        if($this->has($name)) {
+            $m = $this->get($name);
             if($m instanceof Pinoco_MethodProxy) {
                 return $m->call($arguments);
             }
