@@ -42,6 +42,7 @@
  *     )
  * );
  * $pagination->page = 1;
+ * if(!$pagination->isValidPage) { $this->notfound(); }
  * </code>
  *
  * PHPTAL example
@@ -132,12 +133,17 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     public function set_page($value)
     {
-        if($value < 1) { $value = 1; }
-        if($value > $this->totalPages) { $value = $this->totalPages; }
+        if($value < 1) {
+            throw new InvalidArgumentException('Invalid number of page:' . $value);
+        }
         if($value != $this->_currentPage) {
             $this->_data = null;
         }
         $this->_currentPage = $value;
+    }
+    
+    public function get_isValidPage() {
+        return $this->page <= $this->totalPages;
     }
     
     public function get_elementsPerPage()
@@ -146,6 +152,9 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     public function set_elementsPerPage($value)
     {
+        if($value < 1) {
+            throw new InvalidArgumentException('Invalid number of elements:' . $value);
+        }
         $this->_elementsPerPage = $value;
         $this->_data = null;
     }
@@ -156,6 +165,9 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     public function set_pagesAfterFirst($value)
     {
+        if($value < -1) {
+            throw new InvalidArgumentException('Invalid number of links:' . $value);
+        }
         $this->_pagesAfterFirst = $value;
     }
     
@@ -165,7 +177,9 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     public function set_pagesAroundCurrent($value)
     {
-        if($value < -1) { $value = -1; }
+        if($value < -1) {
+            throw new InvalidArgumentException('Invalid number of links:' . $value);
+        }
         $this->_pagesAroundCurrent = $value;
     }
     
@@ -175,6 +189,9 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     }
     public function set_pagesBeforeLast($value)
     {
+        if($value < -1) {
+            throw new InvalidArgumentException('Invalid number of links:' . $value);
+        }
         $this->_pagesBeforeLast = $value;
     }
     
