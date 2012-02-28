@@ -1453,7 +1453,7 @@ class Pinoco extends Pinoco_DynamicVars {
             restore_exception_handler();
             restore_error_handler();
         }
-        self::$_current_instance = null;
+        // DONT CLEAR self::$_current_instance = null;
         
         if($this->testing) {
             return $all_output_while_running;
