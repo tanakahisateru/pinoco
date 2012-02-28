@@ -52,9 +52,4 @@ class TwigRenderer extends Pinoco_Renderer {
         $template = $twig->loadTemplate($page);
         echo $template->render($ctx);
     }
-    
-    public function pinoco_url($url)
-    {
-        return Pinoco::instance()->url($url);
-    }
 }
