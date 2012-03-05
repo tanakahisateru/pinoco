@@ -635,7 +635,7 @@ class Pinoco extends Pinoco_DynamicVars {
         if(!$no_cache && $this->request->server->get('HTTP_PRAGMA')!='no-cache' && $this->request->server->get('HTTP_CAHCE_CONTROL')!='no-cache') {
             if(
                 $etag == $this->request->server->get('HTTP_IF_NONE_MATCH') ||
-                $last_modified <= strtotime($this->request->server->get('HTTP_IF_MODIFIED_SINCE'))
+                $last_modified <= @strtotime($this->request->server->get('HTTP_IF_MODIFIED_SINCE'))
             ) {
                 $this->error('304');
             }
