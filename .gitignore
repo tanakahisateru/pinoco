@@ -1,8 +1,11 @@
 /build/
 /.htaccess
+/composer.lock
+/vendor/
 
 .project
 .buildpath
 /.idea/
 /.settings/
 /nbproject/
+

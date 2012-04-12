@@ -5,6 +5,11 @@ error_reporting(E_ALL);
 if(function_exists('xdebug_disable')){ xdebug_disable(); }
 
 require_once '../../../../src/Pinoco.php';
+
+if(file_exists('../../../../vendor/.composer/autoload.php')) {
+    require '../../../../vendor/.composer/autoload.php';
+}
+
 Pinoco::creditIntoHeader();
 $pinoco = Pinoco::create("../../app", array(
 //    'use_mod_rewrite'  => TRUE,  // TRUE or FALSE default TRUE

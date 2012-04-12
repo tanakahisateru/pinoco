@@ -18,12 +18,12 @@
     "require": {
         "php": ">=5.1.2"
     },
+    "recommend": {
+        "phptal/phptal": ">=1.2.1"
+    },
     "autoload": {
         "psr-0": {
             "Pinoco": "src/"
-        },
-        "classmap": [
-            "src/"
-        ]
+        }
     }
 }
