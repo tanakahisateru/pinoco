@@ -1,0 +1,9 @@
+{
+    "name": "vendor-name-to-be-replaced/product-name-to-be-replaced",
+    "description": "Description of your app.",
+    "require": {
+        "php":">=5.1.2",
+        "pinoco/pinoco":"*",
+        "phptal/phptal":">=1.2.1"
+    }
+}
