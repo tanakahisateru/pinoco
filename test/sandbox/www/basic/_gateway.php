@@ -8,6 +8,10 @@ require_once '../../../../src/Pinoco.php';
 
 if(file_exists('../../../../vendor/.composer/autoload.php')) {
     require '../../../../vendor/.composer/autoload.php';
+    //uncomment to disable PHPTAL class loader.
+    //if(class_exists('PHPTAL')) {
+    //    spl_autoload_unregister(array('PHPTAL','autoload'));
+    //}
 }
 
 Pinoco::creditIntoHeader();
