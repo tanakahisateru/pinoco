@@ -1,0 +1,29 @@
+{
+    "name": "pinoco/pinoco",
+    "homepage": "https://github.com/tanakahisateru/pinoco",
+    "description": "Web site development framework using PHP and (mainly) PHPTAL",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "micro framework",
+        "phptal"
+    ],
+    "authors": [
+        {
+            "name": "Hisateru Tanaka",
+            "email": "tanakahisateru@gmail.com",
+            "homepage": "http://flavors.me/tanakahisateru"
+        }
+    ],
+    "require": {
+        "php": ">=5.1.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Pinoco": "src/"
+        },
+        "classmap": [
+            "src/"
+        ]
+    }
+}
