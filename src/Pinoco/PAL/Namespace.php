@@ -19,9 +19,9 @@
  * @subpackage PAL
  */
 
-require_once 'PHPTAL.php';
-require_once 'PHPTAL/Namespace.php';
-require_once 'PHPTAL/Dom/Defs.php';
+if(!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
+if(!class_exists('PHPTAL_Namespace')) { require_once 'PHPTAL/Namespace.php'; }
+if(!class_exists('PHPTAL_Dom_Defs')) { require_once 'PHPTAL/Dom/Defs.php'; }
 
 /**
  * PHPTAL extensions

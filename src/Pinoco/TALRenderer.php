@@ -27,9 +27,11 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
      */
     public function render($page, $extravars=array())
     {
-        include_once 'PHPTAL.php';
         if(!class_exists('PHPTAL')) {
-            throw new RuntimeException("PHPTAL is not installed.");
+            include_once 'PHPTAL.php';
+            if(!class_exists('PHPTAL')) {
+                throw new RuntimeException("PHPTAL is not installed.");
+            }
         }
         
         $template = new PHPTAL($page);
