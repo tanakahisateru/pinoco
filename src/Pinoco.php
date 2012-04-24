@@ -1040,9 +1040,6 @@ class Pinoco extends Pinoco_DynamicVars {
      */
     public function _error_handler($errno, $errstr, $errfile, $errline)
     {
-        if(function_exists('xdebug_is_enabled') && xdebug_is_enabled()) {
-            return FALSE;
-        }
         if((error_reporting() & $errno) == 0) {
             return FALSE;
         }
@@ -1058,20 +1055,20 @@ class Pinoco extends Pinoco_DynamicVars {
         array_shift($trace);
         $stacktrace = array();
         for($i=0; $i < count($trace); $i++) {
-            $stacktrace[] = htmlspecialchars(sprintf("#%d %s%s%s called at [%s:%d]",
+            $stacktrace[] = htmlspecialchars(sprintf("#%d %s(%d): %s%s%s()",
                 $i,
+                @$trace[$i]['file'],
+                @$trace[$i]['line'],
                 @$trace[$i]['class'],
                 @$trace[$i]['type'],
-                @$trace[$i]['function'],
-                @$trace[$i]['file'],
-                @$trace[$i]['line']
+                @$trace[$i]['function']
             ));
         }
         
         ob_start();
         if (ini_get("display_errors")) {
             printf("<br />\n<b>%s</b>: %s in <b>%s</b> on line <b>%d</b><br />\n", $errors, $errstr, $errfile, $errline);
-            echo "Stack trace:<br />\n" . implode("<br />\n", $stacktrace) . "<br /><br />\n";
+            echo "\n<pre>" . implode("\n", $stacktrace) . "</pre><br />\n";
         }
         if (ini_get('log_errors')) {
             error_log(sprintf("PHP %s:  %s in %s on line %d", $errors, $errstr, $errfile, $errline));
