@@ -19,8 +19,10 @@ class MethodProxyTest extends PHPUnit_Framework_TestCase
         $v->registerAsMethod('m', create_function(
             '$owner,$a,$b', 'return array($owner->a,$owner->b,$a,$b);'));
         $this->assertEquals(array(1, 2, 3, 4), $v->m(3, 4));
-        $m = $v->m;
-        $this->assertEquals(array(1, 2, 3, 4), call_user_func($m, 3, 4));
+        if(version_compare(PHP_VERSION, '5.3.0', '>=')) {
+            $m = $v->m;
+            $this->assertEquals(array(1, 2, 3, 4), call_user_func($m, 3, 4));
+        }
     }
 
     public function testUndefinedMethod()
