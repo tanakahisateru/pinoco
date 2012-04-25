@@ -19,7 +19,7 @@
     "require": {
         "php": ">=5.1.2"
     },
-    "recommend": {
+    "require-dev": {
         "phptal/phptal": ">=1.2.1"
     },
     "autoload": {
