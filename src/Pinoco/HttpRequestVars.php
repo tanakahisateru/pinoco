@@ -39,6 +39,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
     
     public function __construct($pinoco)
     {
+        parent::__construct();
         $this->_pinoco = $pinoco;
     }
     
