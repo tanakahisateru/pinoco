@@ -94,7 +94,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars {
         $this->defineValidityTest('min-length', array($this, '_testMinLength'),
             "At least {param} letters.");
         $this->defineValidityTest('in', array($this, '_testIn'),
-            "Coose in {param}.");
+            "Choose in {param}.");
         $this->defineValidityTest('not-in', array($this, '_testNotIn'),
             "Choose else of {param}.");
         $this->defineValidityTest('numeric', array($this, '_testNumeric'),
