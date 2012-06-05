@@ -90,6 +90,12 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('a','b','c'), $v->keys()->toArray());
     }
     
+    public function testValues()
+    {
+        $v = Pinoco_Vars::fromArray(array('a'=>1, 'c'=>3, 'b'=>2));
+        $this->assertEquals(array(1,2,3), $v->values()->toArray());
+    }
+    
     public function testDefault()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));

@@ -136,11 +136,24 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable {
     
     /**
      * Returns all property names in this object.
+     * Elements of returned list are sorted by its name.
      * @return Pinoco_List
      */
     public function keys()
     {
-        return Pinoco_List::fromArray(array_keys($this->_vars));
+        return Pinoco_List::fromArray(array_keys($this->_vars))->sorted();
+    }
+    
+    /**
+     * Returns values of all properties in this object.
+     * Values are sorted by its key name.
+     * @return Pinoco_List
+     */
+    public function values()
+    {
+        $tmp = $this->_vars;
+        ksort($tmp);
+        return Pinoco_List::fromArray(array_values($tmp));
     }
     
     public function __get($name)
