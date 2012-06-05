@@ -115,7 +115,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
             if($this->_pinoco->testing) {
                 // fake cookie header
                 $this->_pinoco->setcookie(session_name(), '0');
-                $this->_session = empty($_SESSION) ? (new Pinoco_Vars()) : Pinoco_Vars::wrapArray($_SESSION);
+                $this->_session = empty($_SESSION) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_SESSION);
             }
             else {
                 @session_start();
