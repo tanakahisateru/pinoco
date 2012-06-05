@@ -16,14 +16,15 @@
 
 /**
  * Global variables wrapper for HTTP request.
+ *
  * @package Pinoco
- * @property-read Pinoco_Vars $server
- * @property-read Pinoco_Vars $get
- * @property-read Pinoco_Vars $post
- * @property-read Pinoco_Vars $cookie
- * @property-read Pinoco_Vars $files
- * @property-read Pinoco_Vars $session
- * @property-read Pinoco_Vars $env
+ * @property-read Pinoco_Vars $server wraps $_SERVER
+ * @property-read Pinoco_Vars $get wraps $_GET
+ * @property-read Pinoco_Vars $post wraps $_POST
+ * @property-read Pinoco_Vars $cookie wraps $_COOKIE
+ * @property-read Pinoco_Vars $files wraps $_FILES
+ * @property-read Pinoco_Vars $session wraps $_SESSION
+ * @property-read Pinoco_Vars $env wraps $_ENV
  */
 class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
     
