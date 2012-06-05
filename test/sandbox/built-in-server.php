@@ -1,6 +1,6 @@
 <?php
 /**
- * php -S localhost:8081 -t path/to/docroot/ buitin-server.php
+ * php -S localhost:8081 -t path/to/docroot/ built-in-server.php
  */
 $req = preg_split('/\?/', $_SERVER['REQUEST_URI']);
 $path = array_shift($req);
