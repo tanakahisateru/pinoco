@@ -69,8 +69,11 @@
     </target>
     
     <target name="empty-project">
-        <copy todir="./build/empty-project-min">
-            <fileset dir="./empty-projects/min" />
+        <copy todir="./build/empty-project-min" overwrite="true">
+            <fileset dir="./empty-projects/min">
+                <exclude name="**/composer.lock"/>
+                <exclude name="**/vendor/**/*"/>
+            </fileset>
             <filterchain>
                 <replaceregexp>
                     <regexp pattern="\.\./\.\./src/Pinoco" replace="_app/lib/Pinoco"/>
@@ -80,8 +83,12 @@
         <tar destfile="./build/empty-project-min.tgz" compression="gzip">
             <fileset dir="./build/empty-project-min" />
         </tar>
-        <copy todir="./build/empty-project-prod">
-            <fileset dir="./empty-projects/prod" />
+        <copy todir="./build/empty-project-prod" overwrite="true">
+            <fileset dir="./empty-projects/prod">
+                <exclude name="_app/cache/*"/>
+                <exclude name="_app/composer.lock"/>
+                <exclude name="_app/vendor/**/*"/>
+            </fileset>
             <filterchain>
                 <replaceregexp>
                     <regexp pattern="\.\./\.\./src/Pinoco" replace="_app/lib/Pinoco"/>
