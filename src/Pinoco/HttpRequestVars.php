@@ -25,6 +25,7 @@
  * @property-read Pinoco_Vars $files wraps $_FILES
  * @property-read Pinoco_Vars $session wraps $_SESSION
  * @property-read Pinoco_Vars $env wraps $_ENV
+ * @property-read string $method alias to $_SERVER['REQUEST_METHOD']
  */
 class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
     
@@ -140,6 +141,36 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
             }
         }
         return $this->_env;
+    }
+    
+    public function get_method()
+    {
+        return $this->server->get('REQUEST_METHOD', null);
+    }
+    
+    public function isHead()
+    {
+        return $this->method == 'HEAD';
+    }
+    
+    public function isGet()
+    {
+        return $this->method == 'GET';
+    }
+    
+    public function isPost()
+    {
+        return $this->method == 'POST';
+    }
+    
+    public function isPut()
+    {
+        return $this->method == 'PUT';
+    }
+    
+    public function isDelete()
+    {
+        return $this->method == 'DELETE';
     }
 }
 
