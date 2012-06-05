@@ -128,12 +128,24 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function sort($callable=FALSE)
     {
-        if($callable) {
+        if(!$callable) {
             sort($this->_arr);
         }
         else {
             usort($this->_arr, $callable);
         }
+    }
+    
+    /**
+     * Returns sorted list.
+     * @param callback|false $callable
+     * @return Pinoco_List
+     */
+    public function sorted($callable=FALSE)
+    {
+        $tmp = clone($this);
+        $tmp->sort($callable);
+        return $tmp;
     }
     
     /**

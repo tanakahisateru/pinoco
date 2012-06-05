@@ -113,6 +113,22 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(1, 2, 3, 4, 5, 6), $l->toArray());
     }
     
+    public function testSort()
+    {
+        $l = Pinoco_List::fromArray(array(2, 1, 3));
+        $this->assertEquals(array(1, 2, 3), $l->sorted()->toArray());
+        $this->assertEquals(array(2, 1, 3), $l->toArray());
+        $l->sort();
+        $this->assertEquals(array(1, 2, 3), $l->toArray());
+        
+        $sorter = create_function('$a,$b', 'return ($a > $b ? -1 : ($a < $b ? 1 : 0));'); // inv sort
+        $l = Pinoco_List::fromArray(array(2, 1, 3));
+        $this->assertEquals(array(3, 2, 1), $l->sorted($sorter)->toArray());
+        $this->assertEquals(array(2, 1, 3), $l->toArray());
+        $l->sort($sorter);
+        $this->assertEquals(array(3, 2, 1), $l->toArray());
+    }
+    
     public function testJoin()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
