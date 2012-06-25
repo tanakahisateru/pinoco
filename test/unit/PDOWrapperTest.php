@@ -15,12 +15,12 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
             value varchar
         )");
     }
-    
+
     public function tearDown() {
         $this->db->exec("drop table bar");
         $this->db->exec("drop table foo");
     }
-    
+
     public function testExecQuery()
     {
         $this->db->exec("insert into foo (value) values('aaa');");
@@ -30,7 +30,7 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($last_id, $rs[0]->id);
         $this->assertEquals('aaa', $rs[0]->value);
     }
-    
+
     public function testPrepareQuery()
     {
         $this->db->exec("insert into foo (value) values('aaa');");
@@ -41,7 +41,7 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($last_id, $r->id);
         $this->assertEquals('aaa', $r->value);
     }
-    
+
     public function testStatement()
     {
         $this->db->exec("insert into foo (value) values('aaa');");
@@ -53,25 +53,25 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('id'=>'3', 'value'=>'ccc'), $stmt->fetch()->toArray());
         $this->assertFalse($stmt->fetch());
     }
-    
+
     public function testLazy()
     {
         $this->db->exec("insert into foo (value) values('aaa');");
         $last_id = $this->db->lastInsertId();
         $this->db->exec("insert into foo (value) values('bbb');");
         $this->db->exec("insert into foo (value) values('ccc');");
-        
+
         $stmt = $this->db->prepare("insert into bar (foo_id, value) values(?, ?);");
         $stmt->exec($last_id, 'a1');
         $stmt->exec($last_id, 'a2');
         $stmt->exec($last_id, 'a3');
-        
+
         $rs = $this->db->query("select * from foo order by value;")->fetchAll();
-        
+
         $lf = new LazyFetcher($this->db);
         $cc = &$lf->cc;
         $rs->map(array($lf, 'lazyBarFetcherforAll'));
-        
+
         /*
         // smart! I love php5.3.
         $cc = 0;
@@ -84,7 +84,7 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
             });
         });
         */
-        
+
         $this->assertEquals(0, $cc);
         $this->assertEquals(3, $rs[0]->childlen->count());
         $this->assertEquals(1, $cc);

@@ -19,23 +19,23 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
-    
-    private $_status_messages = NULL;
-    
+class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
+{
+    private $_status_messages = null;
+
     /**
      * Constructor
      * @param int $code
      * @param string $title
      * @param string $message
      */
-    public function __construct($code, $title=NULL, $message=NULL)
+    public function __construct($code, $title=null, $message=null)
     {
         $this->code = $code;
         $this->title = $title ? $title : $this->_code2message($code, 'title');
         $this->message = $message ? $message : $this->_code2message($code, 'message');
     }
-    
+
     private function _code2message($code, $field) {
         $ise = "The server encountered an internal error or misconfiguration and was unable to complete your request.";
         if(!$this->_status_messages) {
@@ -101,7 +101,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
                     'message'=>"The proxy server did not receive a timely response from the upstream server.")
             );
         }
-        
+
         if(isset($this->_status_messages[$code])) {
             return $this->_status_messages[$code][$field];
         }
@@ -109,7 +109,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
             return $field == 'title' ? 'Error' : $ise;
         }
     }
-    
+
     /**
      * HTTP error response implementation.
      * @param Pinoco $pinoco
@@ -122,9 +122,9 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
             $protocol = 'HTTP/1.0';
         }
         $pinoco->header($protocol . " " . $this->code . " " . $this->title);
-        
+
         if($pinoco->testing) { return; }
-        
+
         $pref = $pinoco->sysdir . "/error/";
         foreach(array($this->code . '.php', 'default.php') as $errfile) {
             if(file_exists($pref . $errfile)) {
@@ -132,7 +132,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl {
                 return;
             }
         }
-        
+
         $pinoco->header("Content-Type: text/html; charset=iso-8859-1");
         echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' . "\n";
         echo "<html><head>\n";

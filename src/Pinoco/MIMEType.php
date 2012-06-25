@@ -19,7 +19,8 @@
  * (Thanks to MIME_Type package!)
  * @package Pinoco
  */
-class Pinoco_MIMEType {
+class Pinoco_MIMEType
+{
     private static $EXT2TYPE = array (
         'ez'        => 'application/andrew-inset',
         'atom'      => 'application/atom+xml',
@@ -220,7 +221,7 @@ class Pinoco_MIMEType {
         'movie'     => 'video/x-sgi-movie',
         'ice'       => 'x-conference/x-cooltalk',
     );
-    
+
     /**
      * Returns MIME type string matches given file name.
      * @param string $filename

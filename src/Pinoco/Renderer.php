@@ -20,22 +20,23 @@
  * @property Pinoco_Vars $cfg
  * @property callback $before_rendering
  */
-abstract class Pinoco_Renderer {
+abstract class Pinoco_Renderer
+{
     /**
      * @var Pinoco
      */
     protected $_sysref;
-    
+
     /**
      * @var Pinoco_Vars
      */
     protected $_cfg;
-    
+
     /**
      * @var callback
      */
     protected $_before_rendering;
-    
+
     /**
      * Constructor
      * @param Pinoco $sys
@@ -46,9 +47,9 @@ abstract class Pinoco_Renderer {
         $this->_cfg = new Pinoco_Vars();
         $this->_before_rendering = null;
     }
-    
+
     public function __toString() { return __CLASS__; }
-    
+
     /**
      * Properties reader.
      * @param string $name
@@ -58,20 +59,21 @@ abstract class Pinoco_Renderer {
     {
         if($name == 'cfg'){ return $this->_cfg; }
         if($name == 'before_rendering'){ return $this->_before_rendering; }
-        return NULL;
+        return null;
     }
-    
+
     /**
      * Properties writer.
      * This protects read only property "cfg".
      * @param string $name
+     * @param mixed $value
      * @return mixed
      */
     public function __set($name, $value)
     {
         if($name == 'before_rendering'){ $this->_before_rendering = $value; }
     }
-    
+
     /**
      * HTML page renderring implementation.
      * @param string $page
@@ -81,7 +83,7 @@ abstract class Pinoco_Renderer {
      protected function render($page, $extravars=array()){
          // implement rendering process
      }
-     
+
     /**
      * Executes rendering with calling before_rendering handler.
      * @param string $page

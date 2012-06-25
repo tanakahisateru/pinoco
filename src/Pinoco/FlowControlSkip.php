@@ -19,6 +19,7 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_FlowControlSkip extends Pinoco_FlowControl {
+class Pinoco_FlowControlSkip extends Pinoco_FlowControl
+{
 }
 

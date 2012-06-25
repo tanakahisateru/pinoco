@@ -18,8 +18,8 @@
  * Default HTML page renderer using native PHP.
  * @package Pinoco
  */
-class Pinoco_NativeRenderer extends Pinoco_Renderer {
-    
+class Pinoco_NativeRenderer extends Pinoco_Renderer
+{
     /**
      * @param string $page
      * @param array $extravars

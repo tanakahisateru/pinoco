@@ -3,6 +3,9 @@ require_once dirname(__FILE__) . '/../../../../src/Pinoco.php';
 
 if(function_exists('xdebug_disable')){ xdebug_disable(); }
 
+/**
+ * @property Pinoco_TestEnvironment testenv
+ */
 class HookTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -13,7 +16,10 @@ class HookTest extends PHPUnit_Framework_TestCase
             $prefix . '/app'
         )->initBy(array($this, 'init'));
     }
-    
+
+    /**
+     * @param Pinoco $pinoco
+     */
     public function init($pinoco)
     {
         $pinoco->config('cfg', 'config/main.ini');

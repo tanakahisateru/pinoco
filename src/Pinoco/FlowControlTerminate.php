@@ -19,6 +19,7 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_FlowControlTerminate extends Pinoco_FlowControl {
+class Pinoco_FlowControlTerminate extends Pinoco_FlowControl
+{
 }
 

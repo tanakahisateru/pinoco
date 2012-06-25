@@ -19,15 +19,15 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_ValueProxy {
-    
+class Pinoco_ValueProxy
+{
     private $callback;
     private $owner;
     private $context;
     private $oneshot;
     private $freeze;
     private $value;
-    
+
     /**
      * Constructor to make a value proxy.
      *
@@ -45,7 +45,7 @@ class Pinoco_ValueProxy {
         $this->freeze = false;
         $this->value = null;
     }
-    
+
     /**
      * Evalute real value.
      *
@@ -65,7 +65,7 @@ class Pinoco_ValueProxy {
         }
         return $result;
     }
-    
+
     /**
      * Mark it as dirty.
      *

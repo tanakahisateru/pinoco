@@ -9,7 +9,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $v->set('foo', 'bar');
         $this->assertEquals('bar', $v->get('foo'));
     }
-    
+
     public function testHas()
     {
         $v = new Pinoco_Vars();
@@ -17,7 +17,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($v->has('foo'));
         $this->assertFalse($v->has('xxx'));
     }
-    
+
     public function testCount()
     {
         $v = new Pinoco_Vars();
@@ -31,23 +31,23 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $v = new Pinoco_Vars();
         $v->foo = 'bar';
         $this->assertEquals('bar', $v->get('foo'));
-        
+
         $v = new Pinoco_Vars();
         $v->set('foo', 'bar');
         $this->assertEquals('bar', $v->foo);
     }
-    
+
     public function testArrayAccess()
     {
         $v = new Pinoco_Vars();
         $v['foo'] = 'bar';
         $this->assertEquals('bar', $v->get('foo'));
-        
+
         $v = new Pinoco_Vars();
         $v->set('foo', 'bar');
         $this->assertEquals('bar', $v['foo']);
     }
-    
+
     public function testCreateFromArray()
     {
         $src = array('a'=>1, 'b'=>2, 'c'=>3);
@@ -55,17 +55,17 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $v->a);
         $this->assertEquals(2, $v->b);
         $this->assertEquals(3, $v->c);
-        
+
         $src['a'] = 10;
         $this->assertEquals(1, $v->a);
-        
+
         $v->b = 20;
         $this->assertEquals(2, $src['b']);
-        
+
         $src['d'] = 40;
         $this->assertFalse($v->has('d'));
     }
-    
+
     public function testWrapArray()
     {
         $src = array('a'=>1, 'b'=>2, 'c'=>3);
@@ -73,29 +73,29 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $v->a);
         $this->assertEquals(2, $v->b);
         $this->assertEquals(3, $v->c);
-        
+
         $src['a'] = 10;
         $this->assertEquals(10, $v->a);
-        
+
         $v->b = 20;
         $this->assertEquals(20, $src['b']);
-        
+
         $src['d'] = 40;
         $this->assertTrue($v->has('d'));
     }
-    
+
     public function testKeys()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2, 'c'=>3));
         $this->assertEquals(array('a','b','c'), $v->keys()->toArray());
     }
-    
+
     public function testValues()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'c'=>3, 'b'=>2));
         $this->assertEquals(array(1,2,3), $v->values()->toArray());
     }
-    
+
     public function testDefault()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -104,7 +104,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertSame('EMPTY', $v->get('c'));
         $this->assertSame(0, $v->get('c', 0), "as-hoc default");
     }
-    
+
     public function testLoose()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -115,7 +115,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($v->has('c'));
         $this->assertNull($v->c);
     }
-    
+
     public function testRemove()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -125,7 +125,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         unset($v->b);
         $this->assertFalse($v->has('b'));
     }
-    
+
     public function testIteration()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -136,7 +136,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         }
         $this->assertEquals(array('a', 1, 'b', 2), $tmp);
     }
-    
+
     public function testToArray()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -148,7 +148,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('m_a'=>1, 'm_b'=>2), $v->toArray(false, null, 'm_%s'));
         $this->assertEquals(array('m_a'=>1, 'm_b'=>2), $v->toArray(false, null, $name_mod));
     }
-    
+
     public function testImport()
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
@@ -170,7 +170,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
             'a'=>1, 'b'=>2, 'c'=>3, 'e'=>5, 'g'=>7, 'h'=>-1, 'm_i'=>9, 'm_j'=>10
         ), $v->toArray());
     }
-    
+
     public function testToArrayRecurse()
     {
         $v = new Pinoco_Vars();
@@ -186,7 +186,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertSame($v->a, $tmp['a']);
         $this->assertSame($v->b, $tmp['b']);
     }
-    
+
     public function testNothing()
     {
         $v = Pinoco_NothingVars::instance();
@@ -202,7 +202,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $v->toArrayRecurse());
         $this->assertEquals('', strval($v));
     }
-    
+
     public function testExpressionAccess()
     {
         $obj = new stdClass;

@@ -18,15 +18,15 @@
  * Testable Pinoco instance factory for unit test framework.
  * @package Pinoco
  */
-class Pinoco_TestEnvironment extends Pinoco_Vars {
-    
+class Pinoco_TestEnvironment extends Pinoco_Vars
+{
     private $_basedir;
     private $_sysdir;
     private $_baseuri;
     private $_dispatcher;
-    
+
     private $_preprocess;
-    
+
     /**
      * Initialize testable Pinoco factory mainly by base directory and app directory.
      * @param string $sysdir
@@ -42,7 +42,7 @@ class Pinoco_TestEnvironment extends Pinoco_Vars {
         $this->_dispatcher = $dispatcher;
         $this->_preprocess = false;
     }
-    
+
     /**
      * Use this to define Pinoco's instance initialize process.
      * @param callback $callable
@@ -54,11 +54,11 @@ class Pinoco_TestEnvironment extends Pinoco_Vars {
         $this->_preprocess = array($callable, $context);
         return $this;
     }
-    
+
     /**
      * Provides an initialized Pinoco instance.
      * @param string $path
-     * @return Pinoco_TestEnvironment
+     * @return Pinoco
      */
     public function create($path)
     {

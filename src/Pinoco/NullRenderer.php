@@ -18,7 +18,8 @@
  * Null renderer.
  * @package Pinoco
  */
-class Pinoco_NullRenderer extends Pinoco_Renderer {
+class Pinoco_NullRenderer extends Pinoco_Renderer
+{
     /**
      * @param string $page
      * @param array $extravars

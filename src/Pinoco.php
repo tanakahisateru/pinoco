@@ -37,9 +37,9 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * <code>
  * require_once 'Pinoco.php';
  * Pinoco::create("*** your_app_dir ***", array(
- * //    'use_mod_rewrite'  => TRUE,  // TRUE or FALSE default TRUE
- * //    'use_path_info'    => TRUE,  // TRUE or FALSE default TRUE
- * //    'custom_path_info' => FALSE, // FALSE(auto) or string default FALSE
+ * //    'use_mod_rewrite'  => true,  // true or false default true
+ * //    'use_path_info'    => true,  // true or false default true
+ * //    'custom_path_info' => false, // false(auto) or string default false
  * //    'directory_index'  => "index.html index.php", // string like DirectoryIndex directive default "index.html index.php"
  * ))->run();
  * </code>
@@ -52,9 +52,9 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * @property-read string $baseuri Base URI
  * @property-read string $basedir Base directory
  * @property-read string $sysdir  Application directory
- * @property-read book $testing  Test mode flag
+ * @property-read bool $testing  Test mode flag
  * @property Pinoco_List $incdir  Include pathes
- * @property-read Pinoco_Vars $request Request related global variables wrapper
+ * @property-read Pinoco_HttpRequestVars $request Request related global variables wrapper
  * @property-read string $path    Path under base URI
  * @property-read string $script  Current hook script
  * @property-read Pinoco_List $activity  Activity history of hook scripts
@@ -68,18 +68,18 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * @property callback $url_modifier  URL modification callback
  * @property callback $page_modifier Template page base path modification callback
  */
-class Pinoco extends Pinoco_DynamicVars {
-    
+class Pinoco extends Pinoco_DynamicVars
+{
     const VERSION = "0.6.1";
-    
+
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
     private $_sysdir;    // R base directory for scripts
     private $_testing;   // R test mode flag
-    
+
     private $_incdir;  // R/W include search directories
     private $_request;  // R request related global variables wrapper
-    
+
     private $_path;      // R string
     private $_script;    // R string
     private $_activity;  // R list
@@ -87,23 +87,23 @@ class Pinoco extends Pinoco_DynamicVars {
     private $_subpath;   // R string
     private $_pathargs;  // R list
     private $_directory_index;  // R/W string
-    
+
     private $_renderers; // R/M vars
     private $_page;       // R/W string
-    
+
     private $_autolocal; // R/M vars
-    
+
     private $_url_modifier;  // R/W callable
     private $_page_modifier; // R/W callable
-    
+
     // hidden
     private $_system_incdir;
     private $_dispatcher;
     private $_manually_rendered;
     private $_script_include_stack;
-    
+
     private static $_current_instance = null;
-    
+
     /**
      * It provides a suitable Pinoco instance in regular usage.
      * @param string $sysdir
@@ -113,25 +113,25 @@ class Pinoco extends Pinoco_DynamicVars {
     public static function create($sysdir, $options=array())
     {
         // options
-        $use_mod_rewrite  = isset($options['use_mod_rewrite'])  ? $options['use_mod_rewrite'] : TRUE;
-        $use_path_info    = isset($options['use_path_info'])    ? $options['use_path_info'] : TRUE;
-        $custom_path_info = isset($options['custom_path_info']) ? $options['custom_path_info'] : FALSE;
-        
+        $use_mod_rewrite  = isset($options['use_mod_rewrite'])  ? $options['use_mod_rewrite'] : true;
+        $use_path_info    = isset($options['use_path_info'])    ? $options['use_path_info'] : true;
+        $custom_path_info = isset($options['custom_path_info']) ? $options['custom_path_info'] : false;
+
         // raw path info
-        $pathinfo_name = ($custom_path_info !== FALSE) ? $custom_path_info : 'PATH_INFO';
+        $pathinfo_name = ($custom_path_info !== false) ? $custom_path_info : 'PATH_INFO';
         if($use_path_info) {
             $pathinfo = isset($_SERVER[$pathinfo_name]) ? $_SERVER[$pathinfo_name] : @getenv('PATH_INFO');
         }
         else {
             $pathinfo = isset($_GET[$pathinfo_name]) ? $_GET[$pathinfo_name] : "";
         }
-        
+
         // path
         $path = $pathinfo;
         if(!preg_match('/^\//', $path)) {
             $path = "/" . $path;
         }
-        
+
         // dispatcher
         if($use_mod_rewrite) {
             $gateway = "";
@@ -144,20 +144,20 @@ class Pinoco extends Pinoco_DynamicVars {
                 $dispatcher .= "?" . $pathinfo_name . "=";
             }
         }
-        
+
         // base uri (gateway placed path)
         $uri = urldecode($_SERVER['REQUEST_URI']);  // to urldecoded path like path_info or _GET params
         $seppos = strpos($uri, '?');
-        if($seppos !== FALSE) {
+        if($seppos !== false) {
             $uri = substr($uri, 0, $seppos);
         }
         $seppos = strpos($uri, '#');
-        if($seppos !== FALSE) {
+        if($seppos !== false) {
             $uri = substr($uri, 0, $seppos);
         }
         if($use_mod_rewrite) {
             $trailings = $pathinfo;
-            if(strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) !== FALSE) {
+            if(strpos($_SERVER['REQUEST_URI'], "/" . basename($_SERVER['SCRIPT_NAME'])) !== false) {
                 $trailings = "/" . basename($_SERVER['SCRIPT_NAME']) . $pathinfo;
             }
         }
@@ -167,31 +167,32 @@ class Pinoco extends Pinoco_DynamicVars {
         else {
             $trailings = "/" . $gateway;
         }
-        
+
         // remove double slashes in path expression (e.g. /foo//bar)
         $uri = preg_replace('/\/\/+/', '/', $uri);
         $trailings = preg_replace('/\/\/+/', '/', $trailings);
-        
+
         $baseuri = substr($uri, 0, strlen($uri) - strlen($trailings));
-        
+
         // build engine
         return new self($baseuri, $dispatcher, $path, dirname($_SERVER['SCRIPT_FILENAME']), $sysdir);
     }
-    
+
     /**
-     * Pinoco constructor. 
+     * Pinoco constructor.
      * @param string $baseuri
      * @param string $dispatcher
      * @param string $path
      * @param string $basedir
      * @param string $sysdir
      * @param bool $testing
+     * @throws InvalidArgumentException
      * @see src/Pinoco#create($sysdir, $options)
      */
     function __construct($baseuri, $dispatcher, $path, $basedir, $sysdir, $testing=false)
     {
         $this->_testing = $testing;
-        
+
         $this->_baseuri = $baseuri;
         $this->_dispatcher = $dispatcher;
         $this->_path = $path;
@@ -203,19 +204,19 @@ class Pinoco extends Pinoco_DynamicVars {
         if(!is_dir($this->_sysdir)) {
             throw new InvalidArgumentException("Invalid system directory:" . $sysdir . " does not exist.");
         }
-        
+
         $this->_incdir = self::newList();
         $this->_incdir->push($this->sysdir . "/lib"); // default lib dir
-        
+
         $this->_system_incdir = get_include_path();
-        
+
         if($this->_path[strlen($this->_path) - 1] != '/' &&
             (is_dir($this->_basedir . $this->_path) || is_dir($this->_sysdir . "/hooks" . $this->_path))) {
             $this->_path .= '/';
         }
-        
+
         $this->_directory_index = "index.html index.php"; // default index files
-        
+
         /*
         if($this->_path[strlen($this->_path) - 1] == '/') {
             foreach(explode(" ", $directory_index) as $indexfile) {
@@ -229,34 +230,34 @@ class Pinoco extends Pinoco_DynamicVars {
             $this->_path .= 'index.html';
         }
         */
-        
+
         $this->_request = new Pinoco_HttpRequestVars($this);
-        
+
         $this->_script = null;
         $this->_activity = self::newList();
         $this->_sent_headers = self::newList();
         $this->_subpath = "";
         $this->_pathargs = self::newList();
-        
+
         $this->_renderers = self::newVars();
         $this->_renderers->setDefault(new Pinoco_NullRenderer($this));
         $this->_renderers->html = new Pinoco_TALRenderer($this);
         $this->_renderers->php  = new Pinoco_NativeRenderer($this);
-        
+
         $this->_page = "<default>";  // To be resolved automatically
-        
+
         $this->_autolocal = self::newVars();
-        
-        $this->_url_modifier = NULL;
-        $this->_page_modifier = NULL;
-        
+
+        $this->_url_modifier = null;
+        $this->_page_modifier = null;
+
         parent::__construct();
-        
+
         // chdir($this->_sysdir);
     }
-    
+
     public function __toString() { return __CLASS__ . " " . self::VERSION; }
-    
+
     /**
      * Imports named attribute from file or array.
      * load $name
@@ -275,7 +276,7 @@ class Pinoco extends Pinoco_DynamicVars {
             switch($ext) {
                 case 'ini':
                     $source = parse_ini_file($file, true);
-                    if($source === FALSE) {
+                    if($source === false) {
                         throw new InvalidArgumentException('Can\'t load counfig file: ' . $source);
                     }
                     foreach($source as $k=>&$v) {
@@ -303,7 +304,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->get($name)->import($source);
         return $this;
     }
-    
+
     // factory
     /**
      * It provides a new Vars object (that can be filled with existing Array).
@@ -314,7 +315,7 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return Pinoco_Vars::fromArray($init);
     }
-    
+
     /**
      * It provides a new List object (that can be filled with existing Array).
      * @param mixed $init
@@ -324,7 +325,7 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return Pinoco_List::fromArray($init);
     }
-    
+
     /**
      * It provides the NothingVars object.
      * @return Pinoco_NothingVars
@@ -333,7 +334,7 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return Pinoco_NothingVars::instance();
     }
-    
+
     /**
      * It provides a Vars object as existing Array wrapper.
      * @param array &$ref
@@ -343,7 +344,7 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return Pinoco_Vars::wrap($ref);
     }
-    
+
     /**
      * It provides a List object as existing Array wrapper.
      * @param array &$ref
@@ -353,17 +354,19 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return Pinoco_List::wrap($ref);
     }
-    
+
     /**
      * It provides a new object by "path/to/src.php/ClassName" syntax.
+     * @deplicated
      * @param string $class
-     * @param mixed $args,...
+     * @param mixed $args ,...
+     * @throws InvalidArgumentException
      * @return object
      */
     public static function newObj($class /*[, $args[, ...]]*/)
     {
         $seppos = strrpos($class, '/');
-        if($seppos !== FALSE) {
+        if($seppos !== false) {
             $srcfile = substr($class, 0, $seppos);
             $class = substr($class, $seppos + 1);
             require_once $srcfile;
@@ -379,7 +382,7 @@ class Pinoco extends Pinoco_DynamicVars {
             return $object;
         }
         else {
-            if($seppos !== FALSE) {
+            if($seppos !== false) {
                 throw new InvalidArgumentException($class . " may not be defined on " . $srcfile . ".");
             }
             else {
@@ -388,7 +391,7 @@ class Pinoco extends Pinoco_DynamicVars {
             return null;
         }
     }
-    
+
     /**
      * Wrapped PDO factory
      * @deprecated
@@ -405,221 +408,227 @@ class Pinoco extends Pinoco_DynamicVars {
             $dsn, $un, $pw, $opts
         );
     }
-    
+
     // reserved props
     /**
      * Web site root URI.
      * @return string
      */
     public function get_baseuri() { return $this->_baseuri; }
-    
+
     /**
      * Web site root directory in local file system.
      * @return string
      */
     public function get_basedir() { return $this->_basedir; }
-    
+
     /**
      * Application directory.
      * @return string
      */
     public function get_sysdir()  { return $this->_sysdir; }
-    
+
     /**
      * Test mode flag.
      * @return bool
      */
     public function get_testing()  { return $this->_testing; }
-    
+
     /**
      * Include search directories.
      * @return Pinoco_List
      */
     public function get_incdir() { return $this->_incdir; }
-    
+
     /**
      * Request related global variables wrapper.
      * @return Pinoco_Vars
      */
     public function get_request() { return $this->_request; }
-    
+
     /**
      * Local resource path under base URI.
      * @return string
      */
     public function get_path()    { return $this->_path; }
-    
+
     /**
      * Current hook script if it running.
      * @return string
      */
     public function get_script()  { return $this->_script; }
-    
+
     /**
      * Hook scripts invocation log.
      * @return Pinoco_List
      */
     public function get_activity(){ return $this->_activity; }
-    
+
     /**
      * Sent headers via Pinoco's method.
      * @return Pinoco_List
      */
     public function get_sent_headers(){ return $this->_sent_headers; }
-    
+
     /**
      * Partial path under current script.
      * @return string
      */
     public function get_subpath() { return $this->_subpath; }
-    
+
     /**
      * Path elements resolved by _default folders or files.
      * @return Pinoco_List
      */
     public function get_pathargs() { return $this->_pathargs; }
-    
+
     /**
      * Default files (white space splitted) for directory access.
      * @return string
      */
     public function get_directory_index() { return $this->_directory_index; }
-    
+
     /**
      * File name to override view.
      * @return string
      */
     public function get_page()    { return $this->_page; }
-    
+
     /**
      * Page renderers repository.
      * A renderer object is registerd to file extension as dictionary key.
      * @return Pinoco_Vars
      */
     public function get_renderers(){ return $this->_renderers; }
-    
+
     /**
      * Automatically extracted variables for hooks and pages.
      * @return Pinoco_Vars
      */
     public function get_autolocal(){ return $this->_autolocal; }
-        
+
     /**
      * Special filter for url conversion.
      * @return callback
      */
     public function get_url_modifier(){ return $this->_url_modifier; }
-    
+
     /**
      * Special filter for default view file.
      * @return callback
      */
     public function get_page_modifier(){ return $this->_page_modifier; }
-    
+
     /**
      * Include search directories.
      * @param Pinoco_List $dirs
      * @return void
      */
     public function set_incdir($dirs) { $this->_incdir = $dirs; }
-    
+
     /**
      * File name to override view.
-     * Set FALSE if you want an empty output.
+     * Set false if you want an empty output.
      * Set "<default>" if you want to reset to default view.
      * @param string $page
      * @return void
      */
     public function set_page($page) { $this->_page = $page; }
-    
+
     /**
      * Default files (white space splitted) for directory access.
      * @param string $files
      * @return void
      */
     public function set_directory_index($files) { $this->_directory_index = $files; }
-    
+
     /**
      * Special filter for url conversion.
      * @param callback $callable
      * @return void
      */
     public function set_url_modifier($callable) { $this->_url_modifier = $callable; }
-    
+
     /**
      * Special filter for default view file.
      * @param callback $callable
      * @return void
      */
     public function set_page_modifier($callable) { $this->_page_modifier = $callable; }
-    
+
     // flow control
     /**
      * Current hook proccess will be skipped and invoke the next hook script.
+     * @throws Pinoco_FlowControlSkip
      * @return void
      */
     public static function skip()
     {
         throw new Pinoco_FlowControlSkip();
     }
-    
+
     /**
      * Whole hook stage before rendering is treminated and rendering phase is started immediately.
+     * @throws Pinoco_FlowControlTerminate
      * @return void
      */
     public static function terminate()
     {
         throw new Pinoco_FlowControlTerminate();
     }
-    
+
     /**
      * It cancels hooks and rendering and respond HTTP error to browser.
      * @param int $code
      * @param string $title
      * @param string $message
+     * @throws Pinoco_FlowControlHttpError
      * @return void
      */
-    public static function error($code, $title=NULL, $message=NULL)
+    public static function error($code, $title=null, $message=null)
     {
         throw new Pinoco_FlowControlHttpError($code, $title, $message);
     }
-    
+
     /**
      * Special error to let broeswr change the location to access.
      * @param string $url
      * @param bool $extrenal
+     * @throws Pinoco_FlowControlHttpRedirect
      * @return void
      */
-    public static function redirect($url, $extrenal=FALSE)
+    public static function redirect($url, $extrenal=false)
     {
         throw new Pinoco_FlowControlHttpRedirect($url, $extrenal);
     }
-    
+
     /**
      * Error for Not Found.
+     * @throws Pinoco_FlowControlHttpError
      * @return void
      */
     public static function notfound()
     {
         self::error(404);
     }
-    
+
     /**
      * Error for Forbidden.
+     * @throws Pinoco_FlowControlHttpError
      * @return void
      */
     public static function forbidden()
     {
         self::error(403);
     }
-    
+
     /**
      * Serves static file or send 304 no-modified response automatically.
      * This method terminates hook script flow.
      *
      * @param string $filename
      * @param bool $no_cache
-     * @param string $mime_type
+     * @param bool|string $mime_type
      * @return void
      */
     public function serveStatic($filename, $no_cache=false, $mime_type=false)
@@ -648,7 +657,7 @@ class Pinoco extends Pinoco_DynamicVars {
         $this->render(false);
         $this->terminate();
     }
-    
+
     /**
      * Utility to get the parent path.
      * @param string $path
@@ -661,18 +670,18 @@ class Pinoco extends Pinoco_DynamicVars {
         if($dn == ".") { $dn = ""; }
         return $dn;
     }
-    
+
     /**
      * It makes relative path absolute.
      * @param string $path
      * @param string $base
      * @return string
      */
-    public function resolvePath($path, $base=FALSE)
+    public function resolvePath($path, $base=false)
     {
         if(strlen($path) > 0 && $path[0] != '/') {
             // make path absolute if relative
-            if($base === FALSE) {
+            if($base === false) {
                 $thispath = $this->_path;
                 $base = $thispath[strlen($thispath) - 1] != "/" ?
                     self::parentPath($thispath) : rtrim($thispath, "/");
@@ -693,7 +702,7 @@ class Pinoco extends Pinoco_DynamicVars {
             return $path;
         }
     }
-    
+
     /**
      * Returns if the path can be rendered by registerd renderers.
      * @param string $path
@@ -702,33 +711,33 @@ class Pinoco extends Pinoco_DynamicVars {
     public function isRenderablePath($path)
     {
         $sepp = strpos($path, "?");
-        if($sepp !== FALSE) { $path = substr($path, 0, $sepp); }
+        if($sepp !== false) { $path = substr($path, 0, $sepp); }
         $sepp = strpos($path, "#");
-        if($sepp !== FALSE) { $path = substr($path, 0, $sepp); }
+        if($sepp !== false) { $path = substr($path, 0, $sepp); }
         $ext = pathinfo($path, PATHINFO_EXTENSION);
         return $ext && $this->_renderers->has($ext);
     }
-    
+
     /**
      * PHP's header function wrapper.
      * @param string $string
      * @param bool $replace
      * @param int $http_response_code
-     * @return boolean
+     * @return bool
      */
     public function header($string, $replace=true /*, $http_response_code */)
     {
-        $name = NULL;
+        $name = null;
         $is_http = preg_match('/^HTTP\\//', $string);
         if(!$is_http && preg_match('/^(.+?)\\s*:/', $string, $m)) {
             $name = $m[1];
         }
-        
+
         if($is_http || $replace) {
             $tmp = self::newList();
             foreach($this->_sent_headers as $h) {
                 if($is_http && preg_match('/^HTTP\\//', $h) ||
-                    $name !== NULL && preg_match('/^' . preg_quote($name) . '\\s*:/i', $h)
+                    $name !== null && preg_match('/^' . preg_quote($name) . '\\s*:/i', $h)
                 ) {
                     continue;
                 }
@@ -740,7 +749,7 @@ class Pinoco extends Pinoco_DynamicVars {
         else {
             $this->_sent_headers->push($string);
         }
-        
+
         if(!$this->_testing && !headers_sent()) {
             if(func_num_args() >= 3) {
                 @header($string, $replace, func_get_arg(2));
@@ -748,13 +757,13 @@ class Pinoco extends Pinoco_DynamicVars {
             else {
                 @header($string, $replace);
             }
-            return TRUE;
+            return true;
         }
         else {
-            return FALSE;
+            return false;
         }
     }
-    
+
     /**
      * PHP's setcookie function wrapper.
      */
@@ -772,28 +781,28 @@ class Pinoco extends Pinoco_DynamicVars {
             $tmp[] = urlencode($name) . '=';
             $tmp[] = 'expires=' . gmdate("D, d-M-Y H:i:s T", time() - 31536001);
         }
-        
+
         if(empty($path)) {
             $tmp[] = 'path=' . rtrim($this->baseuri, '/') . '/'; // setcookie's default is based on front controller.
         }
         else {
             $tmp[] = 'path=' . $path;
         }
-        
+
         if (!empty($domain)) { $tmp[] = 'domain=' . $domain; }
         if ($secure)         { $tmp[] = 'secure'; }
         if ($httponly)       { $tmp[] = 'httponly'; }
-        
+
         return $this->header('Set-Cookie: ' . implode('; ', $tmp), false);
     }
-    
+
     /**
      * Returns host based URI from site based or sub-path based relateve one.
      * @param string $path
-     * @param bool $pure cancels to call user modifier if TRUE
+     * @param bool $pure cancels to call user modifier if true
      * @return string
      */
-    public function url($path='', $pure=FALSE)
+    public function url($path='', $pure=false)
     {
         if($path != '') {
             $path = $this->resolvePath($path);
@@ -807,7 +816,7 @@ class Pinoco extends Pinoco_DynamicVars {
             // join both url params of dispatcher and path if they have "?" commonly.
             $dqpos = strpos($this->_dispatcher, "?");
             $pqpos = strpos($path, "?");
-            if($dqpos !== FALSE && $pqpos !== FALSE) {
+            if($dqpos !== false && $pqpos !== false) {
                 $path = substr($path, 0, $pqpos) . "&" . substr($path, $pqpos + 1);
             }
             $url = rtrim($this->_baseuri, "/") . $this->_dispatcher . $path;
@@ -817,12 +826,12 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         return (!$pure && $this->_url_modifier) ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
     }
-    
+
     /**
      * Returns default page file considerd with directory index.
      * @param string $path
      * @param string $last_pathelem
-     * @return string|false
+     * @return string|bool
      */
     public function _page_from_path_with_directory_index($path, $last_pathelem=null)
     {
@@ -838,11 +847,11 @@ class Pinoco extends Pinoco_DynamicVars {
                 $page .= '/_default';
             }
             else {
-                return FALSE;
+                return false;
             }
         }
         $page .= '/' . $pes[0];
-        
+
         if($page[strlen($page) - 1] == "/") {
             $di = "";
             $idxs = explode(" ", $this->_directory_index);
@@ -880,13 +889,13 @@ class Pinoco extends Pinoco_DynamicVars {
                 }
             }
         }
-        return FALSE;
+        return false;
     }
-    
+
     /**
      * Invokes renderer with page file immediately.
      * Default rendering will be canceled.
-     * Pass FALSE if you want an empty response.
+     * Pass false if you want an empty response.
      * @param string $page
      * @return void
      */
@@ -907,7 +916,7 @@ class Pinoco extends Pinoco_DynamicVars {
         }
         $this->_manually_rendered = true;
     }
-    
+
     /**
      * MIME type of file.
      * @param string $filename
@@ -938,7 +947,7 @@ class Pinoco extends Pinoco_DynamicVars {
         include_once dirname(__FILE__) . '/Pinoco/MIMEType.php';
         return Pinoco_MIMEType::fromFileName($filename);
     }
-    
+
     /**
      * Returns currently running Pinoco instance.
      * @return Pinoco
@@ -947,13 +956,13 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         return self::$_current_instance;
     }
-    
+
     public static function __callStatic($name, $arguments)
     {
         // Pinoco::instance()->some_method() can write as Pinoco::some_method()
         // PHP >= 5.3.0
         // Why not? => public static function __getStatic() / public static function __setStatic() ...
-        
+
         $instance = self::instance();
         if($instance) {
             return call_user_func_array(array($instance, $name), $arguments);
@@ -962,7 +971,7 @@ class Pinoco extends Pinoco_DynamicVars {
             throw new BadMethodCallException(__CLASS__ . " method called in invalid state");
         }
     }
-    
+
     // runtime core
     /**
      * Writes Pinoco credit into HTTP header.
@@ -987,7 +996,7 @@ class Pinoco extends Pinoco_DynamicVars {
             }
         }
     }
-    
+
     /*
     NOT IN USE NOW!
     private function _hook_or_page_exists()
@@ -1011,7 +1020,7 @@ class Pinoco extends Pinoco_DynamicVars {
         return false;
     }
     */
-    
+
     /**
      * Updates 'include_path' in php.ini by this->incdir.
      */
@@ -1019,38 +1028,38 @@ class Pinoco extends Pinoco_DynamicVars {
     {
         $sep = substr(PHP_OS, 0, 3) == "WIN" ? ";" : ":";
         $runinc = array();
-        
+
         array_push($runinc, dirname($this->script));
         $cwd = getcwd();
         chdir($this->sysdir);
         $runinc = array_merge($runinc, array_map('realpath', $this->_incdir->toArray()));
         chdir($cwd);
         array_push($runinc, $this->_system_incdir);
-        
+
         set_include_path(implode($sep, $runinc));
     }
-    
+
     /**
      * @param string $errno
      * @param string $errstr
      * @param string $errfile
      * @param string $errline
-     * @return void
+     * @return bool
      * @ignore
      */
     public function _error_handler($errno, $errstr, $errfile, $errline)
     {
         if((error_reporting() & $errno) == 0) {
-            return FALSE;
+            return false;
         }
-        
+
         $errno2txt = array(
             E_NOTICE=>"Notice", E_USER_NOTICE=>"Notice",
             E_WARNING=>"Warning", E_USER_WARNING=>"Warning",
             E_ERROR=>"Fatal Error", E_USER_ERROR=>"Fatal Error"
         );
         $errors = isset($errno2txt[$errno]) ? $errno2txt[$errno] : "Unknown";
-        
+
         $trace = debug_backtrace();
         array_shift($trace);
         $stacktrace = array();
@@ -1064,7 +1073,7 @@ class Pinoco extends Pinoco_DynamicVars {
                 @$trace[$i]['function']
             ));
         }
-        
+
         ob_start();
         if (ini_get("display_errors")) {
             printf("<br />\n<b>%s</b>: %s in <b>%s</b> on line <b>%d</b><br />\n", $errors, $errstr, $errfile, $errline);
@@ -1088,9 +1097,9 @@ class Pinoco extends Pinoco_DynamicVars {
             echo str_repeat('    ', 100)."\n"; // IE won't display error pages < 512b
             exit(1);
         }
-        return TRUE;
+        return true;
     }
-    
+
     /**
      * @param Exception $e
      * @return void
@@ -1124,7 +1133,7 @@ class Pinoco extends Pinoco_DynamicVars {
         if (ini_get('log_errors')) {
             error_log($e->getMessage().' in '.$line);
         }
-        
+
         if(ob_get_level() > 0 && ob_get_length() > 0) {
             $curbuf = ob_get_contents();
             ob_clean();
@@ -1146,7 +1155,7 @@ class Pinoco extends Pinoco_DynamicVars {
         echo str_repeat('    ', 100)."\n"; // IE won't display error pages < 512b
         exit(1);
     }
-    
+
     /**
      * It reads and executes another PHP file with any local variables.
      * It can read already executed file.
@@ -1161,7 +1170,7 @@ class Pinoco extends Pinoco_DynamicVars {
             !is_file($script_abs_path)) {
             return;
         }
-        
+
         if(!is_array($this->_script_include_stack)) {
             $this->_script_include_stack = array();
         }
@@ -1173,7 +1182,7 @@ class Pinoco extends Pinoco_DynamicVars {
         array_pop($this->_script_include_stack);
         return $retval;
     }
-    
+
     /**
      * Execute an external script in isolated variable scope.
      * @param string $script Script filename absolute path or relative based on current script.
@@ -1206,7 +1215,7 @@ class Pinoco extends Pinoco_DynamicVars {
             throw $ex;
         }
     }
-    
+
     /**
      * Runs a hook script.
      * @param string $script
@@ -1225,22 +1234,22 @@ class Pinoco extends Pinoco_DynamicVars {
                 throw $ex;
             }
             $this->_subpath = "";
-            return TRUE;
+            return true;
         }
         else {
-            return FALSE;
+            return false;
         }
     }
-    
+
     /**
      * Executes all process of Pinoco engine.
      * @param bool $output_buffering
-     * @return void
+     * @return void|string
      */
-    public function run($output_buffering=TRUE)
+    public function run($output_buffering=true)
     {
         self::$_current_instance = $this;
-        
+
         if(!(function_exists('xdebug_is_enabled') && xdebug_is_enabled())
             && PHP_SAPI !== 'cli')
         {
@@ -1248,52 +1257,52 @@ class Pinoco extends Pinoco_DynamicVars {
             set_error_handler(array($this, "_error_handler"));
             set_exception_handler(array($this, "_exception_handler"));
         }
-        
+
         if($output_buffering || $this->testing) {
             ob_start();
         }
-        
+
         $this->_system_incdir = get_include_path();
-        
+
         $this->_manually_rendered = false;
         try {
             $hookbase = $this->_sysdir . "/hooks";
-            
+
             $uris = explode("/", ltrim($this->_path, "/"));
             $process = array();
             $proccessed = false;
             try {
                 while(count($uris) > 0) {
                     $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
-                    
+
                     $fename_orig = $uris[0];
-                    
+
                     // enter
                     $this->_run_hook_if_exists($hookbase . $dpath . "/_enter.php", implode('/', $uris));
-                    
+
                     array_shift($uris);
-                    
+
                     // For mod_rewrite users: direct access to gateway should be rejected.
                     if(!$this->_testing && $this->_dispatcher == "") { // No dispatcher indicates to force to use mod_rewrite.
                         if(strpos(
                             $this->request->server->get('REQUEST_URI'),
                             "/" . basename($this->request->server->get('SCRIPT_NAME'))
-                        ) !== FALSE) {
+                        ) !== false) {
                             $this->forbidden();
                         }
                     }
-                    
+
                     // NOT IN USE NOW!
                     // preprocess notfound -- if handler or page is not exists
                     //if(!$this->_hook_or_page_exists()){
                     //    $this->notfound();
                     //}
-                    
+
                     // invisible file entry name.
                     if(preg_match('/^_.*$/', $fename_orig)) {
                         $this->notfound();
                     }
-                    
+
                     // default dir
                     if(count($uris) > 0) {
                         if(is_dir($hookbase . $dpath . '/' . $fename_orig)) {
@@ -1323,7 +1332,7 @@ class Pinoco extends Pinoco_DynamicVars {
                         }
                     }
                     array_push($process, $fename);
-                    
+
                     // default script support for the last element(=file)
                     if(count($uris) == 0) {
                         if($fename == "") { // case: no index file found for dir access
@@ -1350,7 +1359,7 @@ class Pinoco extends Pinoco_DynamicVars {
                             $this->_pathargs->push($fename_orig);
                         }
                     }
-                    
+
                     // main script
                     if(is_file($hookbase . $dpath . "/" . $fename . ".php")) {
                         $proccessed = true;
@@ -1363,10 +1372,10 @@ class Pinoco extends Pinoco_DynamicVars {
             }
             catch(Pinoco_FlowControlTerminate $ex) {
             }
-            
+
             //render
             if(!$this->_manually_rendered && $this->_page) {
-                
+
                 if($this->_page != "<default>") {
                     $pagepath = $this->resolvePath($this->_page);
                     $page = $this->_page_from_path_with_directory_index($pagepath, $proccessed ? $fename : false);
@@ -1381,10 +1390,10 @@ class Pinoco extends Pinoco_DynamicVars {
                         $page = $this->_page_from_path_with_directory_index($pagepath, $proccessed ? $fename : false);
                     }
                     else {
-                        $page = FALSE;
+                        $page = false;
                     }
                 }
-                
+
                 if($page && is_file($this->_basedir . $page)) {
                     // non-html but existing => raw binary with mime-type header
                     if($this->isRenderablePath($this->_basedir . $page)) {
@@ -1419,24 +1428,24 @@ class Pinoco extends Pinoco_DynamicVars {
         catch(Pinoco_FlowControlHttpError $ex) { // contains Redirect
             $ex->respond($this);
         }
-        
+
         // cleanup process
         do {
             $fename = array_pop($process);
             array_unshift($uris, $fename);
             $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
-            
+
             // leave (All flow control exceptions work as skip exception)
             try {
                 $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
                 $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
             }
             catch(Pinoco_FlowControl $ex) { }
-            
+
         } while(count($process) > 0);
-        
+
         set_include_path($this->_system_incdir);
-        
+
         if($output_buffering || $this->testing) {
             if($this->testing) {
                 $all_output_while_running = ob_get_clean();
@@ -1445,30 +1454,30 @@ class Pinoco extends Pinoco_DynamicVars {
                 ob_end_flush();
             }
         }
-        
+
         if(isset($special_error_handler_enabled)) {
             restore_exception_handler();
             restore_error_handler();
         }
         // DONT CLEAR self::$_current_instance = null;
-        
+
         if($this->testing) {
             return $all_output_while_running;
         }
     }
-    
+
     /**
      * Provides a testable Pinoco instance for unit test.
      * @param string $sysdir
      * @param string $basedir
      * @param string $baseuri
      * @param string $dispatcher
-     * @return Pinoco
+     * @return Pinoco_TestEnvironment
      */
     public static function testenv($basedir, $sysdir, $baseuri="/", $dispatcher="")
     {
         return new Pinoco_TestEnvironment($basedir, $sysdir, $baseuri, $dispatcher);
     }
-    
+
 }
 

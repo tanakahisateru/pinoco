@@ -26,7 +26,8 @@ if(!class_exists('PHPTAL_PreFilter')) { require_once 'PHPTAL/PreFilter.php'; }
  * @package Pinoco
  * @subpackage PAL
  */
-class Pinoco_PAL_NamespaceLoader extends PHPTAL_PreFilter {
+class Pinoco_PAL_NamespaceLoader extends PHPTAL_PreFilter
+{
     public function filter($data) {
         require_once dirname(__FILE__) . '/Namespace.php';
         return $data;

@@ -36,9 +36,10 @@
  * @method bool setAttribute() setAttribute( int $attribute , mixed $value )
  * @method bool setFetchMode() setFetchMode( int $mode )
  */
-class Pinoco_PDOStatementWrapper {
+class Pinoco_PDOStatementWrapper
+{
     private $_stmt;
-    
+
     /**
      * @param PDOStatement $stmt
      */
@@ -47,12 +48,12 @@ class Pinoco_PDOStatementWrapper {
         $this->_stmt = $stmt;
         //$this->_stmt->setFetchMode(PDO::FETCH_CLASS, "Pinoco_Vars", array());
     }
-    
+
     public function __call($name, $args)
     {
         return call_user_func_array(array($this->_stmt, $name), $args);
     }
-    
+
     /**
      * Executes prepared query with parameters.
      *   No arguments:          no-params.
@@ -87,7 +88,7 @@ class Pinoco_PDOStatementWrapper {
         $this->_stmt->execute($args);
         return $this->rowCount();
     }
-    
+
     /**
      * Alias to execute
      * @param mixed $args...
@@ -98,7 +99,7 @@ class Pinoco_PDOStatementWrapper {
         $args = func_get_args();
         return call_user_func_array(array($this, 'execute'), $args);
     }
-    
+
     /**
      * Calls execute and returns self
      * @param mixed $args...
@@ -110,19 +111,19 @@ class Pinoco_PDOStatementWrapper {
         call_user_func_array(array($this, 'execute'), $args);
         return $this;
     }
-    
+
     /**
      * Fetches the next row in result set.
-     * If FALSE returned, you should close cursor using closeCursor().
+     * If false returned, you should close cursor using closeCursor().
      * @return Pinoco_Vars
      */
     public function fetch($orientation=PDO::FETCH_ORI_NEXT, $offset=0)
     {
         //return $this->_stmt->fetch(PDO::FETCH_CLASS, $orientation, $offset);
         $r = $this->_stmt->fetch(PDO::FETCH_ASSOC, $orientation, $offset);
-        return $r !== FALSE ? Pinoco_Vars::fromArray($r) : $r;
+        return $r !== false ? Pinoco_Vars::fromArray($r) : $r;
     }
-    
+
     /**
      * Fetches all results
      * @return Pinoco_List
@@ -137,7 +138,7 @@ class Pinoco_PDOStatementWrapper {
         }
         return $rs;
     }
-    
+
     /**
      * Fetches single result
      * @return Pinoco_Vars

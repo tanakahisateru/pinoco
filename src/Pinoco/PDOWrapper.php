@@ -28,19 +28,20 @@
  * @method mixed getAttribute() getAttribute(int $attribute)
  * @method array getAvailableDrivers()
  * @method bool inTransaction()
- * @method string lastInsertId() lastInsertId([ string $name = NULL ])
+ * @method string lastInsertId() lastInsertId([ string $name = null ])
  * @method string quote() quote( string $string [, int $parameter_type = PDO::PARAM_STR ] )
  * @method bool rollBack()
  * @method bool setAttribute() setAttribute( int $attribute , mixed $value )
  */
-class Pinoco_PDOWrapper {
+class Pinoco_PDOWrapper
+{
     private $_dsn;
     private $_un;
     private $_pw;
     private $_opts;
     private $_conn;
     private $_after_connection;
-    
+
     /**
      * Wrapped PDO factory
      * @param string $dsn
@@ -53,7 +54,7 @@ class Pinoco_PDOWrapper {
     {
         return new Pinoco_PDOWrapper($dsn, $un, $pw, $opts);
     }
-    
+
     /**
      * @param string $dsn
      * @param string $un
@@ -66,10 +67,10 @@ class Pinoco_PDOWrapper {
         $this->_un = $un;
         $this->_pw = $pw;
         $this->_opts = $opts;
-        $this->_conn = NULL;
+        $this->_conn = null;
         $this->_after_connection = false;
     }
-    
+
     /**
      * @return mixed
      */
@@ -77,7 +78,7 @@ class Pinoco_PDOWrapper {
     {
         return $this->_after_connection;
     }
-    
+
     /**
      * @param mixed $after_connection
      */
@@ -85,13 +86,13 @@ class Pinoco_PDOWrapper {
     {
         $this->_after_connection = $after_connection;
     }
-    
+
     /**
      * @return PDO
      */
     public function getConnection()
     {
-        if($this->_conn === NULL) {
+        if($this->_conn === null) {
             $this->_conn = new PDO($this->_dsn, $this->_un, $this->_pw, $this->_opts);
             $this->_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             if($this->_after_connection) {
@@ -105,12 +106,12 @@ class Pinoco_PDOWrapper {
         }
         return $this->_conn;
     }
-    
+
     public function __call($name, $args)
     {
         return call_user_func_array(array($this->getConnection(), $name), $args);
     }
-    
+
     /**
      * This method provides wrapped prepared statement.
      * @param string $sql
@@ -123,7 +124,7 @@ class Pinoco_PDOWrapper {
             $this->getConnection()->prepare($sql, $opts)
         );
     }
-    
+
     /**
      * Alias to exec
      * @param mixed $args...
@@ -134,7 +135,7 @@ class Pinoco_PDOWrapper {
         $args = func_get_args();
         return call_user_func_array(array($this, 'exec'), $args);
     }
-    
+
     /**
      * This method provides wrapped statement already query sent.
      * @param string $sql

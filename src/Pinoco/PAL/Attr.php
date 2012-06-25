@@ -27,7 +27,8 @@ if(!class_exists('PHPTAL_Php_Attribute_TAL_Attributes')) { require_once 'PHPTAL/
  * @package Pinoco
  * @subpackage PAL
  */
-class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes {
+class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes
+{
     public function before(PHPTAL_Php_CodeWriter $codewriter)
     {
         // prepare

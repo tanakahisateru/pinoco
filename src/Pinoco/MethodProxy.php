@@ -19,11 +19,11 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_MethodProxy {
-    
+class Pinoco_MethodProxy
+{
     private $callback;
     private $owner;
-    
+
     /**
      * Constructor to make an lazy value proxy.
      *
@@ -39,7 +39,7 @@ class Pinoco_MethodProxy {
         $this->callback = $callback;
         $this->owner = $owner;
     }
-    
+
     /**
      * Evalute return value.
      *
@@ -51,7 +51,7 @@ class Pinoco_MethodProxy {
         array_unshift($args, $this->owner);
         return call_user_func_array($this->callback, $args);
     }
-    
+
     /**
      * Closure like behavior (for PHP5.3 or greater)
      *

@@ -19,18 +19,19 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError {
+class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
+{
     /**
      * Constructor
      * @param string $url
      * @param bool $external
      */
-    public function __construct($url, $external=FALSE)
+    public function __construct($url, $external=false)
     {
         $this->url = $url;
         $this->external = $external;
     }
-    
+
     /**
      * Redirect response implementation.
      * @param Pinoco $pinoco

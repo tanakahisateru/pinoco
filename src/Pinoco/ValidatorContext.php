@@ -22,24 +22,24 @@
  * @property-read boolean $invalid Totally invalid.
  * @property-read string $message Error message when invalid.
  */
-class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
-    
+class Pinoco_ValidatorContext extends Pinoco_DynamicVars
+{
     private $_validator;
     private $_name;
     private $_label;
-    
+
     private $_filtered;
     private $_filteredValue;
-    
+
     private $_valid;
     private $_test;
     private $_message;
-    
+
     /**
      * Constructor
      * @param Pinoco_Validator $validator
      * @param string $name
-     * @param string $label
+     * @param string|bool $label
      */
     public function __construct($validator, $name, $label=false)
     {
@@ -47,15 +47,15 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         $this->_validator = $validator;
         $this->_name = $name;
         $this->_label = $label ? $label : $name;
-        
+
         $this->_filtered = false;
         $this->_filteredValue = null;
-        
+
         $this->_valid = true;
         $this->_test = null;
         $this->_message = null;
     }
-    
+
     /**
      * Test target value.
      * @return mixed
@@ -73,7 +73,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
             return $exists ? $value : null;
         }
     }
-    
+
     /**
      * Failed test.
      * @return string
@@ -82,7 +82,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     {
         return $this->_test;
     }
-    
+
     /**
      * is valid or not.
      * @return boolean
@@ -91,7 +91,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     {
         return $this->_valid;
     }
-    
+
     /**
      * inverse of valid.
      * @return boolean
@@ -109,13 +109,13 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
     {
         return $this->_message;
     }
-    
+
     private function buildMessage($template, $param, $value, $label)
     {
         if(is_callable($template)) {
             return call_user_func($template, $param, $value, $label);
         }
-        if(is_string($template)) {
+        else {
             return str_replace(
                 array('{param}', '{value}', '{label}'),
                 array(strval($param), strval($value), $label),
@@ -123,11 +123,11 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
             );
         }
     }
-    
+
     /**
      * Check the field by specified test.
      * @param string $test
-     * @param string $message
+     * @param string|bool $message
      * @return Pinoco_ValidatorContext
      */
     public function is($test, $message=false)
@@ -149,7 +149,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars {
         }
         return $this;
     }
-    
+
     /**
      * Converts value format for trailing statements.
      * @param mixed $filter

@@ -19,10 +19,10 @@
  * @package Pinoco
  * @abstract
  */
-class Pinoco_Delegate {
-    
+class Pinoco_Delegate
+{
     protected $__delegatee__;
-    
+
     /**
      * Creates an object with delegation target. This method
      * should be called in constructor in inherited class.
@@ -41,22 +41,22 @@ class Pinoco_Delegate {
         }
         $this->__delegatee__ = $delegatee;
     }
-    
+
     public function __get($name)
     {
         return $this->__delegatee__->$name;
     }
-    
+
     public function __set($name, $value)
     {
         $this->__delegatee__->$name = $value;
     }
-    
+
     public function __isset($name)
     {
         return isset($this->__delegatee__->$name);
     }
-    
+
     public function __call($name, $args)
     {
         return call_user_func_array(array($this->__delegatee__, $name), $args);

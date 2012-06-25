@@ -10,7 +10,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $l->get(0));
         $this->assertNull($l->get(1));
     }
-    
+
     public function testCount()
     {
         $l = new Pinoco_List();
@@ -20,7 +20,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(3, $l->count());
         $this->assertEquals(3, count($l));
     }
-    
+
     public function testArrayAccess()
     {
         $l = new Pinoco_List();
@@ -30,7 +30,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $l[1]);
         $this->assertEquals(2, $l->count());
     }
-    
+
     public function testPadding()
     {
         $l = new Pinoco_List();
@@ -39,7 +39,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $l[1]);
         $this->assertEquals(2, $l->count());
     }
-    
+
     public function testCreateFromArray()
     {
         $src = array(1, 2, 3);
@@ -51,7 +51,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $src[] = 4;
         $this->assertEquals(3, $l->count());
     }
-    
+
     public function testWrapArray()
     {
         $src = array(1, 2, 3);
@@ -63,7 +63,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $src[] = 4;
         $this->assertEquals(4, $l->count());
     }
-    
+
     public function testDefault()
     {
         $l = new Pinoco_List();
@@ -73,7 +73,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertSame(-1, $l->get(1));
         $this->assertSame(-2, $l->get(1, -2));
     }
-    
+
     public function testPushPop()
     {
         $l = Pinoco_List::fromArray(array(1, 2));
@@ -86,7 +86,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $l->push(4, 5, 6);
         $this->assertEquals(array(1, 3, 4, 5, 6), $l->toArray());
     }
-    
+
     public function testShiftUnshift()
     {
         $l = Pinoco_List::fromArray(array(1, 2));
@@ -99,7 +99,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $l->unshift(4, 5, 6);
         $this->assertEquals(array(6, 5, 4, 3, 2), $l->toArray());
     }
-    
+
     public function testConcat()
     {
         $l = Pinoco_List::fromArray(array(1, 2));
@@ -107,12 +107,12 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(1, 2, 3, 4), $l->toArray());
         $l->concat(Pinoco_List::fromArray(array(5, 6)));
         $this->assertEquals(array(1, 2, 3, 4, 5, 6), $l->toArray());
-        
+
         $l = Pinoco_List::fromArray(array(1, 2));
         $l->concat(array(3, 4), array(5, 6));
         $this->assertEquals(array(1, 2, 3, 4, 5, 6), $l->toArray());
     }
-    
+
     public function testSort()
     {
         $l = Pinoco_List::fromArray(array(2, 1, 3));
@@ -120,7 +120,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(2, 1, 3), $l->toArray());
         $l->sort();
         $this->assertEquals(array(1, 2, 3), $l->toArray());
-        
+
         $sorter = create_function('$a,$b', 'return ($a > $b ? -1 : ($a < $b ? 1 : 0));'); // inv sort
         $l = Pinoco_List::fromArray(array(2, 1, 3));
         $this->assertEquals(array(3, 2, 1), $l->sorted($sorter)->toArray());
@@ -128,20 +128,20 @@ class ListTest extends PHPUnit_Framework_TestCase
         $l->sort($sorter);
         $this->assertEquals(array(3, 2, 1), $l->toArray());
     }
-    
+
     public function testJoin()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals('1,2,3', $l->join());
     }
-    
+
     public function testReverse()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(array(3, 2, 1), $l->reverse()->toArray());
         $this->assertEquals(array(1, 2, 3), $l->toArray());
     }
-    
+
     public function testSlice()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3, 4, 5));
@@ -149,42 +149,42 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(2, 3, 4), $l->slice(1, 3)->toArray());
         $this->assertEquals(array(1, 2, 3, 4, 5), $l->toArray());
     }
-    
+
     public function testSplice()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3, 4, 5));
         $this->assertEquals(array(2), $l->splice(1, 1)->toArray());
         $this->assertEquals(array(1, 3, 4, 5), $l->toArray());
-        
+
         $l = Pinoco_List::fromArray(array(1, 2, 3, 4, 5));
         $this->assertEquals(array(2, 3), $l->splice(1, 2, array(-1, -2, -3))->toArray());
         $this->assertEquals(array(1, -1, -2, -3, 4, 5), $l->toArray());
     }
-    
+
     public function testInsert()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $l->insert(1, -1);
         $this->assertEquals(array(1, -1, 2, 3), $l->toArray());
     }
-    
+
     public function testRemove()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $l->remove(1);
         $this->assertEquals(array(1, 3), $l->toArray());
-        
+
         $l = Pinoco_List::fromArray(array(1, 2, 3, 4));
         $l->remove(1, 2);
         $this->assertEquals(array(1, 4), $l->toArray());
     }
-    
+
     public function testIndex()
     {
         $l = Pinoco_List::fromArray(array(0, 1, 2, 3));
         $this->assertEquals(2, $l->index(2));
     }
-    
+
     public function testToArray()
     {
         $name_mod = create_function('$orig', 'return sprintf("m_%03d", $orig);');
@@ -193,7 +193,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('m_0'=>1, 'm_1'=>2, 'm_2'=>3), $l->toArray('m_%d'));
         $this->assertEquals(array('m_000'=>1, 'm_001'=>2, 'm_002'=>3), $l->toArray($name_mod));
     }
-    
+
     public function testReduce()
     {
         $reducer = create_function('$a,$b', 'return $a + $b;');
@@ -201,21 +201,21 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(6, $l->reduce($reducer));
         $this->assertEquals(10, $l->reduce($reducer, 4));
     }
-    
+
     public function testMap()
     {
         $mapper = create_function('$a', 'return $a + 1;');
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(array(2, 3, 4), $l->map($mapper)->toArray());
     }
-    
+
     public function testFilter()
     {
         $filter = create_function('$a', 'return $a >= 2;');
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(array(2, 3), $l->filter($filter)->toArray());
     }
-    
+
     public function testEach()
     {
         ob_start();
@@ -224,7 +224,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $ob = ob_get_clean();
         $this->assertEquals('123', $ob);
     }
-    
+
     public function testIteration()
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
@@ -234,7 +234,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         }
         $this->assertEquals(array(1, 2, 3), $tmp);
     }
-    
+
     public function testToArrayRecurse()
     {
         $l = new Pinoco_List();
@@ -250,7 +250,7 @@ class ListTest extends PHPUnit_Framework_TestCase
         $this->assertSame($l[0], $tmp[0]);
         $this->assertSame($l[1], $tmp[1]);
     }
-    
+
     public function testExpressionAccess()
     {
         $obj = new stdClass;

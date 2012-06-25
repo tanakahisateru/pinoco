@@ -19,8 +19,8 @@
  * @package Pinoco
  * @abstract
  */
-class Pinoco_DynamicVars extends Pinoco_Vars {
-    
+class Pinoco_DynamicVars extends Pinoco_Vars
+{
     /**
      * Returns a value or default by name.
      * @param string $name
@@ -43,7 +43,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
             }
         }
     }
-    
+
     /**
      * Checks if this object has certain property or not.
      * If setLoose is set true then it returns true always.
@@ -55,7 +55,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
     {
         return method_exists($this, 'get_' . $name) || parent::has($name);
     }
-    
+
     /**
      * Returns all property names in this object.
      * @return Pinoco_List
@@ -75,11 +75,13 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
         $ks->concat(parent::keys());
         return $ks;
     }
-    
+
     /**
      * Propertry setter.
      * @param string $name
      * @param mixed $value
+     * @throws InvalidArgumentException
+     * @return void
      * @see src/Pinoco/Pinoco_Vars#set($name, $value)
      */
     public function set($name, $value)
@@ -94,7 +96,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars {
             parent::set($name, $value);
         }
     }
-    
+
     public function getIterator()
     {
         // to include reserved special vars

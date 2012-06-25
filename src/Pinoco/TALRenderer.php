@@ -18,8 +18,8 @@
  * Preferred HTML page renderer using PHPTAL
  * @package Pinoco
  */
-class Pinoco_TALRenderer extends Pinoco_Renderer {
-    
+class Pinoco_TALRenderer extends Pinoco_Renderer
+{
     /**
      * @param string $page
      * @param array $extravars
@@ -33,9 +33,9 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
                 throw new RuntimeException("PHPTAL is not installed.");
             }
         }
-        
+
         $template = new PHPTAL($page);
-        
+
         //pal namespace loading
         include_once dirname(__FILE__) . '/PAL/NamespaceLoader.php';
         $template->addPreFilter(new Pinoco_PAL_NamespaceLoader());
@@ -48,7 +48,7 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
                 call_user_func(array($template, $meth), $v);
             }
         }
-        
+
         //extra TALES definition
         if(!function_exists("phptal_tales_url")) {
             function phptal_tales_url($src, $nothrow)
@@ -57,7 +57,7 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
                 return '$ctx->this->url(' . $src . ')';
             }
         }
-        
+
         //extract vars
         foreach($this->_sysref->autolocal as $name=>$value) {
             $template->set($name, $value);
@@ -66,7 +66,7 @@ class Pinoco_TALRenderer extends Pinoco_Renderer {
             $template->set($name, $value);
         }
         $template->set('this', $this->_sysref);
-        
+
         //exec
         //ob_start();
         echo $template->execute();

@@ -27,10 +27,10 @@
  * @property-read Pinoco_Vars $env wraps $_ENV
  * @property-read string $method alias to $_SERVER['REQUEST_METHOD']
  */
-class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
-    
+class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
+{
     private $_pinoco;
-    
+
     private $_server;
     private $_get;
     private $_post;
@@ -38,13 +38,16 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
     private $_files;
     private $_session;
     private $_env;
-    
+
+    /**
+     * @param Pinoco $pinoco
+     */
     public function __construct($pinoco)
     {
         parent::__construct();
         $this->_pinoco = $pinoco;
     }
-    
+
     public function get_server()
     {
         if(!isset($this->_server)) {
@@ -57,7 +60,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_server;
     }
-    
+
     public function get_get()
     {
         if(!isset($this->_get)) {
@@ -70,7 +73,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_get;
     }
-    
+
     public function get_post()
     {
         if(!isset($this->_post)) {
@@ -83,7 +86,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_post;
     }
-    
+
     public function get_cookie()
     {
         if(!isset($this->_cookie)) {
@@ -96,7 +99,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_cookie;
     }
-    
+
     public function get_files()
     {
         if(!isset($this->_files)) {
@@ -109,7 +112,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_files;
     }
-    
+
     public function get_session()
     {
         if(!isset($this->_session)) {
@@ -129,7 +132,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_session;
     }
-    
+
     public function get_env()
     {
         if(!isset($this->_env)) {
@@ -142,32 +145,32 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars {
         }
         return $this->_env;
     }
-    
+
     public function get_method()
     {
         return $this->server->get('REQUEST_METHOD', null);
     }
-    
+
     public function isHead()
     {
         return $this->method == 'HEAD';
     }
-    
+
     public function isGet()
     {
         return $this->method == 'GET';
     }
-    
+
     public function isPost()
     {
         return $this->method == 'POST';
     }
-    
+
     public function isPut()
     {
         return $this->method == 'PUT';
     }
-    
+
     public function isDelete()
     {
         return $this->method == 'DELETE';

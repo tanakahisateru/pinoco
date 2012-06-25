@@ -27,7 +27,8 @@ if(!class_exists('PHPTAL_Php_Attribute_TAL_Content')) { require_once 'PHPTAL/Php
  * @package Pinoco
  * @subpackage PAL
  */
-class Pinoco_PAL_ContentNl2br extends PHPTAL_Php_Attribute_TAL_Content {
+class Pinoco_PAL_ContentNl2br extends PHPTAL_Php_Attribute_TAL_Content
+{
     protected function doEchoAttribute(PHPTAL_Php_CodeWriter $codewriter, $code)
     {
         if ($code !== "''") {

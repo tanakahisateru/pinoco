@@ -87,8 +87,8 @@
  * @property-read Pinoco_Vars $prev Navigation information of the prev button.
  * @property-read Pinoco_Vars $next Navigation information of the prev button.
  */
-class Pinoco_Pagination extends Pinoco_DynamicVars {
-
+class Pinoco_Pagination extends Pinoco_DynamicVars
+{
     private $totalCountCallback;
     private $dataFetchCallback;
     private $urlFormatCallback;
@@ -97,10 +97,10 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     private $_pagesAfterFirst;
     private $_pagesAroundCurrent;
     private $_pagesBeforeLast;
-    
+
     private $_totalCount;
     private $_data;
-    
+
     /**
      * Creates pagination object from user codes.
      *
@@ -126,7 +126,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
             $this->set($name, $value);
         }
     }
-    
+
     public function get_page()
     {
         return $this->_currentPage;
@@ -141,11 +141,11 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         $this->_currentPage = $value;
     }
-    
+
     public function get_isValidPage() {
         return $this->page <= $this->totalPages;
     }
-    
+
     public function get_elementsPerPage()
     {
         return $this->_elementsPerPage;
@@ -158,7 +158,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         $this->_elementsPerPage = $value;
         $this->_data = null;
     }
-    
+
     public function get_pagesAfterFirst()
     {
         return $this->_pagesAfterFirst;
@@ -170,7 +170,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         $this->_pagesAfterFirst = $value;
     }
-    
+
     public function get_pagesAroundCurrent()
     {
         return $this->_pagesAroundCurrent;
@@ -182,7 +182,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         $this->_pagesAroundCurrent = $value;
     }
-    
+
     public function get_pagesBeforeLast()
     {
         return $this->_pagesBeforeLast;
@@ -194,7 +194,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         $this->_pagesBeforeLast = $value;
     }
-    
+
     /**
      * Total number of elements.
      * @return integer
@@ -206,7 +206,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         return $this->_totalCount;
     }
-    
+
     /**
      * Elements in paginated range.
      * The fetched result is cached before changing current page.
@@ -224,7 +224,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         return $this->_data;
     }
-    
+
     /**
      * Force to clear cached data.
      * @return void
@@ -234,7 +234,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         $this->_data = null;
         $this->_totalCount = null;
     }
-    
+
     /**
      * Total number of pages.
      * @return integer
@@ -243,7 +243,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
     {
         return max(1, intval(($this->totalCount - 1) / $this->elementsPerPage) + 1);
     }
-    
+
     /**
      * Navigation information of each page buttons.
      * @return Pinoco_List
@@ -270,7 +270,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
                         $skipto = max($i, $this->totalPages - $this->_pagesBeforeLast);
                     }
                 }
-                if($skipped) {
+                if($skipped && isset($skipto)) {
                     $pages->push(Pinoco::newVars(array('padding' => true)));
                     $i = $skipto - 1;
                     continue;
@@ -285,7 +285,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
         }
         return $pages;
     }
-    
+
     /**
      * Navigation information of the prev button.
      * @return Pinoco_Vars
@@ -305,7 +305,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars {
             ));
         }
     }
-    
+
     /**
      * Navigation information of the next button.
      * @return Pinoco_Vars

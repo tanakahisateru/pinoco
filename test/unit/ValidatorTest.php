@@ -25,7 +25,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->check('bar')->is('not-empty');
         $this->assertTrue($v->valid);
     }
-    
+
     public function testConstantTest()
     {
         $testee = array(
@@ -52,7 +52,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->check('baz')->is('not-empty');
         $this->assertTrue($v->valid); // Zero is not empty
     }
-    
+
     public function testErrorMessage()
     {
         $testee = array(
@@ -84,45 +84,45 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $v->result->count());
         $this->assertTrue($v->valid);
     }
-    
+
     public function testBuiltInTests()
     {
         $v = new Pinoco_Validator(array('foo'=>"1234"));
         $this->assertFalse($v->check('foo')->is('max-length 3')->valid);
         $this->assertEquals("In 3 letters.", $v->result->foo->message);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"1234"));
         $this->assertFalse($v->check('foo')->is('min-length 5')->valid);
         $this->assertEquals("At least 5 letters.", $v->result->foo->message);
-        
+
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertFalse($v->check('foo')->is('in 2,3,4')->valid);
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertTrue($v->check('foo')->is('in 1,2,3')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertFalse($v->check('foo')->is('not-in 1,2,3')->valid);
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertTrue($v->check('foo')->is('not-in 2,3,4')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"one"));
         $this->assertFalse($v->check('foo')->is('numeric')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"1.5"));
         $this->assertFalse($v->check('foo')->is('integer')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"a123"));
         $this->assertFalse($v->check('foo')->is('alpha')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"a123-"));
         $this->assertFalse($v->check('foo')->is('alpha-numeric')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertFalse($v->check('foo')->is('== 2')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertFalse($v->check('foo')->is('!= 1')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>2));
         $this->assertFalse($v->check('foo')->is('> 2')->valid);
         $v = new Pinoco_Validator(array('foo'=>2));
@@ -131,24 +131,24 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($v->check('foo')->is('< 2')->valid);
         $v = new Pinoco_Validator(array('foo'=>2));
         $this->assertFalse($v->check('foo')->is('<= 1')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"abc"));
         $this->assertFalse($v->check('foo')->is('match /cd/')->valid);
         $v = new Pinoco_Validator(array('foo'=>"abc"));
         $this->assertTrue($v->check('foo')->is('match /ab/')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"abc"));
         $this->assertFalse($v->check('foo')->is('not-match /ab/')->valid);
         $v = new Pinoco_Validator(array('foo'=>"abc"));
         $this->assertTrue($v->check('foo')->is('not-match /cd/')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"foo@bar"));
         $this->assertTrue($v->check('foo')->is('email')->valid);
-        
+
         $v = new Pinoco_Validator(array('foo'=>"http://foo/bar"));
         $this->assertTrue($v->check('foo')->is('url')->valid);
     }
-    
+
     public function testTestSequence()
     {
         $v = new Pinoco_Validator(array('foo'=>"abc"));
@@ -163,7 +163,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->check('foo')->is('numeric');
         $this->assertTrue($v->valid);
     }
-    
+
     public function testExtendingTests()
     {
         $next_number = create_function('$v,$p', 'return $v == $p+1;');
@@ -179,21 +179,21 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v = new Pinoco_Validator(array('foo'=>2));
         $v->defineValidityTest('next-number', $next_number, 'xxx');
         $v->check('foo')->is('next-number 1');
-        
+
         // TODO extract test for recheck
         $v->recheck('foo', 'FOO_FIELD')->is('next-number 3',
             '{label} should be {param}+1 but {value}');
         $this->assertFalse($v->valid);
         $this->assertEquals('FOO_FIELD should be 3+1 but 2',
             $v->result->foo->message);
-        
+
         $func_msg_tmpl = create_function(
             '$param,$value,$label', 'return $param.$value.$label;');
         $v->recheck('foo', 'FOO_FIELD')->is('next-number 3', $func_msg_tmpl);
         $this->assertFalse($v->valid);
         $this->assertEquals('32FOO_FIELD', $v->result->foo->message);
     }
-    
+
     public function testFilterFunction()
     {
         $testee = array(
@@ -203,16 +203,16 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v = new Pinoco_Validator($testee);
         $this->assertEquals(" abc ", $v->check('foo')->value);
         $this->assertFalse($v->check('foo')->is('max-length 3')->valid);
-        
+
         $this->assertEquals("abc", $v->recheck('foo')->filter('trim')->value);
         $this->assertTrue($v->recheck('foo')->filter('trim')->is('max-length 3')->valid);
-        
+
         $this->assertEquals("ABC", $v->recheck('foo')->filter('trim')->is('max-length 3')->filter('strtoupper')->value);
         $this->assertEquals(array('foo' => "ABC"), $v->values->toArray());
         $v->check('bar');
         $this->assertEquals(array('foo' => "ABC", 'bar'=>"def"), $v->values->toArray());
     }
-    
+
     public function testExtendingNamedFilter()
     {
         $add_filter = create_function('$v,$p', 'return $v + $p;');
@@ -223,7 +223,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->defineFilter('add', $add_filter);
         $this->assertEquals(3, $v->check('foo')->filter('add 1')->value);
     }
-    
+
     public function testEmptyResult()
     {
         $form = Pinoco_Validator::emptyResult();

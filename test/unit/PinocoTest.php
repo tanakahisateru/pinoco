@@ -12,7 +12,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
             '/pub'
         );
     }
-    
+
     public function testUrl()
     {
         $p = $this->testenv->create('/page.html');
@@ -36,7 +36,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/pub/sub/foo.html', $p->url('./foo.html'));
         $this->assertEquals('/pub/foo.html',     $p->url('../foo.html'));
     }
-    
+
     public function testHeader()
     {
         $p = $this->testenv->create('/');
@@ -62,7 +62,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
             $p->sent_headers->toArray()
         );
     }
-    
+
     public function testCookie()
     {
         $p = $this->testenv->create('/');
@@ -71,7 +71,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
             array('Set-Cookie: foo=bar; path=/pub/'),
             $p->sent_headers->toArray()
         );
-        
+
         $p = $this->testenv->create('/');
         $p->setcookie('foo', null);
         $this->assertRegExp(

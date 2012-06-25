@@ -18,10 +18,10 @@
  * Special Variable model as Nothing
  * @package Pinoco
  */
-class Pinoco_NothingVars extends Pinoco_Vars {
-    
+class Pinoco_NothingVars extends Pinoco_Vars
+{
     private static $_instance = null;
-    
+
     /**
      * Provides the unique Nothing instance.
      * @return Pinoco_NothingVars
@@ -33,7 +33,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
         }
         return self::$_instance;
     }
-    
+
     /**
      * Returns itself as globally unique NothingVars.
      * @param string $name
@@ -43,7 +43,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
     {
         return $this;
     }
-    
+
     /**
      * Nothing can respond to any names.
      * @param string $name
@@ -53,7 +53,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
     {
         return true;
     }
-    
+
     /**
      * Every values pased to Nothing would be lost.
      * @param string $name
@@ -63,7 +63,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
     public function set($name, $value)
     {
     }
-    
+
     /**
      * Every values pased to Nothing would be lost.
      * @param string $name
@@ -72,9 +72,9 @@ class Pinoco_NothingVars extends Pinoco_Vars {
      */
     public function registerAsMethod($name, $callback)
     {
-        $this->_vars[$name] = new Pinoco_MethodProxy($callback, $this);
+        //$this->set[$name] = new Pinoco_MethodProxy($callback, $this);
     }
-    
+
     /**
      * Every values pased to Nothing would be lost.
      * @param string $name
@@ -85,7 +85,7 @@ class Pinoco_NothingVars extends Pinoco_Vars {
     public function registerAsDynamic($name, $callback, $context=array())
     {
     }
-    
+
     /**
      * Every values pased to Nothing would be lost.
      * @param string $name
@@ -96,34 +96,41 @@ class Pinoco_NothingVars extends Pinoco_Vars {
     public function registerAsLazy($name, $callback, $context=array())
     {
     }
-    
+
     /**
      * Every values pased to Nothing would be lost.
      * @param mixed $src
+     * @param bool $filter
+     * @param null $default
+     * @param string $modifier
      * @return void
      */
     public function import($src, $filter=false, $default=null, $modifier="%s")
     {
     }
-    
+
     /**
      * Nothig as Array is empty array.
+     * @param bool $filter
+     * @param null $default
+     * @param string $modifier
      * @return array
      */
     public function toArray($filter=false, $default=null, $modifier="%s")
     {
         return array();
     }
-    
+
     /**
      * Nothig as Array is empty array.
+     * @param bool $depth
      * @return array
      */
     public function toArrayRecurse($depth=false)
     {
         return array();
     }
-    
+
     /**
      * Nothig as String is empty string.
      * @return string
