@@ -17,7 +17,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     }
     public function mockFormatUrl($pagination, $page)
     {
-        return $pagination->baseuri . (strpos($pagination->baseuri, '?') === FALSE ? '?' : '&') . 'page=' . $page;
+        return $pagination->baseuri . (strpos($pagination->baseuri, '?') === false ? '?' : '&') . 'page=' . $page;
     }
 
     public function setUp()

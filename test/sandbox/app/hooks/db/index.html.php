@@ -38,4 +38,4 @@ foreach($db->query('select * from foo;')->fetchAll() as $foo) {
 }
 echo "</pre>";
 
-$this->page = NULL;
+$this->page = null;

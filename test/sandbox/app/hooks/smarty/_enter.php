@@ -13,7 +13,7 @@ $this->page_modifier = 'page_ext_html2tpl';
 // Session in URL
 function inject_lang_to_url($url, $renderable) {
     if($renderable) {
-        $sep = (strpos($url, "?") === FALSE) ? "?" : "&";
+        $sep = (strpos($url, "?") === false) ? "?" : "&";
         return $url . $sep . htmlspecialchars("SESSID=1234567890");
     }
     else {
