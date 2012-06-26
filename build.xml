@@ -3,16 +3,18 @@
 <!-- Phing build file -->
 <project name="Pinoco" default="dist">
     <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2"/>
-    
+
     <property name="product" value="Pinoco"/>
     <property name="version" value="0.6.1"/>
     <property name="stability" value="beta"/>
     <property name="lead.user" value="tanakahisateru"/>
     <property name="lead.name" value="Hisateru Tanaka"/>
     <property name="lead.email" value="tanakahisateru@gmail.com"/>
-    
-    <target name="dist" depends="test,doc,package,empty-project"/>
-    
+
+    <target name="dist" depends="pre-dist,clean-build"/>
+
+    <target name="pre-dist" depends="test,doc,package,empty-project"/>
+
     <target name="test">
         <phpunit haltonerror="true" haltonfailure="true" printsummary="true">
             <batchtest>
@@ -20,7 +22,7 @@
             </batchtest>
         </phpunit>
     </target>
-    
+
     <target name="doc">
         <delete file="./build/${product}-${version}-doc.tgz" />
         <delete dir="./build/doc" />
@@ -37,7 +39,7 @@
             <fileset dir="./build/doc" />
         </tar>
     </target>
-    
+
     <target name="package">
         <delete dir="./build/package" />
         <copy todir="./build/package">
@@ -67,12 +69,13 @@
         </d51pearpkg2>
         <exec command="pear package package/package.xml" dir="./build" />
     </target>
-    
+
     <target name="empty-project">
         <copy todir="./build/empty-project-min" overwrite="true">
             <fileset dir="./empty-projects/min">
-                <exclude name="**/composer.lock"/>
-                <exclude name="**/vendor/**/*"/>
+                <exclude name="_app/composer.lock"/>
+                <exclude name="_app/vendor"/>
+                <exclude name="_app/vendor/**/*"/>
             </fileset>
             <filterchain>
                 <replaceregexp>
@@ -87,6 +90,7 @@
             <fileset dir="./empty-projects/prod">
                 <exclude name="_app/cache/*"/>
                 <exclude name="_app/composer.lock"/>
+                <exclude name="_app/vendor"/>
                 <exclude name="_app/vendor/**/*"/>
             </fileset>
             <filterchain>
@@ -99,5 +103,12 @@
             <fileset dir="./build/empty-project-prod" />
         </tar>
     </target>
-    
+
+    <target name="clean-build">
+        <delete dir="./build/package" />
+        <delete dir="./build/doc" />
+        <delete dir="./build/empty-project-prod" />
+        <delete dir="./build/empty-project-min" />
+    </target>
+
 </project>
