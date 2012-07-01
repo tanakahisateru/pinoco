@@ -53,9 +53,9 @@
  * <div class="pagination"
  *     tal:define="prev pagination/prev; pages pagination/pages; next pagination/next">
  *     <!--! prev button -->
- *     <a href="" tal:condition="not:prev/current"
+ *     <a href="" tal:condition="prev/enabled"
  *        tal:attributes="href url:${prev/href}">PREV</a>
- *     <span class="disabled" tal:condition="prev/current">PREV</span>
+ *     <span class="disabled" tal:condition="not:prev/enabled">PREV</span>
  *     <!--! page link buttons -->
  *     <tal:block tal:repeat="page pages">
  *         <tal:block tal:condition="not:page/padding">
