@@ -19,16 +19,16 @@
  * You can use also native functions.
  * @package Pinoco
  * @property-read string $queryString
- * @method bool bindColumn() bindColumn( mixed $column , mixed &$param [, int $type [, int $maxlen [, mixed $driverdata ]]] )
- * @method bool bindParam() bindParam( mixed $parameter , mixed &$variable [, int $data_type = PDO::PARAM_STR [, int $length [, mixed $driver_options ]]] )
- * @method bool bindValue() bindValue( mixed $parameter , mixed $value [, int $data_type = PDO::PARAM_STR ] )
+ * @method bool bindColumn(mixed $column , mixed &$param, int $type, int $maxlen, mixed $driverdata)
+ * @method bool bindParam(mixed $parameter, mixed &$variable, int $data_type = PDO::PARAM_STR, int $length, mixed $driver_options)
+ * @method bool bindValue(mixed $parameter, mixed $value, int $data_type = PDO::PARAM_STR)
  * @method bool closeCursor()
  * @method int columnCount()
  * @method bool debugDumpParams()
  * @method string errorCode()
  * @method array errorInfo()
- * @method string fetchColumn() fetchColumn([ int $column_number = 0 ] )
- * @method mixed fetchObject() fetchObject([ string $class_name = "stdClass" [, array $ctor_args ]] )
+ * @method string fetchColumn(int $column_number = 0)
+ * @method mixed fetchObject(string $class_name = "stdClass", array $ctor_args)
  * @method mixed getAttribute() getAttribute( int $attribute )
  * @method array getColumnMeta() getColumnMeta( int $column )
  * @method bool nextRowset()
@@ -115,6 +115,8 @@ class Pinoco_PDOStatementWrapper
     /**
      * Fetches the next row in result set.
      * If false returned, you should close cursor using closeCursor().
+     * @param int $orientation
+     * @param int $offset
      * @return Pinoco_Vars
      */
     public function fetch($orientation=PDO::FETCH_ORI_NEXT, $offset=0)

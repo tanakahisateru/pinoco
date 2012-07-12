@@ -104,9 +104,9 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     /**
      * Creates pagination object from user codes.
      *
-     * @param callback $totalCountCallback
-     * @param callback $dataFetchCallback
-     * @param callback $urlFormatCallback
+     * @param callable $totalCountCallback
+     * @param callable $dataFetchCallback
+     * @param callable $urlFormatCallback
      * @param array $options
      */
     public function __construct($totalCountCallback, $dataFetchCallback,

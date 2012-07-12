@@ -47,7 +47,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars
     /**
      * Checks if this object has certain property or not.
      * If setLoose is set true then it returns true always.
-     * @param stirng $name
+     * @param string $name
      * @return bool
      * @see src/Pinoco/Pinoco_Vars#has($name)
      */

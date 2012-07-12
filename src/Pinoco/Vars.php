@@ -49,6 +49,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Wraps an existing Array.
      * @param array &$srcref
+     * @throws InvalidArgumentException
      * @return Pinoco_Vars
      */
     public static function wrap(&$srcref)
@@ -341,7 +342,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Exports properties to Array recursively.
-     * @param int $depth
+     * @param bool|int $depth
      * @return array
      */
     public function toArrayRecurse($depth=false)
@@ -364,6 +365,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      * @param array|boolean $filter
      * @param mixed $default
      * @param string $modifier
+     * @throws InvalidArgumentException
      * @return void
      */
     public function import($src, $filter=false, $default=null, $modifier="%s")

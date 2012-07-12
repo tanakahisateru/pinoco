@@ -18,7 +18,7 @@
  * Abstract HTML page renderer
  * @package Pinoco
  * @property Pinoco_Vars $cfg
- * @property callback $before_rendering
+ * @property callable $before_rendering
  */
 abstract class Pinoco_Renderer
 {
@@ -33,7 +33,7 @@ abstract class Pinoco_Renderer
     protected $_cfg;
 
     /**
-     * @var callback
+     * @var callable
      */
     protected $_before_rendering;
 
