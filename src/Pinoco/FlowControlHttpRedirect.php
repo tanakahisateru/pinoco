@@ -41,29 +41,40 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
     {
         $s = $pinoco->request->server;
         $protocol = $s->get('HTTPS') ? "https" : "http";
-        $server_prefix = $protocol . '://' . $s->get('SERVER_NAME');
-        if ($protocol == "http" && $s->get('SERVER_PORT') != "80") {
-            $server_prefix = $server_prefix . ":" . $s->get('SERVER_PORT');
-        } else if ($protocol == "https" && $s->get('SERVER_PORT') != "443") {
-            $server_prefix = $server_prefix . ":" . $s->get('SERVER_PORT');
-        }
-        $fixedurl = "";
-        if(preg_match('/^\w+:\/\/[^\/]/', $this->url)) {
-            $fixedurl = $this->url;
-        }
-        else if(preg_match('/^\/\/[^\/]/', $this->url)) {
-            $fixedurl = $protocol . ':' . $this->url;
-        }
-        else if(preg_match('/^\/[^\/]?/', $this->url)) {
-            if($this->external) {
-                $fixedurl = $server_prefix. $this->url;
-            }
-            else {
-                $fixedurl = $server_prefix. $pinoco->url($this->url);
-            }
+        $server_prefix = "";
+        if ($s->has('HTTP_HOST')) {
+            $server_prefix = $protocol . '://' . $s->get('HTTP_HOST');
         }
         else {
-            $fixedurl = $server_prefix. $pinoco->url($this->url);
+            $server_prefix = $protocol . '://' . $s->get('SERVER_NAME');
+            $port = $s->get('SERVER_PORT');
+            if ($protocol == "http" && $port != "80") {
+                $server_prefix = $server_prefix . ":" . $port;
+            } else if ($protocol == "https" && $port != "443") {
+                $server_prefix = $server_prefix . ":" . $port;
+            }
+        }
+        $fixedurl = "";
+        if (preg_match('/^\w+:\/\/[^\/]/', $this->url)) {
+            $fixedurl = $this->url;
+        }
+        else if (preg_match('/^\/\/[^\/]/', $this->url)) {
+            $fixedurl = $protocol . ':' . $this->url;
+        }
+        else if (preg_match('/^\/[^\/]?/', $this->url) && $this->external) {
+            $fixedurl = $server_prefix. $this->url;
+        }
+        else {
+            $filteredurl = $pinoco->url($this->url);
+            if (preg_match('/^\w+:\/\/[^\/]/', $filteredurl)) {
+                $fixedurl = $filteredurl;
+            }
+            else if (preg_match('/^\/\/[^\/]/', $filteredurl)) {
+                $fixedurl = $protocol . ':' . $filteredurl;
+            }
+            else {
+                $fixedurl = $server_prefix. $filteredurl;
+            }
         }
         $pinoco->header('Location: ' . $fixedurl);
     }
