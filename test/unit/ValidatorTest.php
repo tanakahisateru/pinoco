@@ -117,6 +117,11 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v = new Pinoco_Validator(array('foo'=>"a123-"));
         $this->assertFalse($v->check('foo')->is('alpha-numeric')->valid);
 
+        $v = new Pinoco_Validator(array('foo'=>array()));
+        $this->assertTrue($v->check('foo')->is('array')->valid);
+        $v = new Pinoco_Validator(array('foo'=>new Pinoco_List()));
+        $this->assertTrue($v->check('foo')->is('array')->valid);
+
         $v = new Pinoco_Validator(array('foo'=>1));
         $this->assertFalse($v->check('foo')->is('== 2')->valid);
 
@@ -233,5 +238,33 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $form = Pinoco_Validator::emptyResult(array('foo'=>"init"));
         $this->assertEquals('init', $form->foo->value);
         $this->assertEquals(null, $form->bar->value);
+    }
+
+    public function testArrayTest()
+    {
+        $v = new Pinoco_Validator(array('foo'=>array("abc", "def")));
+        $v->recheck('foo')->all('numeric');
+        $this->assertFalse($v->result->foo->valid);
+        $v->recheck('foo')->all('integer');
+        $this->assertFalse($v->result->foo->valid);
+        $v->recheck('foo')->all('alpha');
+        $this->assertTrue($v->result->foo->valid);
+        $v->recheck('foo')->is('array')->all('not-empty')->any('in abc,ghi');
+        $this->assertTrue($v->result->foo->valid);
+
+        $v = new Pinoco_Validator(array('foo'=>Pinoco_List::fromArray(array("abc", "def"))));
+        $v->check('foo')->is('array')->all('alpha')->any('in def,ghi');
+        $this->assertTrue($v->result->foo->valid);
+    }
+
+    public function testArrayFilter()
+    {
+        $v = new Pinoco_Validator(array('foo'=>array(" abc ", " def ")));
+        $v->recheck('foo')->map('trim');
+        $this->assertEquals(array("abc","def"), $v->result->foo->value);
+
+        $v = new Pinoco_Validator(array('foo'=>Pinoco_List::fromArray(array(" abc ", " def "))));
+        $v->recheck('foo')->map('trim');
+        $this->assertEquals(Pinoco_List::fromArray(array("abc","def")), $v->result->foo->value);
     }
 }

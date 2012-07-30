@@ -116,12 +116,23 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
             return call_user_func($template, $param, $value, $label);
         }
         else {
+            if (is_array($value)) {
+                $value = implode(', ', $value);
+            }
             return str_replace(
                 array('{param}', '{value}', '{label}'),
                 array(strval($param), strval($value), $label),
                 $template
             );
         }
+    }
+
+    private function splitExpression($expression)
+    {
+        $param = explode(' ', trim($expression));
+        $name = array_shift($param);
+        $param = count($param) == 0 ? null : implode(' ', $param);
+        return array($name, $param);
     }
 
     /**
@@ -135,9 +146,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        $param = explode(' ', trim($test));
-        $testName = array_shift($param);
-        $param = count($param) == 0 ? null : implode(' ', $param);
+        list($testName, $param) = $this->splitExpression($test);
         list($result, $value) = $this->_validator->execValidityTest(
             $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
         );
@@ -146,6 +155,54 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
             $this->_valid = false;
             $template = $message ? $message : $this->_validator->getMessageFor($testName);
             $this->_message = $this->buildMessage($template, $param, $value, $this->_label);
+        }
+        return $this;
+    }
+
+    /**
+     * Check if all elements pass specified test.
+     * @param string $test
+     * @param string|bool $message
+     * @return Pinoco_ValidatorContext
+     */
+    public function all($test, $message=false)
+    {
+        if (!$this->_valid) {
+            return $this;
+        }
+        list($testName, $param) = $this->splitExpression($test);
+        list($result, $value) = $this->_validator->execValidityTestAll(
+            $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
+        );
+        if (!$result) {
+            $this->_test = $test;
+            $this->_valid = false;
+            $template = $message ? $message : $this->_validator->getMessageFor($testName);
+            $this->_message = $this->buildMessage($template, $param, implode(', ', $value), $this->_label);
+        }
+        return $this;
+    }
+
+    /**
+     * Check if any element(s) pass(es) specified test.
+     * @param string $test
+     * @param string|bool $message
+     * @return Pinoco_ValidatorContext
+     */
+    public function any($test, $message=false)
+    {
+        if (!$this->_valid) {
+            return $this;
+        }
+        list($testName, $param) = $this->splitExpression($test);
+        list($result, $value) = $this->_validator->execValidityTestAny(
+            $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
+        );
+        if (!$result) {
+            $this->_test = $test;
+            $this->_valid = false;
+            $template = $message ? $message : $this->_validator->getMessageFor($testName);
+            $this->_message = $this->buildMessage($template, $param, implode(', ', $value), $this->_label);
         }
         return $this;
     }
@@ -160,10 +217,29 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        $param = explode(' ', trim($filter));
-        $filterName = array_shift($param);
-        $param = count($param) == 0 ? null : implode(' ', $param);
+        list($filterName, $param) = $this->splitExpression($filter);
         list($filtered, $value) = $this->_validator->execFilter(
+            $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
+        );
+        if ($filtered) {
+            $this->_filtered = $this->_filtered || true;
+            $this->_filteredValue = $value;
+        }
+        return $this;
+    }
+
+    /**
+     * Converts value formats in the element for trailing statements.
+     * @param mixed $filter
+     * @return Pinoco_ValidatorContext
+     */
+    public function map($filter)
+    {
+        if (!$this->_valid) {
+            return $this;
+        }
+        list($filterName, $param) = $this->splitExpression($filter);
+        list($filtered, $value) = $this->_validator->execFilterMap(
             $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
         );
         if ($filtered) {

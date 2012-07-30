@@ -105,6 +105,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             "Alphabet only.");
         $this->defineValidityTest('alpha-numeric', array($this, '_testAlphaNumeric'),
             "Alphabet or number.");
+        $this->defineValidityTest('array', array($this, '_testArray'),
+            "By Array.");
         $this->defineValidityTest('==', array($this, '_testEqual'),
             "Shuld equal to {param}.");
         $this->defineValidityTest('!=', array($this, '_testNotEqual'),
@@ -223,71 +225,73 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             $value = $exists ? $this->_target->$name : null;
         }
         else {
-            return null;
+            $exists = false;
+            $value = null;
         }
         return array($exists, $value);
     }
 
-    /**
-     * Values preparation for validation and filtering.
-     * @param string $field
-     * @param boolean $filtered
-     * @param mixed $filteredValue
-     * @param array $methods
-     * @param mixed $methodName
-     * @param array $param
-     * @return array callback, arguments and value
-     */
-    protected function prepareExecution($field, $filtered, $filteredValue, $methods, $methodName, $param)
+    private function prepareCallback($methods, $methodName, $param)
     {
         $this->_errors = null;
         $this->_values = null;
         if (isset($methods[$methodName])) {
-            $callback = $methods[$methodName]['callback'];
-            $complex = $methods[$methodName]['complex'];
-            $params = array($param);
+            return array(
+                $methods[$methodName]['callback'],
+                $methods[$methodName]['complex'],
+                array($param)
+            );
         }
         elseif (is_callable($methodName)) {
-            $callback = $methodName;
-            $complex = false;
-            $params = $param ? explode(' ', $param) : array();
+            return array(
+                $methodName,
+                false,
+                $param ? explode(' ', $param) : array()
+            );
         }
         else {
             // test method not registered
-            // validation must be failed and value is null
-            return array(null, false, null);
+            return array(
+                null,
+                false,
+                array()
+            );
         }
+    }
 
+    private function prepareValue($field, $filtered, $filteredValue)
+    {
         // fetch
         if ($filtered) {
-            $exists = true;
-            $value = $filteredValue;
+            return array(
+                true,
+                $filteredValue
+            );
         }
         else {
-            if (($r = $this->fetchExistenceAndValue($field)) === null) {
-                // validation must be failed and value is null
-                return array(null, false, null);
-            }
-            list($exists, $value) = $r;
+            return $this->fetchExistenceAndValue($field);
         }
+    }
 
+    private function callMethod($callback, $complex, $params, $exists, $value)
+    {
         if ($complex) {
             // complex test: full information presented
             //               and should be checked if empty or not
-            $args = array($this->_target, $field, $exists, $value);
+            $args = array($exists, $value);
         }
         else {
             // simple test: empty always success
-            if (!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false)) {
+            if (!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false || $value === array())) {
                 // validation must be passed and value is as is.
-                return array(null, true, $value);
+                return array(true, $value);
             }
             $args = array($value);
         }
         foreach ($params as $p) {
             $args[] = $p;
         }
-        return array($callback, $args, $value);
+        return call_user_func_array($callback, $args);
     }
 
     /**
@@ -297,19 +301,78 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      * @param boolean $filtered
      * @param mixed $filteredValue
      * @param string $testName
-     * @param array $param
+     * @param string $param
      * @return array
      */
     public function execValidityTest($field, $filtered, $filteredValue, $testName, $param)
     {
-        list($callback, $args, $value) = $this->prepareExecution(
-            $field, $filtered, $filteredValue,
-            $this->_tests, $testName, $param
-        );
-        if ($callback === null) {
-            return array($args, $value);
+        list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
+        list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
+        if ($callback == null) {
+            return array(false, $value);
         }
-        return array(call_user_func_array($callback, $args), $value);
+        else {
+            return array(
+                $this->callMethod($callback, $complex, $params, $exists, $value),
+                $value
+            );
+        }
+    }
+
+    /**
+     * Executes validation test to array with logical AND.
+     * (called by varidation context)
+     * @param string $field
+     * @param boolean $filtered
+     * @param mixed $filteredValue
+     * @param string $testName
+     * @param string $param
+     * @return array
+     */
+    public function execValidityTestAll($field, $filtered, $filteredValue, $testName, $param)
+    {
+        list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
+        list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
+        if ($callback == null) {
+            return array(false, $value);
+        }
+        else {
+            foreach ($value as $k=>$v) {
+                $result = $this->callMethod($callback, $complex, $params, $exists, $v);
+                if (!$result) {
+                    return array(false, $value);
+                }
+            }
+            return array(true, $value);
+        }
+    }
+
+    /**
+     * Executes validation test to array with logical OR.
+     * (called by varidation context)
+     * @param string $field
+     * @param boolean $filtered
+     * @param mixed $filteredValue
+     * @param string $testName
+     * @param string $param
+     * @return array
+     */
+    public function execValidityTestAny($field, $filtered, $filteredValue, $testName, $param)
+    {
+        list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
+        list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
+        if ($callback == null) {
+            return array(false, $value);
+        }
+        else {
+            foreach ($value as $k=>$v) {
+                $result = $this->callMethod($callback, $complex, $params, $exists, $v);
+                if ($result) {
+                    return array(true, $value);
+                }
+            }
+            return array(false, $value);
+        }
     }
 
     /**
@@ -319,19 +382,56 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      * @param boolean $filtered
      * @param mixed $filteredValue
      * @param mixed $filterName
-     * @param array $param
+     * @param string $param
      * @return array
      */
     public function execFilter($field, $filtered, $filteredValue, $filterName, $param)
     {
-        list($callback, $args, $value) = $this->prepareExecution(
-            $field, $filtered, $filteredValue,
-            $this->_filters, $filterName, $param
-        );
-        if ($callback === null) {
-            return array(true, $value);
+        list($callback, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
+        list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
+        if ($callback == null) {
+            return array(true, null);
         }
-        return array(true, call_user_func_array($callback, $args));
+        else {
+            return array(
+                true,
+                $this->callMethod($callback, $complex, $params, $exists, $value)
+            );
+        }
+    }
+
+    /**
+     * Executes filter for each elements.
+     * (called by varidation context)
+     * @param string $field
+     * @param boolean $filtered
+     * @param mixed $filteredValue
+     * @param mixed $filterName
+     * @param string $param
+     * @return array
+     */
+    public function execFilterMap($field, $filtered, $filteredValue, $filterName, $param)
+    {
+        list($callback, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
+        list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
+        if ($callback == null) {
+            return array(true, null);
+        }
+        else {
+            if ($value instanceof Pinoco_List) {
+                $result = new Pinoco_List();
+                foreach ($value as $k=>$v) {
+                    $result->push($this->callMethod($callback, $complex, $params, $exists, $v));
+                }
+            }
+            else {
+                $result = [];
+                foreach ($value as $k=>$v) {
+                    $result[] = $this->callMethod($callback, $complex, $params, $exists, $v);
+                }
+            }
+            return array(true, $result);
+        }
     }
 
     /**
@@ -471,23 +571,25 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /////////////////////////////////////////////////////////////////////
     // builtin tests
-    private function _testPassComplex($target, $name, $exists, $value)
+    private function _testPassComplex($exists, $value)
     {
         return true;
     }
-    private function _testFailComplex($target, $name, $exists, $value)
+    private function _testFailComplex($exists, $value)
     {
         return false;
     }
-    private function _testEmptyComplex($target, $name, $exists, $value)
+    private function _testEmptyComplex($exists, $value)
     {
         if (!$exists || $value === null) { return true; }
-        if ($value === "0" || $value === 0 || $value === false) { return false; }
+        if ($value === "0" || $value === 0 || $value === false || $value === array()) {
+            return false;
+        }
         return empty($value);
     }
-    private function _testNotEmptyComplex($target, $name, $exists, $value)
+    private function _testNotEmptyComplex($exists, $value)
     {
-        return !$this->_testEmptyComplex($target, $name, $exists, $value);
+        return !$this->_testEmptyComplex($exists, $value);
     }
 
     private function _testMaxLength($value, $param=0)
@@ -516,7 +618,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
     private function _testInteger($value)
     {
-        return is_integer(0 + $value);
+        return is_integer($value);
     }
     private function _testAlpha($value)
     {
@@ -525,6 +627,10 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     private function _testAlphaNumeric($value)
     {
         return ctype_alnum($value);
+    }
+    private function _testArray($value)
+    {
+        return is_array($value) || $value instanceof Traversable;
     }
     private function _testEqual($value, $param=null)
     {
