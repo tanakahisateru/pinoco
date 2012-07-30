@@ -57,7 +57,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     }
 
     /**
-     * Test target value.
+     * Retreaves target value.
      * @return mixed
      */
     public function get_value()
