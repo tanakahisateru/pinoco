@@ -178,7 +178,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
             $this->_test = $test;
             $this->_valid = false;
             $template = $message ? $message : $this->_validator->getMessageFor($testName);
-            $this->_message = $this->buildMessage($template, $param, implode(', ', $value), $this->_label);
+            $this->_message = $this->buildMessage($template, $param, $value, $this->_label);
         }
         return $this;
     }
@@ -202,7 +202,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
             $this->_test = $test;
             $this->_valid = false;
             $template = $message ? $message : $this->_validator->getMessageFor($testName);
-            $this->_message = $this->buildMessage($template, $param, implode(', ', $value), $this->_label);
+            $this->_message = $this->buildMessage($template, $param, $value, $this->_label);
         }
         return $this;
     }

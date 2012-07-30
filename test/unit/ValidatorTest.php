@@ -255,6 +255,18 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v = new Pinoco_Validator(array('foo'=>Pinoco_List::fromArray(array("abc", "def"))));
         $v->check('foo')->is('array')->all('alpha')->any('in def,ghi');
         $this->assertTrue($v->result->foo->valid);
+
+        $v = new Pinoco_Validator(array('foo'=>null));
+        $v->recheck('foo')->all('numeric');
+        $this->assertFalse($v->result->foo->valid);
+
+        $v = new Pinoco_Validator(array());
+        $v->recheck('foo')->all('numeric');
+        $this->assertFalse($v->result->foo->valid);
+
+        $v = new Pinoco_Validator(array('foo'=>array()));
+        $v->recheck('foo')->all('numeric');
+        $this->assertTrue($v->result->foo->valid);
     }
 
     public function testArrayFilter()

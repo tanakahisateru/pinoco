@@ -333,7 +333,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     {
         list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null) {
+        if ($callback == null || !(is_array($value) || $value instanceof Traversable)) {
             return array(false, $value);
         }
         else {
@@ -361,7 +361,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     {
         list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null) {
+        if ($callback == null || !(is_array($value) || $value instanceof Traversable)) {
             return array(false, $value);
         }
         else {
@@ -414,7 +414,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     {
         list($callback, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null) {
+        if ($callback == null || !(is_array($value) || $value instanceof Traversable)) {
             return array(true, null);
         }
         else {
