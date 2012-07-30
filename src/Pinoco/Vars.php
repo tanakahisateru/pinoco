@@ -54,7 +54,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      */
     public static function wrap(&$srcref)
     {
-        if(!is_array($srcref)) {
+        if (!is_array($srcref)) {
             throw new InvalidArgumentException("Non array variable was given.");
         }
         $self = new Pinoco_Vars();
@@ -70,9 +70,9 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      */
     public function get($name /*[, $default]*/)
     {
-        if(array_key_exists($name, $this->_vars)) {
+        if (array_key_exists($name, $this->_vars)) {
             $r = $this->_vars[$name];
-            if($r instanceof Pinoco_ValueProxy) {
+            if ($r instanceof Pinoco_ValueProxy) {
                 $r = $r->fetch();
             }
             return $r;
@@ -93,24 +93,24 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
         $default = func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
         $es = explode('/', $expression);
         $v = $this;
-        while(count($es) > 0) {
+        while (count($es) > 0) {
             $name = trim(array_shift($es));
-            if($name === "") {
+            if ($name === "") {
                 continue;
             }
-            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
                 $v = $v->get($name, $default);
             }
-            elseif(is_object($v)) {
-                if(property_exists($v, $name)) {
+            elseif (is_object($v)) {
+                if (property_exists($v, $name)) {
                     $v = $v->$name;
                 }
                 else {
                     return $default;
                 }
             }
-            elseif(is_array($v)) {
-                if(array_key_exists($name, $v)) {
+            elseif (is_array($v)) {
+                if (array_key_exists($name, $v)) {
                     $v = $v[$name];
                 }
                 else {
@@ -220,7 +220,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      */
     public function markAsDirty($name)
     {
-        if(array_key_exists($name, $this->_vars) &&
+        if (array_key_exists($name, $this->_vars) &&
             $this->_vars[$name] instanceof Pinoco_ValueProxy
         ) {
             $this->_vars[$name]->dirty();
@@ -274,12 +274,12 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     public function __call($name, $arguments)
     {
-        if($this->has($name)) {
+        if ($this->has($name)) {
             $m = $this->get($name);
-            if($m instanceof Pinoco_MethodProxy) {
+            if ($m instanceof Pinoco_MethodProxy) {
                 return $m->call($arguments);
             }
-            elseif(is_callable($m)) {
+            elseif (is_callable($m)) {
                 return call_user_func_array($m, $arguments);
             }
         }
@@ -331,7 +331,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     {
         $arr = array();
         $ks = $filter ? $filter : $this->keys();
-        foreach($ks as $k) {
+        foreach ($ks as $k) {
             $name = (strpos($modifier, "%") !== false) ? sprintf($modifier, $k) : (
                 is_callable($modifier) ? call_user_func($modifier, $k) : ($modifier . $k)
             );
@@ -347,11 +347,11 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      */
     public function toArrayRecurse($depth=false)
     {
-        if($depth !== false && $depth == 0) { return $this; }
+        if ($depth !== false && $depth == 0) { return $this; }
         $arr = array();
-        foreach($this->keys() as $k) {
+        foreach ($this->keys() as $k) {
             $v = $this->get($k);
-            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
                 $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
             }
             $arr[$k] = $v;
@@ -370,23 +370,23 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      */
     public function import($src, $filter=false, $default=null, $modifier="%s")
     {
-        if(is_array($src)){
+        if (is_array($src)) {
             $srcarr = $src;
         }
-        else if($src instanceof Traversable) {
+        elseif ($src instanceof Traversable) {
             $srcarr = array();
-            foreach($src as $k=>$v) {
+            foreach ($src as $k=>$v) {
                 $srcarr[$k] = $v;
             }
         }
-        else if(is_object($src)){
+        elseif (is_object($src)) {
             $srcarr = get_object_vars($src);
         }
         else {
             throw new InvalidArgumentException("Can't import from scalar variable.");
         }
         $ks = $filter ? $filter : array_keys($srcarr);
-        foreach($ks as $k) {
+        foreach ($ks as $k) {
             $name = (strpos($modifier, "%") !== false) ? sprintf($modifier, $k) : (
                 is_callable($modifier) ? call_user_func($modifier, $k) : ($modifier . $k)
             );

@@ -4,7 +4,7 @@ $path = array_shift($req);
 $param = implode('?', $req);
 $reqfile = $_SERVER['DOCUMENT_ROOT'] . $path;
 $is_html = preg_match('/(\.html?|\.php)$/', $reqfile); // like as .htaccess
-if($is_html || !is_file($reqfile)) {
+if ($is_html || !is_file($reqfile)) {
     $_SERVER['PATH_INFO'] = $path;
     $_SERVER['SCRIPT_FILENAME'] = $_SERVER['DOCUMENT_ROOT'] . '/_gateway.php';
     $_SERVER['SCRIPT_NAME'] = '/_gateway.php';

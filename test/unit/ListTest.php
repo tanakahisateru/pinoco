@@ -229,7 +229,7 @@ class ListTest extends PHPUnit_Framework_TestCase
     {
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $tmp = array();
-        foreach($l as $e) {
+        foreach ($l as $e) {
             $tmp[] = $e;
         }
         $this->assertEquals(array(1, 2, 3), $tmp);

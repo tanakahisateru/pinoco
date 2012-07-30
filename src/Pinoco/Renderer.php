@@ -57,8 +57,8 @@ abstract class Pinoco_Renderer
      */
     public function __get($name)
     {
-        if($name == 'cfg'){ return $this->_cfg; }
-        if($name == 'before_rendering'){ return $this->_before_rendering; }
+        if ($name == 'cfg') { return $this->_cfg; }
+        if ($name == 'before_rendering') { return $this->_before_rendering; }
         return null;
     }
 
@@ -71,7 +71,7 @@ abstract class Pinoco_Renderer
      */
     public function __set($name, $value)
     {
-        if($name == 'before_rendering'){ $this->_before_rendering = $value; }
+        if ($name == 'before_rendering') { $this->_before_rendering = $value; }
     }
 
     /**
@@ -80,7 +80,7 @@ abstract class Pinoco_Renderer
      * @param array $extravars
      * @return void
      */
-     protected function render($page, $extravars=array()){
+     protected function render($page, $extravars=array()) {
          // implement rendering process
      }
 
@@ -90,8 +90,8 @@ abstract class Pinoco_Renderer
      * @param array $extravars
      * @return void
      */
-     public function prepareAndRender($page, $extravars=array()){
-         if($this->_before_rendering) {
+     public function prepareAndRender($page, $extravars=array()) {
+         if ($this->_before_rendering) {
              call_user_func($this->_before_rendering, $this);
          }
          $this->render($page, $extravars);

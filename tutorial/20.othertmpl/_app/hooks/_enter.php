@@ -6,10 +6,11 @@ require_once "SmartyRenderer.php";
 //    Deny from all
 // </FilesMatch>
 // Instead, this is alternative way to block directly access to resource.
-// if(preg_match('/\.tpl$/', $this->path)) { $this->forbidden(); }
+// if (preg_match('/\.tpl$/', $this->path)) { $this->forbidden(); }
 
-function page_ext_html2tpl($path) {
-    if(preg_match('/\/$/', $path)) {
+function page_ext_html2tpl($path)
+{
+    if (preg_match('/\/$/', $path)) {
         return $path . 'index.tpl';
     } else {
         return preg_replace('/(.*)\.html$/', '${1}.tpl', $path);

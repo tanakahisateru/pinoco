@@ -21,11 +21,11 @@
  * $validator->check('name')->is('not-empty')->is('max-length 255');
  * $validator->check('age')->is('not-empty')->is('integer')
  *                         ->is('>= 21', 'Adult only.');
- * if($validator->valid) {
+ * if ($validator->valid) {
  *     echo "OK";
  * }
  * else {
- *     foreach($validator->errors as $field=>$context) {
+ *     foreach ($validator->errors as $field=>$context) {
  *         echo $field . ":" . $context->message . "\n";
  *     }
  * }
@@ -174,7 +174,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function overrideErrorMessages($messages)
     {
-        foreach($messages as $test=>$msg) {
+        foreach ($messages as $test=>$msg) {
             $this->_messages[$test] = $msg;
         }
     }
@@ -186,10 +186,10 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function getMessageFor($testName)
     {
-        if(isset($this->_messages[$testName])) {
+        if (isset($this->_messages[$testName])) {
             return $this->_messages[$testName];
         }
-        else if(isset($this->_tests[$testName])) {
+        elseif (isset($this->_tests[$testName])) {
             return $this->_tests[$testName]['message'];
         }
         else {
@@ -206,19 +206,19 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     public function fetchExistenceAndValue($name)
     {
         //type check
-        if($this->_target instanceof Pinoco_Vars) {
+        if ($this->_target instanceof Pinoco_Vars) {
             $exists = $this->_target->has($name);
             $value = $this->_target->get($name);
         }
-        else if($this->_target instanceof Pinoco_List) {
+        elseif ($this->_target instanceof Pinoco_List) {
             $exists = intval($name) < $this->_target->count();
             $value = $exists ? $this->_target[$name] : null;
         }
-        else if(is_array($this->_target)) {
+        elseif (is_array($this->_target)) {
             $exists = isset($this->_target[$name]);
             $value = $exists ? $this->_target[$name] : null;
         }
-        else if(is_object($this->_target)) {
+        elseif (is_object($this->_target)) {
             $exists = isset($this->_target->$name);
             $value = $exists ? $this->_target->$name : null;
         }
@@ -247,7 +247,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             $complex = $methods[$methodName]['complex'];
             $params = array($param);
         }
-        else if (is_callable($methodName)) {
+        elseif (is_callable($methodName)) {
             $callback = $methodName;
             $complex = false;
             $params = $param ? explode(' ', $param) : array();
@@ -355,7 +355,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     {
         $this->_errors = null;
         $this->_values = null;
-        if(!$this->_result->has($name)) {
+        if (!$this->_result->has($name)) {
             $this->_result->set($name, $this->contextFor($name, $label));
         }
         return $this->_result->get($name);
@@ -384,7 +384,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     {
         $this->_errors = null;
         $this->_values = null;
-        if($this->_result->has($name)) {
+        if ($this->_result->has($name)) {
             $this->_result->remove($name);
         }
     }
@@ -404,11 +404,11 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function get_errors()
     {
-        if($this->_errors === null) {
+        if ($this->_errors === null) {
             $this->_errors = new Pinoco_Vars();
-            foreach($this->_result->keys() as $field) {
+            foreach ($this->_result->keys() as $field) {
                 $result = $this->_result->get($field);
-                if($result->invalid) {
+                if ($result->invalid) {
                     $this->_errors->set($field, $result);
                 }
             }
@@ -422,9 +422,9 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function get_values()
     {
-        if($this->_values === null) {
+        if ($this->_values === null) {
             $this->_values = new Pinoco_Vars();
-            foreach($this->_result->keys() as $field) {
+            foreach ($this->_result->keys() as $field) {
                 $result = $this->_result->get($field);
                 $this->_values->set($field, $result->value);
             }
@@ -460,7 +460,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     public static function emptyResult($values=array())
     {
         $validator = new self($values);
-        foreach($values as $name=>$value) {
+        foreach ($values as $name=>$value) {
             $validator->check($name)->is('pass');
         }
         $result = $validator->result;
@@ -481,8 +481,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
     private function _testEmptyComplex($target, $name, $exists, $value)
     {
-        if(!$exists || $value === null) { return true; }
-        if($value === "0" || $value === 0 || $value === false) { return false; }
+        if (!$exists || $value === null) { return true; }
+        if ($value === "0" || $value === 0 || $value === false) { return false; }
         return empty($value);
     }
     private function _testNotEmptyComplex($target, $name, $exists, $value)
@@ -501,8 +501,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     private function _testIn($value, $param='')
     {
         $as = explode(',', $param);
-        foreach($as as $a) {
-            if($value == trim($a)) { return true; }
+        foreach ($as as $a) {
+            if ($value == trim($a)) { return true; }
         }
         return false;
     }

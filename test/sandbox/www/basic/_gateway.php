@@ -2,14 +2,14 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 //TEST:
-if(function_exists('xdebug_disable')){ xdebug_disable(); }
+if (function_exists('xdebug_disable')) { xdebug_disable(); }
 
 require_once '../../../../src/Pinoco.php';
 
-if(file_exists('../../../../vendor/autoload.php')) {
+if (file_exists('../../../../vendor/autoload.php')) {
     require '../../../../vendor/autoload.php';
     //uncomment to disable PHPTAL class loader.
-    //if(class_exists('PHPTAL')) {
+    //if (class_exists('PHPTAL')) {
     //    spl_autoload_unregister(array('PHPTAL','autoload'));
     //}
 }

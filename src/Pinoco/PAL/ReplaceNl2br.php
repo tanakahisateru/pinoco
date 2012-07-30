@@ -15,9 +15,9 @@
  * @subpackage PAL
  */
 
-if(!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
-if(!class_exists('PHPTAL_Namespace')) { require_once 'PHPTAL/Namespace.php'; }
-if(!class_exists('PHPTAL_Php_Attribute_TAL_Replace')) { require_once 'PHPTAL/Php/Attribute/TAL/Replace.php'; }
+if (!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
+if (!class_exists('PHPTAL_Namespace')) { require_once 'PHPTAL/Namespace.php'; }
+if (!class_exists('PHPTAL_Php_Attribute_TAL_Replace')) { require_once 'PHPTAL/Php/Attribute/TAL/Replace.php'; }
 
 /**
  * @package Pinoco

@@ -2,7 +2,7 @@
 $this->testvar1 = "initial value";
 $this->testvar2 = "initial value";
 
-if(1) {
+if (1) {
     $this->skip();  // It works like return syntax.
 }
 

@@ -293,7 +293,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
             $pn->page = 0;
             $this->fail();
         }
-        catch(InvalidArgumentException $ex) {
+        catch (InvalidArgumentException $ex) {
             $this->assertRegExp('/^Invalid number of page/', $ex->getMessage());
         }
         $pn->page = 6;

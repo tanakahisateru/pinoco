@@ -62,11 +62,11 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
      */
     public function get_value()
     {
-        if($this->_filtered) {
+        if ($this->_filtered) {
             return $this->_filteredValue;
         }
         else {
-            if(($r = $this->_validator->fetchExistenceAndValue($this->_name)) === null) {
+            if (($r = $this->_validator->fetchExistenceAndValue($this->_name)) === null) {
                 return null;
             }
             list($exists, $value) = $r;
@@ -112,7 +112,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     private function buildMessage($template, $param, $value, $label)
     {
-        if(is_callable($template)) {
+        if (is_callable($template)) {
             return call_user_func($template, $param, $value, $label);
         }
         else {
@@ -132,7 +132,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
      */
     public function is($test, $message=false)
     {
-        if(!$this->_valid) {
+        if (!$this->_valid) {
             return $this;
         }
         $param = explode(' ', trim($test));
@@ -141,7 +141,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         list($result, $value) = $this->_validator->execValidityTest(
             $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
         );
-        if(!$result) {
+        if (!$result) {
             $this->_test = $test;
             $this->_valid = false;
             $template = $message ? $message : $this->_validator->getMessageFor($testName);
@@ -157,7 +157,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
      */
     public function filter($filter)
     {
-        if(!$this->_valid) {
+        if (!$this->_valid) {
             return $this;
         }
         $param = explode(' ', trim($filter));
@@ -166,7 +166,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         list($filtered, $value) = $this->_validator->execFilter(
             $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
         );
-        if($filtered) {
+        if ($filtered) {
             $this->_filtered = $this->_filtered || true;
             $this->_filteredValue = $value;
         }

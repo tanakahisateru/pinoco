@@ -27,9 +27,9 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
      */
     public function render($page, $extravars=array())
     {
-        if(!class_exists('PHPTAL')) {
+        if (!class_exists('PHPTAL')) {
             include_once 'PHPTAL.php';
-            if(!class_exists('PHPTAL')) {
+            if (!class_exists('PHPTAL')) {
                 throw new RuntimeException("PHPTAL is not installed.");
             }
         }
@@ -42,15 +42,15 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
 
         //config
         $template->setTemplateRepository($this->_sysref->basedir);
-        foreach($this->cfg as $k => $v) {
+        foreach ($this->cfg as $k => $v) {
             $meth = 'set' . strtoupper($k[0]) . substr($k, 1);
-            if(method_exists($template, $meth)) {
+            if (method_exists($template, $meth)) {
                 call_user_func(array($template, $meth), $v);
             }
         }
 
         //extra TALES definition
-        if(!function_exists("phptal_tales_url")) {
+        if (!function_exists("phptal_tales_url")) {
             function phptal_tales_url($src, $nothrow)
             {
                 $src = phptal_tales('string:' . trim($src), $nothrow);
@@ -59,10 +59,10 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
         }
 
         //extract vars
-        foreach($this->_sysref->autolocal as $name=>$value) {
+        foreach ($this->_sysref->autolocal as $name=>$value) {
             $template->set($name, $value);
         }
-        foreach($extravars as $name=>$value) {
+        foreach ($extravars as $name=>$value) {
             $template->set($name, $value);
         }
         $template->set('this', $this->_sysref);

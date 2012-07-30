@@ -30,11 +30,11 @@ class Pinoco_DynamicVars extends Pinoco_Vars
      */
     public function get($name /*[, $default]*/)
     {
-        if(method_exists($this, 'get_' . $name)) {
+        if (method_exists($this, 'get_' . $name)) {
             return call_user_func(array($this, 'get_' . $name));
         }
         else {
-            if(func_num_args() > 1) {
+            if (func_num_args() > 1) {
                 $a1 = func_get_arg(1);
                 return parent::get($name, $a1);
             }
@@ -66,8 +66,8 @@ class Pinoco_DynamicVars extends Pinoco_Vars
         $meths = get_class_methods($this);
         $ks = array();
         $m = array();
-        foreach($meths as $meth) {
-            if(preg_match("/^get_(.*)$/", $meth, $m)) {
+        foreach ($meths as $meth) {
+            if (preg_match("/^get_(.*)$/", $meth, $m)) {
                 array_push($ks, $m[1]);
             }
         }
@@ -86,10 +86,10 @@ class Pinoco_DynamicVars extends Pinoco_Vars
      */
     public function set($name, $value)
     {
-        if(method_exists($this, 'set_' . $name)) {
+        if (method_exists($this, 'set_' . $name)) {
             call_user_func(array($this, 'set_' . $name), $value);
         }
-        else if(method_exists($this, 'get_' . $name)) {
+        elseif (method_exists($this, 'get_' . $name)) {
             throw new InvalidArgumentException("Cannot reassign to ". $name . ".");
         }
         else {

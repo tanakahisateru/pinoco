@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php if(isset($title)){ echo $title; }else{ ?>Pinoco Test<?php } ?></title>
+        <title><?php if (isset($title)) { echo $title; } else { ?>Pinoco Test<?php } ?></title>
     </head>
     <body>
         <h1>Hello World</h1>

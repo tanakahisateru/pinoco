@@ -6,7 +6,7 @@ try {
     $db->beginTransaction();
     $s = $db->prepare('select * from foo;')->query();
     $foo = $s->fetch();
-    while($foo) {
+    while ($foo) {
         printf("foo:%d has %s.\n", $foo->id, $foo->value);
         $foo = $s->fetch();
     }
@@ -14,14 +14,14 @@ try {
     
     printf("insert ddd affected %d rows\n", $db->prepare("insert into foo (value) values(?)")->execute("ddd"));
     
-    foreach($db->prepare('select * from foo where id<:maxid;')->query(array('maxid'=>10))->fetchAll() as $foo) {
+    foreach ($db->prepare('select * from foo where id<:maxid;')->query(array('maxid'=>10))->fetchAll() as $foo) {
         printf("foo:%d has %s.\n", $foo->id, $foo->value);
     }
     
     printf("update xxx affected %d rows\n", $db->execute("update foo set value='xxx' where id<3"));
     printf("update yyy affected %d rows\n", $db->prepare("update foo set value=? where id<?")->execute('yyy', 2));
     
-    foreach($db->query('select * from foo;')->fetchAll() as $foo) {
+    foreach ($db->query('select * from foo;')->fetchAll() as $foo) {
         printf("foo:%d has %s.\n", $foo->id, $foo->value);
     }
     
@@ -29,11 +29,11 @@ try {
     
     $db->commit(); // never executed
 }
-catch(PDOException $ex) {
+catch (PDOException $ex) {
     $db->rollBack();
     echo $ex->getMessage() . "\n";
 }
-foreach($db->query('select * from foo;')->fetchAll() as $foo) {
+foreach ($db->query('select * from foo;')->fetchAll() as $foo) {
     printf("foo:%d has %s.\n", $foo->id, $foo->value);
 }
 echo "</pre>";

@@ -38,7 +38,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
 
     private function _code2message($code, $field) {
         $ise = "The server encountered an internal error or misconfiguration and was unable to complete your request.";
-        if(!$this->_status_messages) {
+        if (!$this->_status_messages) {
             $this->_status_messages = array(
                 100 => array('title'=>'Continue', 'message'=>$ise),
                 101 => array('title'=>'Switching Protocols', 'message'=>$ise),
@@ -102,7 +102,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
             );
         }
 
-        if(isset($this->_status_messages[$code])) {
+        if (isset($this->_status_messages[$code])) {
             return $this->_status_messages[$code][$field];
         }
         else {
@@ -118,16 +118,16 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
     public function respond($pinoco)
     {
         $protocol = $pinoco->request->server->get('SERVER_PROTOCOL', 'HTTP/1.0');
-        if(!preg_match('/^HTTP\/.*$/', $protocol)) {
+        if (!preg_match('/^HTTP\/.*$/', $protocol)) {
             $protocol = 'HTTP/1.0';
         }
         $pinoco->header($protocol . " " . $this->code . " " . $this->title);
 
-        if($pinoco->testing) { return; }
+        if ($pinoco->testing) { return; }
 
         $pref = $pinoco->sysdir . "/error/";
-        foreach(array($this->code . '.php', 'default.php') as $errfile) {
-            if(file_exists($pref . $errfile)) {
+        foreach (array($this->code . '.php', 'default.php') as $errfile) {
+            if (file_exists($pref . $errfile)) {
                 $pinoco->_includeWithThis($pref . $errfile, get_object_vars($this));
                 return;
             }

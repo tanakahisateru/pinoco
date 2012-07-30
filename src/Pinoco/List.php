@@ -52,7 +52,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      */
     public static function wrap(&$srcref)
     {
-        if(!is_array($srcref)) {
+        if (!is_array($srcref)) {
             throw new InvalidArgumentException("Non array variable was given.");
         }
         $self = new Pinoco_List();
@@ -68,7 +68,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     public function push($value /*[, $value1[, ...]]*/)
     {
         $n = func_num_args();
-        for($i = 0; $i < $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
             $a = func_get_arg($i);
             array_push($this->_arr, $a);
         }
@@ -91,7 +91,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     public function unshift($value /*[, $value1[, ...]]*/)
     {
         $n = func_num_args();
-        for($i = 0; $i < $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
             $a = func_get_arg($i);
             array_unshift($this->_arr, $a);
         }
@@ -114,9 +114,9 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     public function concat($source /*[, $source1[, ...]]*/)
     {
         $n = func_num_args();
-        for($i = 0; $i < $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
             $arg = func_get_arg($i);
-            foreach($arg as $e) {
+            foreach ($arg as $e) {
                 array_push($this->_arr, $e);
             }
         }
@@ -129,7 +129,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      */
     public function sort($callable=false)
     {
-        if(!$callable) {
+        if (!$callable) {
             sort($this->_arr);
         }
         else {
@@ -184,7 +184,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @return Pinoco_List
      */
     public function slice($offset /*[, $length]*/) {
-        if(func_num_args() >= 2) {
+        if (func_num_args() >= 2) {
             $a1 = func_get_arg(1);
             return self::fromArray(array_slice($this->_arr, $offset, $a1));
         }
@@ -201,7 +201,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @return Pinoco_List;
      */
     public function splice($offset, $length /*[, $replacement]*/) { // $replacement
-        if(func_num_args() >= 3) {
+        if (func_num_args() >= 3) {
             $a2 = func_get_arg(2);
             return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
         }
@@ -253,7 +253,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      */
     public function get($idx /*[, $default]*/)
     {
-        if(isset($this->_arr[$idx])) {
+        if (isset($this->_arr[$idx])) {
             return $this->_arr[$idx];
         }
         else {
@@ -272,24 +272,24 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
         $default = func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
         $es = explode('/', $expression);
         $v = $this;
-        while(count($es) > 0) {
+        while (count($es) > 0) {
             $name = trim(array_shift($es));
-            if($name === "") {
+            if ($name === "") {
                 continue;
             }
-            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
                 $v = $v->get($name, $default);
             }
-            elseif(is_object($v)) {
-                if(property_exists($v, $name)) {
+            elseif (is_object($v)) {
+                if (property_exists($v, $name)) {
                     $v = $v->$name;
                 }
                 else {
                     return $default;
                 }
             }
-            elseif(is_array($v)) {
-                if(array_key_exists($name, $v)) {
+            elseif (is_array($v)) {
+                if (array_key_exists($name, $v)) {
                     $v = $v[$name];
                 }
                 else {
@@ -312,7 +312,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      */
     public function set($idx, $value /*[, $default]*/)
     {
-        for($i = count($this->_arr); $i < $idx; $i++) {
+        for ($i = count($this->_arr); $i < $idx; $i++) {
             $this->_arr[$i] = func_num_args() > 2 ? func_get_arg(2) : $this->_default_val; //default??
         }
         $this->_arr[$idx] = $value;
@@ -336,8 +336,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     public function toArray($modifier=null)
     {
         $arr = array();
-        if($modifier) {
-            foreach($this->_arr as $i=>$v) {
+        if ($modifier) {
+            foreach ($this->_arr as $i=>$v) {
                 $name = (strpos($modifier, "%") !== false) ? sprintf($modifier, $i) : (
                     is_callable($modifier) ? call_user_func($modifier, $i) : ($modifier . $i)
                 );
@@ -345,7 +345,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
             }
         }
         else {
-            foreach($this->_arr as $i=>$v) {
+            foreach ($this->_arr as $i=>$v) {
                 $arr[$i] = $v;
             }
         }
@@ -359,10 +359,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      */
     public function toArrayRecurse($depth=false)
     {
-        if($depth !== false && $depth == 0) { return $this; }
+        if ($depth !== false && $depth == 0) { return $this; }
         $arr = array();
-        foreach($this->_arr as $i=>$v) {
-            if($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+        foreach ($this->_arr as $i=>$v) {
+            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
                 $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
             }
             $arr[$i] = $v;
@@ -388,7 +388,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      */
     public function each($callable)
     {
-        foreach($this->_arr as $e){
+        foreach ($this->_arr as $e) {
             call_user_func($callable, $e);
         }
     }

@@ -15,8 +15,8 @@
  * @subpackage PAL
  */
 
-if(!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
-if(!class_exists('PHPTAL_PreFilter')) { require_once 'PHPTAL/PreFilter.php'; }
+if (!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
+if (!class_exists('PHPTAL_PreFilter')) { require_once 'PHPTAL/PreFilter.php'; }
 
 /**
  * @package Pinoco

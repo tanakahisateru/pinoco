@@ -4,7 +4,7 @@ $this->updateIncdir();
 
 require_once "TestController.php";
 
-switch($this->pathargs[0]) {
+switch ($this->pathargs[0]) {
 case "":
 case "index":
     $this->newObj('TestController')->index($this);

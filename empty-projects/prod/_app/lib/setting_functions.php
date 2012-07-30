@@ -1,6 +1,6 @@
 <?php
 function setupTALRenderer($renderer) {
-    if(!class_exists('PHPTAL')) {
+    if (!class_exists('PHPTAL')) {
         require_once 'PHPTAL.php';
     }
     $renderer->cfg->phpCodeDestination = Pinoco::instance()->sysdir . "/cache";

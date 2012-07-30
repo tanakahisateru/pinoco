@@ -66,7 +66,7 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
             $this->_baseuri, $this->_dispatcher, $path,
             $this->_basedir, $this->_sysdir, true
         );
-        if($this->_preprocess) {
+        if ($this->_preprocess) {
             call_user_func($this->_preprocess[0], $pinoco, $this->_preprocess[1]);
         }
         return $pinoco;

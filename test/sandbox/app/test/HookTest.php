@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../src/Pinoco.php';
 
-if(function_exists('xdebug_disable')){ xdebug_disable(); }
+if (function_exists('xdebug_disable')) { xdebug_disable(); }
 
 /**
  * @property Pinoco_TestEnvironment testenv

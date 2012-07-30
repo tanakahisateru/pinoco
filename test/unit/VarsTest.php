@@ -130,7 +130,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
     {
         $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
         $tmp=array();
-        foreach($v as $k=>$e) {
+        foreach ($v as $k=>$e) {
             $tmp[] = $k;
             $tmp[] = $e;
         }

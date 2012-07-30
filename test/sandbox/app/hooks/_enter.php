@@ -1,6 +1,7 @@
 <?php
-if(!function_exists('setupTALRenderer')) {
-    function setupTALRenderer($renderer) {
+if (!function_exists('setupTALRenderer')) {
+    function setupTALRenderer($renderer)
+    {
         $pinoco = Pinoco::instance();
         $renderer->cfg->phpCodeDestination = $pinoco->sysdir . "/tmp";
         $renderer->cfg->encoding = "UTF-8";

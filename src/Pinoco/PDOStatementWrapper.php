@@ -67,15 +67,15 @@ class Pinoco_PDOStatementWrapper
      */
     public function execute(/*[$args[, ...]]*/)
     {
-        if(func_num_args() == 0) {
+        if (func_num_args() == 0) {
             $args = array();
         }
-        else if(func_num_args() == 1) {
+        elseif (func_num_args() == 1) {
             $a = func_get_arg(0);
-            if($a instanceof Pinoco_Vars || $a instanceof Pinoco_List) {
+            if ($a instanceof Pinoco_Vars || $a instanceof Pinoco_List) {
                 $args = $a->toArray();
             }
-            else if(is_array($a)) {
+            elseif (is_array($a)) {
                 $args = $a;
             }
             else {
@@ -135,7 +135,7 @@ class Pinoco_PDOStatementWrapper
         //return Pinoco::newList($this->_stmt->fetchAll(PDO::FETCH_CLASS));
         $rs = new Pinoco_List();
         $rows = $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach($rows as $r) {
+        foreach ($rows as $r) {
             $rs->push(Pinoco_Vars::fromArray($r));
         }
         return $rs;
@@ -148,7 +148,7 @@ class Pinoco_PDOStatementWrapper
     public function fetchOne()
     {
         $r = $this->fetch();
-        try { $this->closeCursor(); } catch(PDOException $ex){ }
+        try { $this->closeCursor(); } catch (PDOException $ex) { }
         return $r;
     }
 }

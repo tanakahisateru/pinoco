@@ -42,7 +42,7 @@
  *     )
  * );
  * $pagination->page = 1;
- * if(!$pagination->isValidPage) { $this->notfound(); }
+ * if (!$pagination->isValidPage) { $this->notfound(); }
  * </code>
  *
  * PHPTAL example
@@ -122,7 +122,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
         $this->_pagesBeforeLast = 0;
         $this->_totalCount = null;
         $this->_data = null;
-        foreach($options as $name=>$value) {
+        foreach ($options as $name=>$value) {
             $this->set($name, $value);
         }
     }
@@ -133,10 +133,10 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     }
     public function set_page($value)
     {
-        if($value < 1) {
+        if ($value < 1) {
             throw new InvalidArgumentException('Invalid number of page:' . $value);
         }
-        if($value != $this->_currentPage) {
+        if ($value != $this->_currentPage) {
             $this->_data = null;
         }
         $this->_currentPage = $value;
@@ -152,7 +152,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     }
     public function set_elementsPerPage($value)
     {
-        if($value < 1) {
+        if ($value < 1) {
             throw new InvalidArgumentException('Invalid number of elements:' . $value);
         }
         $this->_elementsPerPage = $value;
@@ -165,7 +165,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     }
     public function set_pagesAfterFirst($value)
     {
-        if($value < -1) {
+        if ($value < -1) {
             throw new InvalidArgumentException('Invalid number of links:' . $value);
         }
         $this->_pagesAfterFirst = $value;
@@ -177,7 +177,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     }
     public function set_pagesAroundCurrent($value)
     {
-        if($value < -1) {
+        if ($value < -1) {
             throw new InvalidArgumentException('Invalid number of links:' . $value);
         }
         $this->_pagesAroundCurrent = $value;
@@ -189,7 +189,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     }
     public function set_pagesBeforeLast($value)
     {
-        if($value < -1) {
+        if ($value < -1) {
             throw new InvalidArgumentException('Invalid number of links:' . $value);
         }
         $this->_pagesBeforeLast = $value;
@@ -201,7 +201,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
      */
     public function get_totalCount()
     {
-        if(is_null($this->_totalCount)) {
+        if (is_null($this->_totalCount)) {
             $this->_totalCount = call_user_func($this->totalCountCallback, $this);
         }
         return $this->_totalCount;
@@ -214,7 +214,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
      */
     public function get_data()
     {
-        if(is_null($this->_data)) {
+        if (is_null($this->_data)) {
             $this->_data = call_user_func(
                 $this->dataFetchCallback,
                 $this,
@@ -253,24 +253,24 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
         $pages = Pinoco::newList();
         $leftpad = false;
         $rightpad = false;
-        for($i = 1; $i <= $this->totalPages; $i++) {
-            if($this->_pagesAroundCurrent >= 0) {
+        for ($i = 1; $i <= $this->totalPages; $i++) {
+            if ($this->_pagesAroundCurrent >= 0) {
                 $skipped = false;
-                if(!$leftpad && $i > 1 + $this->_pagesAfterFirst) {
+                if (!$leftpad && $i > 1 + $this->_pagesAfterFirst) {
                     $leftpad = true;
-                    if(abs($i - $this->_currentPage) > $this->_pagesAroundCurrent) {
+                    if (abs($i - $this->_currentPage) > $this->_pagesAroundCurrent) {
                         $skipped = true;
                         $skipto = max($i+1, $this->_currentPage - $this->_pagesAroundCurrent);
                     }
                 }
-                if($leftpad && !$rightpad && $i > $this->_currentPage + $this->_pagesAroundCurrent) {
+                if ($leftpad && !$rightpad && $i > $this->_currentPage + $this->_pagesAroundCurrent) {
                     $rightpad = true;
-                    if($i < $this->totalPages - $this->_pagesBeforeLast) {
+                    if ($i < $this->totalPages - $this->_pagesBeforeLast) {
                         $skipped = true;
                         $skipto = max($i, $this->totalPages - $this->_pagesBeforeLast);
                     }
                 }
-                if($skipped && isset($skipto)) {
+                if ($skipped && isset($skipto)) {
                     $pages->push(Pinoco::newVars(array('padding' => true)));
                     $i = $skipto - 1;
                     continue;
@@ -292,7 +292,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
      */
     public function get_prev()
     {
-        if($this->_currentPage > 1) {
+        if ($this->_currentPage > 1) {
             return Pinoco::newVars(array(
                 'enabled' => true,
                 'number'  => $this->_currentPage - 1,
@@ -312,7 +312,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
      */
     public function get_next()
     {
-        if($this->_currentPage < $this->totalPages) {
+        if ($this->_currentPage < $this->totalPages) {
             return Pinoco::newVars(array(
                 'enabled' => true,
                 'number'  => $this->_currentPage + 1,

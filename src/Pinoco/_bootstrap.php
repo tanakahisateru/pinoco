@@ -16,7 +16,7 @@
  * @filesource
  */
 
-if(!function_exists('__pinoco_autoload_impl')) {
+if (!function_exists('__pinoco_autoload_impl')) {
     /**
      * SPL autoload implementation for Pinoco libs
      * @param string $class
@@ -24,14 +24,14 @@ if(!function_exists('__pinoco_autoload_impl')) {
      */
     function __pinoco_autoload_impl($class)
     {
-        if($class === 'Pinoco') {
+        if ($class === 'Pinoco') {
             require_once dirname(dirname(__FILE__)) . '/Pinoco.php';
         }
-        elseif(substr($class, 0, 7) === 'Pinoco_') {
+        elseif (substr($class, 0, 7) === 'Pinoco_') {
             require_once dirname(__FILE__) . '/' . strtr(substr($class, 7), "_", "/") . '.php';
         }
     }
-    if(!@in_array('__pinoco_autoload_impl', spl_autoload_functions())) {
+    if (!@in_array('__pinoco_autoload_impl', spl_autoload_functions())) {
         spl_autoload_register('__pinoco_autoload_impl');
     }
 }

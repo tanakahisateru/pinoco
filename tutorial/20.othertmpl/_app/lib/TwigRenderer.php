@@ -7,7 +7,7 @@ class TwigRenderer extends Pinoco_Renderer
     public function render($page, $extravars=array())
     {
         include_once 'Twig/Autoloader.php';
-        if(!class_exists('Twig_Autoloader')){
+        if (!class_exists('Twig_Autoloader')) {
             throw new RuntimeException("Twig is not installed.");
         }
         Twig_Autoloader::register();
@@ -16,7 +16,7 @@ class TwigRenderer extends Pinoco_Renderer
           'cache' => sys_get_temp_dir(),
           'auto_reload'=> true,
         );
-        foreach($this->cfg as $k => $v) {
+        foreach ($this->cfg as $k => $v) {
             $options[$k] = $v;
         }
 
@@ -24,8 +24,9 @@ class TwigRenderer extends Pinoco_Renderer
         $twig = new Twig_Environment($loader, $options);
 
         // add URL modifier
-        if(!function_exists('twig_url_format_filter')) {
-            function twig_url_format_filter($p) {
+        if (!function_exists('twig_url_format_filter')) {
+            function twig_url_format_filter($p)
+            {
                 return Pinoco::instance()->url($p);
             }
         }

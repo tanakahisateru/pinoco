@@ -53,13 +53,13 @@ class Pinoco_ValueProxy
      */
     public function fetch()
     {
-        if($this->oneshot && $this->freeze) {
+        if ($this->oneshot && $this->freeze) {
             return $this->value;
         }
         $args = $this->context;
         array_unshift($args, $this->owner);
         $result = call_user_func_array($this->callback, $args);
-        if($this->oneshot) {
+        if ($this->oneshot) {
             $this->freeze = true;
             $this->value = $result;
         }

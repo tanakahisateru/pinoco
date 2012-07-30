@@ -61,7 +61,7 @@ function decorate_with_bracket($e) { return '[' . $e . ']'; }
 $locallist = $locallist->map('decorate_with_bracket');
 
 $this->info .= sprintf("locallist(%d items) : %s", $locallist->count(), $locallist->shift());
-foreach($locallist as $e) {
+foreach ($locallist as $e) {
     $this->info .= sprintf(",%s", $e);
 }
 // Of cource, you can use $locallist->join(',') or reduce() for the same purpose.

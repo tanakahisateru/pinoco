@@ -7,7 +7,7 @@ class SmartyRenderer extends Pinoco_Renderer
     public function render($page, $extravars=array())
     {
         include_once 'Smarty/Smarty.class.php';
-        if(!class_exists('Smarty')){
+        if (!class_exists('Smarty')) {
             throw new RuntimeException("Smarty is not installed.");
         }
 
@@ -24,8 +24,9 @@ class SmartyRenderer extends Pinoco_Renderer
         }
 
         // add URL modifier
-        if(preg_match('/^Smarty-([0-9]+)\./', $smarty->_version, $mo) && $mo[1] >= 3) {
-            function smarty_modifier_url($url) {
+        if (preg_match('/^Smarty-([0-9]+)\./', $smarty->_version, $mo) && $mo[1] >= 3) {
+            function smarty_modifier_url($url)
+            {
                 return Pinoco::instance()->url($url);
             }
         }
@@ -34,15 +35,15 @@ class SmartyRenderer extends Pinoco_Renderer
         }
 
         // custom conofig
-        foreach($this->cfg as $k => $v) {
+        foreach ($this->cfg as $k => $v) {
             $smarty->$k = $v;
         }
 
         //extract vars
-        foreach($this->_sysref->autolocal as $name=>$value) {
+        foreach ($this->_sysref->autolocal as $name=>$value) {
             $smarty->assign($name, $value);
         }
-        foreach($extravars as $name=>$value) {
+        foreach ($extravars as $name=>$value) {
             $smarty->assign($name, $value);
         }
         $smarty->assign('this', $this->_sysref);

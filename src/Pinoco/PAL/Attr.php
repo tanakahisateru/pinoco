@@ -15,9 +15,9 @@
  * @subpackage PAL
  */
 
-if(!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
-if(!class_exists('PHPTAL_Namespace')) { require_once 'PHPTAL/Namespace.php'; }
-if(!class_exists('PHPTAL_Php_Attribute_TAL_Attributes')) { require_once 'PHPTAL/Php/Attribute/TAL/Attributes.php'; }
+if (!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
+if (!class_exists('PHPTAL_Namespace')) { require_once 'PHPTAL/Namespace.php'; }
+if (!class_exists('PHPTAL_Php_Attribute_TAL_Attributes')) { require_once 'PHPTAL/Php/Attribute/TAL/Attributes.php'; }
 
 /**
  * @package Pinoco
@@ -28,7 +28,7 @@ class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes
     public function before(PHPTAL_Php_CodeWriter $codewriter)
     {
         // prepare
-        $codewriter->pushCode('if(isset($ctx->attr)){$_pal_attr_bak=$ctx->attr;}');
+        $codewriter->pushCode('if (isset($ctx->attr)) {$_pal_attr_bak=$ctx->attr;}');
         $codewriter->doSetVar('$ctx->attr', 'array()');
         $attrs = $this->phpelement->getAttributeNodes();
         foreach ($attrs as $attr) {
@@ -40,7 +40,7 @@ class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes
         parent::before($codewriter);
         // cleanup
         $codewriter->pushCode('unset($ctx->attr)');
-        $codewriter->pushCode('if(isset($_pal_attr_bak)){$ctx->attr=$_pal_attr_bak;unset($_pal_attr_bak);}');
+        $codewriter->pushCode('if (isset($_pal_attr_bak)) {$ctx->attr=$_pal_attr_bak;unset($_pal_attr_bak);}');
     }
 }
 

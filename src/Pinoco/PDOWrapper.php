@@ -92,11 +92,11 @@ class Pinoco_PDOWrapper
      */
     public function getConnection()
     {
-        if($this->_conn === null) {
+        if ($this->_conn === null) {
             $this->_conn = new PDO($this->_dsn, $this->_un, $this->_pw, $this->_opts);
             $this->_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            if($this->_after_connection) {
-                if(is_callable($this->_after_connection)) {
+            if ($this->_after_connection) {
+                if (is_callable($this->_after_connection)) {
                     call_user_func($this->_after_connection, $this);
                 }
                 else {

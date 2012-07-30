@@ -50,7 +50,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
             $port = $s->get('SERVER_PORT');
             if ($protocol == "http" && $port != "80") {
                 $server_prefix = $server_prefix . ":" . $port;
-            } else if ($protocol == "https" && $port != "443") {
+            } elseif ($protocol == "https" && $port != "443") {
                 $server_prefix = $server_prefix . ":" . $port;
             }
         }
@@ -58,10 +58,10 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
         if (preg_match('/^\w+:\/\/[^\/]/', $this->url)) {
             $fixedurl = $this->url;
         }
-        else if (preg_match('/^\/\/[^\/]/', $this->url)) {
+        elseif (preg_match('/^\/\/[^\/]/', $this->url)) {
             $fixedurl = $protocol . ':' . $this->url;
         }
-        else if (preg_match('/^\/[^\/]?/', $this->url) && $this->external) {
+        elseif (preg_match('/^\/[^\/]?/', $this->url) && $this->external) {
             $fixedurl = $server_prefix. $this->url;
         }
         else {
@@ -69,7 +69,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
             if (preg_match('/^\w+:\/\/[^\/]/', $filteredurl)) {
                 $fixedurl = $filteredurl;
             }
-            else if (preg_match('/^\/\/[^\/]/', $filteredurl)) {
+            elseif (preg_match('/^\/\/[^\/]/', $filteredurl)) {
                 $fixedurl = $protocol . ':' . $filteredurl;
             }
             else {

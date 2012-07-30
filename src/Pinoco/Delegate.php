@@ -36,7 +36,7 @@ class Pinoco_Delegate
      */
     public function __construct($delegatee=null)
     {
-        if(is_null($delegatee)) {
+        if (is_null($delegatee)) {
             $delegatee = Pinoco::instance();
         }
         $this->__delegatee__ = $delegatee;
