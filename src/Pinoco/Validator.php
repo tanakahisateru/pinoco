@@ -425,7 +425,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
                 }
             }
             else {
-                $result = [];
+                $result = array();
                 foreach ($value as $k=>$v) {
                     $result[] = $this->callMethod($callback, $complex, $params, $exists, $v);
                 }
