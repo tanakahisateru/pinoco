@@ -124,6 +124,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
         $pinoco->header($protocol . " " . $this->code . " " . $this->title);
 
         if ($pinoco->testing) { return; }
+        if (in_array($this->code, array(204, 205, 304))) { return; }
 
         $pref = $pinoco->sysdir . "/error/";
         foreach (array($this->code . '.php', 'default.php') as $errfile) {
