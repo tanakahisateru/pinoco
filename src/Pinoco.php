@@ -623,31 +623,78 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
+     * Conditional flow control. Send cache hints and also mighnt send
+     * "304 Not Modified" status if the content has not been changed
+     * from previously sent (detected by incomming request header).
+     *
+     * @param int $timestamp
+     * @param string $etag
+     * @param int $lifetime
+     * @return void
+     */
+    public function abortIfNotModified($timestamp=null, $etag=null, $lifetime=86400)
+    {
+        $server = $this->request->server;
+        // These headers would be sent when required with super reload(SHIFT+F5).
+        $pragma = $server->get('HTTP_PRAGMA');
+        $cache_control = $server->get('HTTP_CAHCE_CONTROL');
+        $ignore_cache = false;
+        if ($pragma == 'no-cache' || $cache_control == 'no-cache') {
+            $ignore_cache = true;
+        }
+        $modified = true;
+        if(!$ignore_cache && $lifetime > 0) {
+            if ($modified && $timestamp !== null) {
+                if ($timestamp <= @strtotime($server->get('HTTP_IF_MODIFIED_SINCE'))) {
+                    $modified = false;
+                }
+            }
+            if ($modified && $etag !== null) {
+                if ($etag == trim($server->get('HTTP_IF_NONE_MATCH'), '" ')) {
+                    $modified = false;
+                }
+            }
+        }
+        if ($timestamp !== null) {
+            $this->header('Last-modified: ' . gmdate('D, d M Y H:i:s T', $timestamp));
+        }
+        if ($etag !== null) {
+            $this->header('ETag: "' . $etag . '"');
+        }
+        if ($lifetime > 0) {
+            if ($timestamp !== null || $etag !== null) {
+                $this->header('Cache-Control: max-age=' . $lifetime);
+                $this->header('Expires: ' . gmdate('D, d M Y H:i:s T', time() + $lifetime));
+            }
+        }
+        else {
+            $this->header('Cache-Control: no-cache');
+            $this->header('Expires: ' . gmdate('D, d M Y H:i:s T', 0));
+        }
+        if (!$modified) {
+            self::error('304');
+        }
+    }
+
+    /**
      * Serves static file or send 304 no-modified response automatically.
      * This method terminates hook script flow.
      *
      * @param string $filename
-     * @param bool $no_cache
+     * @param int $lifetime
      * @param bool|string $mime_type
      * @return void
      */
-    public function serveStatic($filename, $no_cache=false, $mime_type=false)
+    public function serveStatic($filename, $lifetime=86400, $mime_type=false)
     {
         if (!is_file($filename)) {
-            $this->error(404);
+            self::error(404);
         }
-        $stat = stat($filename);
-        $last_modified = max($stat['mtime'], $stat['ctime']);
-        $etag = md5($filename . $last_modified);
-        $this->header('Last-modified: ' . gmdate('D, d M Y H:i:s T', $last_modified));
-        $this->header('ETag: ' . $etag);
-        if (!$no_cache && $this->request->server->get('HTTP_PRAGMA')!='no-cache' && $this->request->server->get('HTTP_CAHCE_CONTROL')!='no-cache') {
-            if (
-                $etag == $this->request->server->get('HTTP_IF_NONE_MATCH') ||
-                $last_modified <= @strtotime($this->request->server->get('HTTP_IF_MODIFIED_SINCE'))
-            ) {
-                $this->error('304');
-            }
+        if($lifetime > 0) {
+            $stat = stat($filename);
+            $last_modified = max($stat['mtime'], $stat['ctime']);
+            $etag = md5(file_get_contents($filename, false, null, 0, 1024) . $last_modified);
+            $this->abortIfNotModified($last_modified, $etag, $lifetime);
         }
         if (!$mime_type) {
             $mime_type = self::mimeType($filename);
