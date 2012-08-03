@@ -623,6 +623,16 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
+     * This method sends headers not to be cached.
+     * @return void
+     */
+    public function nocache()
+    {
+        $this->header('Cache-Control: no-cache');
+        $this->header('Expires: ' . gmdate('D, d M Y H:i:s T', 0));
+    }
+
+    /**
      * Conditional flow control. Send cache hints and also mighnt send
      * "304 Not Modified" status if the content has not been changed
      * from previously sent (detected by incomming request header).
@@ -668,8 +678,7 @@ class Pinoco extends Pinoco_DynamicVars
             }
         }
         else {
-            $this->header('Cache-Control: no-cache');
-            $this->header('Expires: ' . gmdate('D, d M Y H:i:s T', 0));
+            $this->nocache();
         }
         if (!$modified) {
             self::error('304');
