@@ -4,6 +4,6 @@
     "require": {
         "php":">=5.1.2",
         "pinoco/pinoco":"*",
-        "phptal/phptal":">=1.2.1"
+        "phptal/phptal":"dev-master"
     }
 }

@@ -20,7 +20,7 @@
         "php": ">=5.1.2"
     },
     "require-dev": {
-        "phptal/phptal": ">=1.2.1"
+        "phptal/phptal": "dev-master"
     },
     "autoload": {
         "psr-0": {
