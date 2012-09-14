@@ -79,7 +79,7 @@
             </fileset>
             <filterchain>
                 <replaceregexp>
-                    <regexp pattern="\.\./\.\./src/Pinoco" replace="_app/lib/Pinoco"/>
+                    <regexp pattern="require_once\s+'\.\./\.\./src/Pinoco\.php';" replace=""/>
                 </replaceregexp>
             </filterchain>
         </copy>
@@ -95,7 +95,7 @@
             </fileset>
             <filterchain>
                 <replaceregexp>
-                    <regexp pattern="\.\./\.\./src/Pinoco" replace="_app/lib/Pinoco"/>
+                    <regexp pattern="require_once\s+'\.\./\.\./src/Pinoco\.php';" replace=""/>
                 </replaceregexp>
             </filterchain>
         </copy>
