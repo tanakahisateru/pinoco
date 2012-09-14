@@ -3,7 +3,8 @@
     "description": "Description of your app.",
     "require": {
         "php":">=5.1.2",
-        "pinoco/pinoco":"*",
+        "pinoco/pinoco":"dev-master",
         "phptal/phptal":"dev-master"
-    }
+    },
+    "minimum-stability": "beta"
 }
