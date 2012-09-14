@@ -73,9 +73,11 @@
     <target name="empty-project">
         <copy todir="./build/empty-project-min" overwrite="true">
             <fileset dir="./empty-projects/min">
-                <exclude name="_app/composer.lock"/>
-                <exclude name="_app/vendor"/>
-                <exclude name="_app/vendor/**/*"/>
+                <patternset>
+                    <exclude name="_app/composer.lock"/>
+                    <exclude name="_app/vendor"/>
+                    <exclude name="_app/vendor/**/*"/>
+                </patternset>
             </fileset>
             <filterchain>
                 <replaceregexp>
@@ -88,10 +90,12 @@
         </tar>
         <copy todir="./build/empty-project-prod" overwrite="true">
             <fileset dir="./empty-projects/prod">
-                <exclude name="_app/cache/*"/>
-                <exclude name="_app/composer.lock"/>
-                <exclude name="_app/vendor"/>
-                <exclude name="_app/vendor/**/*"/>
+                <patternset>
+                    <exclude name="_app/cache/*"/>
+                    <exclude name="_app/composer.lock"/>
+                    <exclude name="_app/vendor"/>
+                    <exclude name="_app/vendor/**/*"/>
+                </patternset>
             </fileset>
             <filterchain>
                 <replaceregexp>
