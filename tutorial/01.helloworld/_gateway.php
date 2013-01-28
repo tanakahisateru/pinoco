@@ -1,5 +1,6 @@
 <?php
 require_once '../../src/Pinoco.php';
+if (file_exists('../../vendor/autoload.php')) { require '../../vendor/autoload.php'; }
 Pinoco::create("_app", array(
 //    'use_mod_rewrite'  => true,  // true or false default true
 //    'use_path_info'    => true,  // true or false default true

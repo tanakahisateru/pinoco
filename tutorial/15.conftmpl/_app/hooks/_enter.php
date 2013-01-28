@@ -1,5 +1,7 @@
 <?php
-require_once "PHPTAL.php";
+if (!class_exists('PHPTAL')) {
+	require_once "PHPTAL.php";
+}
 $this->renderers->html->cfg->outputMode = PHPTAL::HTML5;
 $this->renderers->html->cfg->forceReparse = true;
 // ... You can create any entry in cfg variable.

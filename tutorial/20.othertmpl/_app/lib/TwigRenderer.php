@@ -6,7 +6,9 @@ class TwigRenderer extends Pinoco_Renderer
 {
     public function render($page, $extravars=array())
     {
-        include_once 'Twig/Autoloader.php';
+		if (!class_exists('Twig_Autoloader')) {
+			include_once 'Twig/Autoloader.php';
+		}
         if (!class_exists('Twig_Autoloader')) {
             throw new RuntimeException("Twig is not installed.");
         }
