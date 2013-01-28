@@ -24,14 +24,13 @@ class SmartyRenderer extends Pinoco_Renderer
         }
 
         // add URL modifier
-        if (preg_match('/^Smarty-([0-9]+)\./', $smarty->_version, $mo) && $mo[1] >= 3) {
-            function smarty_modifier_url($url)
-            {
-                return Pinoco::instance()->url($url);
-            }
+        if (is_callable(array($smarty, 'registerPlugin'))) {
+			// Smarty3
+			$smarty->registerPlugin('modifier', 'url', array($this, 'pinoco_url'));
         }
         else {
-            $smarty->register_modifier('url', array($this, 'pinoco_url'));
+			// Smarty2
+			$smarty->register_modifier('url', array($this, 'pinoco_url'));
         }
 
         // custom conofig
