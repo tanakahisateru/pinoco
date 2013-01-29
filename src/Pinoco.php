@@ -280,7 +280,7 @@ class Pinoco extends Pinoco_DynamicVars
                     if ($source === false) {
                         throw new InvalidArgumentException('Can\'t load counfig file: ' . $source);
                     }
-                    foreach ($source as $k=>&$v) {
+                    foreach ($source as &$v) {
                         if (is_array($v)) {
                             $v = Pinoco_Vars::fromArray($v);
                         }
