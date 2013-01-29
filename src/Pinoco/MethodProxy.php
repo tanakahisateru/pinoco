@@ -28,7 +28,7 @@ class Pinoco_MethodProxy
      * Constructor to make an lazy value proxy.
      *
      * @param callable $callback
-     * @param Pinoco_Vars $owner
+     * @param mixed $owner
      */
     public function __construct($callback, $owner)
     {

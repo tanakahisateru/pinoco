@@ -263,6 +263,7 @@ class Pinoco extends Pinoco_DynamicVars
      * load $name
      * @param string $name Attribute name of Pinoco instance.
      * @param mixed $source Config file path based on the app dir or array.
+     * @throws InvalidArgumentException
      * @return Pinoco
      */
     public function config($name, $source)
@@ -730,7 +731,7 @@ class Pinoco extends Pinoco_DynamicVars
     /**
      * It makes relative path absolute.
      * @param string $path
-     * @param string $base
+     * @param string|bool $base
      * @return string
      */
     public function resolvePath($path, $base=false)
@@ -953,6 +954,7 @@ class Pinoco extends Pinoco_DynamicVars
      * Default rendering will be canceled.
      * Pass false if you want an empty response.
      * @param string $page
+     * @throws InvalidArgumentException
      * @return void
      */
     public function render($page)
@@ -1242,6 +1244,7 @@ class Pinoco extends Pinoco_DynamicVars
     /**
      * Execute an external script in isolated variable scope.
      * @param string $script Script filename absolute path or relative based on current script.
+     * @throws Pinoco_FlowControl
      * @return mixed
      */
     public function subscript($script)
@@ -1276,6 +1279,7 @@ class Pinoco extends Pinoco_DynamicVars
      * Runs a hook script.
      * @param string $script
      * @param string $subpath
+     * @throws Pinoco_FlowControl
      * @return bool
      */
     private function _run_hook_if_exists($script, $subpath)
