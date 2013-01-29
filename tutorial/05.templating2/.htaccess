@@ -15,7 +15,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} \.(html|php)$ [OR]
 RewriteCond %{REQUEST_FILENAME} !-f
 
-# * Still not rewrited requests only:
+# * Still not rewritten requests only:
 RewriteCond %{REQUEST_FILENAME} !_gateway\.php$
 
 # * Extra restrictions you want:

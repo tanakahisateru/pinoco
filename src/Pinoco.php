@@ -45,7 +45,7 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * </code>
  *
  * Pinoco::create guesses HTTP request to create Pinoco instance.
- * If this method can't work file in your environment, you can cretae Pinoco
+ * If this method can't work file in your environment, you can create Pinoco
  * environment manually via "new" operator using your own parameters.
  *
  * @package Pinoco
@@ -64,7 +64,7 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * @property string $directory_index Space separated directory index files(like Apache)
  * @property string $page         Template file to be rendered
  * @property-read Pinoco_Vars $renderers File extension to rendering module mappings
- * @property-read Pinoco_Vars $autolocal Auto extraced variables into local scope
+ * @property-read Pinoco_Vars $autolocal Auto extracted variables into local scope
  * @property callback $url_modifier  URL modification callback
  * @property callback $page_modifier Template page base path modification callback
  */
@@ -558,7 +558,7 @@ class Pinoco extends Pinoco_DynamicVars
 
     // flow control
     /**
-     * Current hook proccess will be skipped and invoke the next hook script.
+     * Current hook process will be skipped and invoke the next hook script.
      * @throws Pinoco_FlowControlSkip
      * @return void
      */
@@ -591,15 +591,15 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
-     * Special error to let broeswr change the location to access.
+     * Special error to let browser change the location to access.
      * @param string $url
-     * @param bool $extrenal
+     * @param bool $external
      * @throws Pinoco_FlowControlHttpRedirect
      * @return void
      */
-    public static function redirect($url, $extrenal=false)
+    public static function redirect($url, $external=false)
     {
-        throw new Pinoco_FlowControlHttpRedirect($url, $extrenal);
+        throw new Pinoco_FlowControlHttpRedirect($url, $external);
     }
 
     /**
@@ -633,9 +633,9 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
-     * Conditional flow control. Send cache hints and also mighnt send
+     * Conditional flow control. Send cache hints and also might send
      * "304 Not Modified" status if the content has not been changed
-     * from previously sent (detected by incomming request header).
+     * from previously sent (detected by incoming request header).
      *
      * @param int $timestamp
      * @param string $etag
@@ -647,7 +647,7 @@ class Pinoco extends Pinoco_DynamicVars
         $server = $this->request->server;
         // These headers would be sent when required with super reload(SHIFT+F5).
         $pragma = $server->get('HTTP_PRAGMA');
-        $cache_control = $server->get('HTTP_CAHCE_CONTROL');
+        $cache_control = $server->get('HTTP_CACHE_CONTROL');
         $ignore_cache = false;
         if ($pragma == 'no-cache' || $cache_control == 'no-cache') {
             $ignore_cache = true;
@@ -760,7 +760,7 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
-     * Returns if the path can be rendered by registerd renderers.
+     * Returns if the path can be rendered by registered renderers.
      * @param string $path
      * @return bool
      */
@@ -853,7 +853,7 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
-     * Returns host based URI from site based or sub-path based relateve one.
+     * Returns host based URI from site based or sub-path based relative one.
      * @param string $path
      * @param bool $pure cancels to call user modifier if true
      * @return string
@@ -884,7 +884,7 @@ class Pinoco extends Pinoco_DynamicVars
     }
 
     /**
-     * Returns default page file considerd with directory index.
+     * Returns default page file considered with directory index.
      * @param string $path
      * @param string $last_pathelem
      * @return string|bool
@@ -1326,7 +1326,7 @@ class Pinoco extends Pinoco_DynamicVars
 
             $uris = explode("/", ltrim($this->_path, "/"));
             $process = array();
-            $proccessed = false;
+            $processed = false;
             try {
                 while (count($uris) > 0) {
                     $dpath = (count($process) == 0 ? "" : "/") . implode('/', $process);
@@ -1418,7 +1418,7 @@ class Pinoco extends Pinoco_DynamicVars
 
                     // main script
                     if (is_file($hookbase . $dpath . "/" . $fename . ".php")) {
-                        $proccessed = true;
+                        $processed = true;
                         if ($this->_run_hook_if_exists($hookbase . $dpath . "/" . $fename . ".php", implode('/', $uris))) {
                             break;
                         }
@@ -1434,7 +1434,7 @@ class Pinoco extends Pinoco_DynamicVars
 
                 if ($this->_page != "<default>") {
                     $pagepath = $this->resolvePath($this->_page);
-                    $page = $this->_page_from_path_with_directory_index($pagepath, $proccessed ? $fename : false);
+                    $page = $this->_page_from_path_with_directory_index($pagepath, $processed ? $fename : false);
                 }
                 else {
                     $pagepath = $this->_path;
@@ -1443,7 +1443,7 @@ class Pinoco extends Pinoco_DynamicVars
                         $pagepath = call_user_func($this->_page_modifier, $pagepath);
                     }
                     if ($pagepath) {
-                        $page = $this->_page_from_path_with_directory_index($pagepath, $proccessed ? $fename : false);
+                        $page = $this->_page_from_path_with_directory_index($pagepath, $processed ? $fename : false);
                     }
                     else {
                         $page = false;
@@ -1465,7 +1465,7 @@ class Pinoco extends Pinoco_DynamicVars
                         catch (Pinoco_FlowControl $ex) { }
                     }
                 }
-                elseif (!$proccessed) {
+                elseif (!$processed) {
                     // no page and no tarminal hook indicates resource was not found or forbidden
                     if ($this->_path[strlen($this->_path) - 1] == "/") {
                         $this->forbidden();
