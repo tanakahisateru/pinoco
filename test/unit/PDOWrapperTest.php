@@ -3,6 +3,11 @@ require_once dirname(__FILE__) . '/../../src/Pinoco/_bootstrap.php';
 
 class PDOWrapperTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var $db Pinoco_PDOWrapper
+     */
+    protected $db;
+
     public function setUp() {
         $this->db = new Pinoco_PDOWrapper('sqlite::memory:');
         $this->db->exec("create table foo (
@@ -103,16 +108,34 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
 
 // ugly :( fuck php5.2
 class LazyFetcher {
+    /**
+     * @var $db Pinoco_PDOWrapper
+     */
+    protected $db;
+
+    /**
+     * @param Pinoco_PDOWrapper $db
+     */
     function __construct($db) {
         $this->db = $db;
         $this->cc = 0;
     }
+
+    /**
+     * @param Pinoco_Vars $owner
+     * @return Pinoco_List
+     */
     function lazyBarFetcher($owner) {
         $this->cc++;
         return $this->db->prepare(
             "select * from bar where foo_id=? order by value;"
         )->query($owner->id)->fetchAll();
     }
+
+    /**
+     * @param Pinoco_Vars $r
+     * @return Pinoco_Vars
+     */
     function lazyBarFetcherforAll($r) {
         return $r->registerAsLazy('childlen', array($this, 'lazyBarFetcher'));
     }

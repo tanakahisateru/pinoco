@@ -3,6 +3,11 @@ require_once dirname(__FILE__) . '/../../src/Pinoco/_bootstrap.php';
 
 class HttpRequestTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var $testenv Pinoco_TestEnvironment
+     */
+    protected $testenv;
+
     protected function setUp()
     {
         $project = dirname(dirname(dirname(__FILE__)));
