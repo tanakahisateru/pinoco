@@ -379,6 +379,7 @@ class Pinoco extends Pinoco_DynamicVars
             for ($i = 0; $i < count($argsvals); $i++) {
                 $argsvars[$i] = '$argsvals[' . $i . ']';
             }
+            $object = null;
             eval(sprintf('$object = new %s(%s);', $class, implode(', ', $argsvars)));
             return $object;
         }
@@ -389,7 +390,6 @@ class Pinoco extends Pinoco_DynamicVars
             else {
                 throw new InvalidArgumentException($class . " is not defined.");
             }
-            return null;
         }
     }
 
@@ -1226,7 +1226,7 @@ class Pinoco extends Pinoco_DynamicVars
         // script path must be absolute and exist.
         if (!preg_match('/^([A-Za-z]+:)?[\\/\\\\].+/', $script_abs_path) ||
             !is_file($script_abs_path)) {
-            return;
+            return null;
         }
 
         if (!is_array($this->_script_include_stack)) {
@@ -1267,7 +1267,7 @@ class Pinoco extends Pinoco_DynamicVars
         }
         catch (Pinoco_FlowControlSkip $ex) {
             $this->_script = $prev_script;
-            return;
+            return null;
         }
         catch (Pinoco_FlowControl $ex) {
             $this->_script = $prev_script;
@@ -1524,6 +1524,8 @@ class Pinoco extends Pinoco_DynamicVars
         if ($this->testing) {
             return $all_output_while_running;
         }
+
+        return "";
     }
 
     /**
