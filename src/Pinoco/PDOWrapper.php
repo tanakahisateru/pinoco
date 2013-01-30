@@ -72,11 +72,13 @@ class Pinoco_PDOWrapper
         $this->_pw = $pw;
         $this->_opts = $opts;
         $this->_conn = null;
-        $this->_after_connection = false;
+        $this->_after_connection = null;
     }
 
     /**
-     * @return mixed
+     * Returns initialize process when connection would be created.
+     *
+     * @return string|callable|null
      */
     public function getAfterConnection()
     {
@@ -84,7 +86,9 @@ class Pinoco_PDOWrapper
     }
 
     /**
-     * @param mixed $after_connection
+     * Sets initialize process when connection would be created.
+     *
+     * @param string|callable|null $after_connection
      */
     public function setAfterConnection($after_connection)
     {

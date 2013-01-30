@@ -822,10 +822,10 @@ class Pinoco extends Pinoco_DynamicVars
      *
      * @param string $string
      * @param bool $replace
-     * @param int $http_response_code
+     * @param int|null $http_response_code
      * @return bool
      */
-    public function header($string, $replace=true /*, $http_response_code */)
+    public function header($string, $replace=true, $http_response_code=null)
     {
         $name = null;
         $is_http = preg_match('/^HTTP\\//', $string);
@@ -851,8 +851,8 @@ class Pinoco extends Pinoco_DynamicVars
         }
 
         if (!$this->_testing && !headers_sent()) {
-            if (func_num_args() >= 3) {
-                @header($string, $replace, func_get_arg(2));
+            if (!is_null($http_response_code)) {
+                @header($string, $replace, $http_response_code);
             }
             else {
                 @header($string, $replace);
@@ -934,7 +934,7 @@ class Pinoco extends Pinoco_DynamicVars
         else {
             $url = rtrim($this->_baseuri, "/") . $path;
         }
-        return (!$pure && $this->_url_modifier) ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
+        return (!$pure && $this->_url_modifier != null) ? call_user_func($this->_url_modifier, $url, $renderable) : $url;
     }
 
     /**
@@ -1510,7 +1510,7 @@ class Pinoco extends Pinoco_DynamicVars
                 }
                 else {
                     $pagepath = $this->_path;
-                    if ($this->_page_modifier) {
+                    if ($this->_page_modifier != null) {
                         $this->updateIncdir();
                         $pagepath = call_user_func($this->_page_modifier, $pagepath);
                     }
