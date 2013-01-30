@@ -44,7 +44,6 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
     {
         $s = $pinoco->request->server;
         $protocol = $s->get('HTTPS') ? "https" : "http";
-        $server_prefix = "";
         if ($s->has('HTTP_HOST')) {
             $server_prefix = $protocol . '://' . $s->get('HTTP_HOST');
         }
@@ -57,7 +56,6 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
                 $server_prefix = $server_prefix . ":" . $port;
             }
         }
-        $fixedurl = "";
         if (preg_match('/^\w+:\/\/[^\/]/', $this->url)) {
             $fixedurl = $this->url;
         }
