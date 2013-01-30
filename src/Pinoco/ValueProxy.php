@@ -16,6 +16,7 @@
 
 /**
  * Value proxy
+ *
  * @package Pinoco
  * @internal
  */
@@ -47,7 +48,7 @@ class Pinoco_ValueProxy
     }
 
     /**
-     * Evalute real value.
+     * Evaluate real value.
      *
      * @return mixed
      */

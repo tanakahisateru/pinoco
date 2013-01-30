@@ -23,6 +23,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars
 {
     /**
      * Returns a value or default by name.
+     *
      * @param string $name
      * @param mixed $default
      * @return mixed
@@ -47,6 +48,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars
     /**
      * Checks if this object has certain property or not.
      * If setLoose is set true then it returns true always.
+     *
      * @param string $name
      * @return bool
      * @see src/Pinoco/Pinoco_Vars#has($name)
@@ -58,6 +60,7 @@ class Pinoco_DynamicVars extends Pinoco_Vars
 
     /**
      * Returns all property names in this object.
+     *
      * @return Pinoco_List
      * @see src/Pinoco/Pinoco_Vars#keys()
      */
@@ -77,7 +80,8 @@ class Pinoco_DynamicVars extends Pinoco_Vars
     }
 
     /**
-     * Propertry setter.
+     * Property setter.
+     *
      * @param string $name
      * @param mixed $value
      * @throws InvalidArgumentException

@@ -28,7 +28,7 @@
  *     },
  *     // What to be shown?
  *     function($pagination, $offset, $limit) {
- *         return $pagination->db->prepate(
+ *         return $pagination->db->prepare(
  *             "SELECT * FROM ... LIMIT $offset, $limit"
  *         )->query()->fetchAll();
  *     },
@@ -197,6 +197,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
 
     /**
      * Total number of elements.
+     *
      * @return integer
      */
     public function get_totalCount()
@@ -210,6 +211,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     /**
      * Elements in paginated range.
      * The fetched result is cached before changing current page.
+     *
      * @return mixed
      */
     public function get_data()
@@ -227,6 +229,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
 
     /**
      * Force to clear cached data.
+     *
      * @return void
      */
     public function reset()
@@ -237,6 +240,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
 
     /**
      * Total number of pages.
+     *
      * @return integer
      */
     public function get_totalPages()
@@ -246,6 +250,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
 
     /**
      * Navigation information of each page buttons.
+     *
      * @return Pinoco_List
      */
     public function get_pages()
@@ -288,6 +293,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
 
     /**
      * Navigation information of the prev button.
+     *
      * @return Pinoco_Vars
      */
     public function get_prev()
@@ -308,6 +314,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
 
     /**
      * Navigation information of the next button.
+     *
      * @return Pinoco_Vars
      */
     public function get_next()

@@ -16,6 +16,7 @@
 
 /**
  * Method proxy
+ *
  * @package Pinoco
  * @internal
  */
@@ -41,7 +42,7 @@ class Pinoco_MethodProxy
     }
 
     /**
-     * Evalute return value.
+     * Evaluates itself by arguments and returns result.
      *
      * @param array $args
      * @return mixed

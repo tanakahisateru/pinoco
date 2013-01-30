@@ -16,6 +16,7 @@
 
 /**
  * List model
+ *
  * @package Pinoco
  */
 class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
@@ -34,6 +35,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Makes a new object from Array.
+     *
      * @param mixed $src
      * @return Pinoco_List
      */
@@ -46,9 +48,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Wraps an existing Array.
+     *
      * @param array &$srcref
      * @throws InvalidArgumentException
-     * @return \Pinoco_List
+     * @return Pinoco_List
      */
     public static function wrap(&$srcref)
     {
@@ -62,6 +65,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Appends a value to tail.
+     *
      * @param mixed $value,...
      * @return void
      */
@@ -76,6 +80,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Removes and return a value from tail.
+     *
      * @return mixed
      */
     public function pop()
@@ -85,6 +90,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Inserts a value to head.
+     *
      * @param mixed $value,...
      * @return void
      */
@@ -99,6 +105,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Removes and return a value from head.
+     *
      * @return mixed
      */
     public function shift()
@@ -107,7 +114,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Concatinates another iteratable object.
+     * Concatenates another iterative object.
+     *
      * @param mixed $source
      * @return void
      */
@@ -124,6 +132,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Sorts this list.
+     *
      * @param callback|bool $callable
      * @return void
      */
@@ -139,6 +148,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns sorted list.
+     *
      * @param callback|bool $callable
      * @return Pinoco_List
      */
@@ -151,6 +161,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a number of element of this list.
+     *
      * @return int
      */
     public function count()
@@ -160,6 +171,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Converts this list to string.
+     *
      * @param string $sep
      * @return string
      */
@@ -170,6 +182,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a reversed list.
+     *
      * @return Pinoco_List
      */
     public function reverse()
@@ -179,6 +192,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a slice.
+     *
      * @param int $offset
      * @param int $length
      * @return Pinoco_List
@@ -195,6 +209,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Removes elements by range and inserts another.
+     *
      * @param int $offset
      * @param int $length
      * @param array $replacement
@@ -212,6 +227,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Inserts another.
+     *
      * @param int $offset
      * @param mixed $value
      * @return void
@@ -225,6 +241,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Removes by range.
+     *
      * @param int $offset
      * @param int $length
      * @return void
@@ -236,6 +253,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns the first position where value found in this list.
+     *
      * @param mixed $value
      * @return int
      */
@@ -247,6 +265,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns value or default by position.
+     *
      * @param int $idx
      * @param mixed $default
      * @return mixed
@@ -263,6 +282,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a value or default by tree expression.
+     *
      * @param string $expression
      * @param mixed $default
      * @return mixed
@@ -304,7 +324,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Stes value by position.
+     * Sets value by position.
+     *
      * @param int $idx
      * @param mixed $value
      * @param mixed $default
@@ -320,6 +341,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Sets a default value for overflow access.
+     *
      * @param mixed $value
      * @return void
      */
@@ -330,6 +352,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Exports elements to Array.
+     *
      * @param array|null $modifier
      * @return array
      */
@@ -354,6 +377,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Exports properties to Array recursively.
+     *
      * @param int $depth
      * @return array
      */
@@ -372,6 +396,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Fold operation for each elements.
+     *
      * @param callback $callable
      * @param mixed $initial
      * @return mixed
@@ -383,6 +408,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Some operation for each elements.
+     *
      * @param callback $callable
      * @return void
      */
@@ -394,7 +420,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Regenerates list from this list which elements are applied given fnction.
+     * Regenerates list from this list which elements are applied given function.
+     *
      * @param callback $callable
      * @return Pinoco_List
      */
@@ -404,7 +431,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Regenerates list from this list which elements are filterd by given fnction.
+     * Regenerates list from this list which elements are filtered by given function.
+     *
      * @param callback $callable
      * @return Pinoco_List
      */
@@ -412,6 +440,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     {
         return self::fromArray(array_filter($this->_arr, $callable));
     }
+
     /*
     public function any($callable)
     {

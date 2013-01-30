@@ -16,6 +16,7 @@
 
 /**
  * Flow control object
+ *
  * @package Pinoco
  * @internal
  */
@@ -23,6 +24,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
 {
     /**
      * Constructor
+     *
      * @param string $url
      * @param bool $external
      */
@@ -34,6 +36,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
 
     /**
      * Redirect response implementation.
+     *
      * @param Pinoco $pinoco
      * @return void
      */

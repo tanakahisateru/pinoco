@@ -16,6 +16,7 @@
 
 /**
  * Variable model
+ *
  * @package Pinoco
  */
 class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
@@ -36,6 +37,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Makes a new object from Array.
+     *
      * @param mixed $src
      * @return Pinoco_Vars
      */
@@ -48,6 +50,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Wraps an existing Array.
+     *
      * @param array &$srcref
      * @throws InvalidArgumentException
      * @return Pinoco_Vars
@@ -64,6 +67,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a value or default by name.
+     *
      * @param string $name
      * @param mixed $default
      * @return mixed
@@ -84,6 +88,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a value or default by tree expression.
+     *
      * @param string $expression
      * @param mixed $default
      * @return mixed
@@ -126,7 +131,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Checks if this object has certain property or not.
-     * If setloose is set true then it returns true always.
+     * If "setloose" is set as true then it returns true always.
+     *
      * @param string $name
      * @return bool
      */
@@ -138,6 +144,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Returns all property names in this object.
      * Elements of returned list are sorted by its name.
+     *
      * @return Pinoco_List
      */
     public function keys()
@@ -148,6 +155,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Returns values of all properties in this object.
      * Values are sorted by its key name.
+     *
      * @return Pinoco_List
      */
     public function values()
@@ -164,6 +172,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Sets a value to this object as given name.
+     *
      * @param string $name
      * @param mixed $value
      * @return void
@@ -176,7 +185,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Extends existing instance with any callable object.
      * The instance would be passed to the 1st argument of callback, then
-     * trailings are filled as is just like Python's OOP.
+     * trailing arguments are filled as is, just like Python's OOP.
+     *
      * @param string $name
      * @param callable $callback
      * @return void
@@ -188,7 +198,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Sets a value to this object as given named dynamic value.
-     * The callback evaluted every time when fetched.
+     * The callback evaluated every time when fetched.
+     *
      * @param string $name
      * @param callable $callback
      * @param array $context
@@ -201,7 +212,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Sets a value to this object as given named lazy value.
-     * The callback evaluted as oneshot.
+     * The callback evaluated as one-shot.
+     *
      * @param string $name
      * @param callable $callback
      * @param array $context
@@ -215,6 +227,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Clear lazy property's internal cache.
      * It would be regenerated at the next fetching.
+     *
      * @param string $name
      * @return void
      */
@@ -229,6 +242,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Sets a default value for non existence property access.
+     *
      * @param mixed $value
      * @return void
      */
@@ -239,6 +253,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Makes has() result always true.
+     *
      * @param bool $flag
      * @return void
      */
@@ -249,6 +264,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Removes a property by name.
+     *
      * @param string $name
      * @return void
      */
@@ -288,6 +304,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Returns a number of entries in this object.
+     *
      * @return int
      */
     public function count()
@@ -322,6 +339,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Exports properties to Array.
+     *
      * @param array|boolean $filter
      * @param mixed $default
      * @param string $modifier
@@ -342,6 +360,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Exports properties to Array recursively.
+     *
      * @param bool|int $depth
      * @return array
      */
@@ -360,7 +379,8 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * Imports properties from an array, object or another Vars
+     * Imports properties from an array, object or another Vars.
+     *
      * @param mixed $src
      * @param array|boolean $filter
      * @param mixed $default

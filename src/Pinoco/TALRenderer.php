@@ -16,11 +16,14 @@
 
 /**
  * Preferred HTML page renderer using PHPTAL
+ *
  * @package Pinoco
  */
 class Pinoco_TALRenderer extends Pinoco_Renderer
 {
     /**
+     * Renders the web page.
+     *
      * @param string $page
      * @param array $extravars
      * @return void

@@ -16,6 +16,7 @@
 
 /**
  * Delegate class base
+ *
  * @package Pinoco
  * @abstract
  */
@@ -32,6 +33,7 @@ class Pinoco_Delegate
      *     parent::__construct($delegatee);
      * }
      * </code>
+     *
      * @param object $delegatee;
      */
     public function __construct($delegatee=null)

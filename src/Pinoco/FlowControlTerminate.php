@@ -16,6 +16,7 @@
 
 /**
  * Flow control object
+ *
  * @package Pinoco
  * @internal
  */

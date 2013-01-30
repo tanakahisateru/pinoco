@@ -37,6 +37,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Constructor
+     *
      * @param Pinoco_Validator $validator
      * @param string $name
      * @param string|bool $label
@@ -57,7 +58,8 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     }
 
     /**
-     * Retreaves target value.
+     * Retrieves target value.
+     *
      * @return mixed
      */
     public function get_value()
@@ -76,6 +78,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Failed test.
+     *
      * @return string
      */
     public function get_test()
@@ -84,7 +87,8 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     }
 
     /**
-     * is valid or not.
+     * Valid or not.
+     *
      * @return boolean
      */
     public function get_valid()
@@ -93,7 +97,8 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     }
 
     /**
-     * inverse of valid.
+     * Inverse of valid.
+     *
      * @return boolean
      */
     public function get_invalid()
@@ -103,6 +108,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Error message for the first failed check.
+     *
      * @return string
      */
     public function get_message()
@@ -137,6 +143,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Check the field by specified test.
+     *
      * @param string $test
      * @param string|bool $message
      * @return Pinoco_ValidatorContext
@@ -161,6 +168,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Check if all elements pass specified test.
+     *
      * @param string $test
      * @param string|bool $message
      * @return Pinoco_ValidatorContext
@@ -185,6 +193,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Check if any element(s) pass(es) specified test.
+     *
      * @param string $test
      * @param string|bool $message
      * @return Pinoco_ValidatorContext
@@ -209,6 +218,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Converts value format for trailing statements.
+     *
      * @param mixed $filter
      * @return Pinoco_ValidatorContext
      */
@@ -230,6 +240,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
 
     /**
      * Converts value formats in the element for trailing statements.
+     *
      * @param mixed $filter
      * @return Pinoco_ValidatorContext
      */

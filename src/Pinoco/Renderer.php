@@ -15,7 +15,8 @@
  */
 
 /**
- * Abstract HTML page renderer
+ * Abstract HTML page renderer.
+ *
  * @package Pinoco
  * @property Pinoco_Vars $cfg
  * @property callable $before_rendering
@@ -39,6 +40,7 @@ abstract class Pinoco_Renderer
 
     /**
      * Constructor
+     *
      * @param Pinoco $sys
      */
     public function __construct(&$sys)
@@ -52,6 +54,7 @@ abstract class Pinoco_Renderer
 
     /**
      * Properties reader.
+     *
      * @param string $name
      * @return mixed
      */
@@ -65,6 +68,7 @@ abstract class Pinoco_Renderer
     /**
      * Properties writer.
      * This protects read only property "cfg".
+     *
      * @param string $name
      * @param mixed $value
      * @return mixed
@@ -75,7 +79,8 @@ abstract class Pinoco_Renderer
     }
 
     /**
-     * HTML page renderring implementation.
+     * HTML page rendering implementation.
+     *
      * @param string $page
      * @param array $extravars
      * @return void
@@ -86,6 +91,7 @@ abstract class Pinoco_Renderer
 
     /**
      * Executes rendering with calling before_rendering handler.
+     *
      * @param string $page
      * @param array $extravars
      * @return void

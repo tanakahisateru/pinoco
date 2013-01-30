@@ -17,6 +17,7 @@
 /**
  * Fallback MIME-Type dict
  * (Thanks to MIME_Type package!)
+ *
  * @package Pinoco
  */
 class Pinoco_MIMEType
@@ -224,6 +225,7 @@ class Pinoco_MIMEType
 
     /**
      * Returns MIME type string matches given file name.
+     *
      * @param string $filename
      * @return string
      */

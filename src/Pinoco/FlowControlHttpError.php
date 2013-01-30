@@ -16,6 +16,7 @@
 
 /**
  * Flow control object
+ *
  * @package Pinoco
  * @internal
  */
@@ -25,6 +26,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
 
     /**
      * Constructor
+     *
      * @param int $code
      * @param string $title
      * @param string $message
@@ -61,11 +63,11 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
                 401 => array('title'=>'Unauthorized',
                     'message'=>"This server could not verify that you are authorized to access the document requested.  Either you supplied the wrong credentials (e.g., bad password), or your browser doesn't understand how to supply the credentials required."),
                 402 => array('title'=>'Payment Required',
-                    'message'=>"The server encountered an internal error or misconfigurationand was unable to complete your request."),
+                    'message'=>"The server encountered an internal error or misconfiguration and was unable to complete your request."),
                 403 => array('title'=>'Forbidden',
-                    'message'=>"You don't have privileges to access the URL on this server."), // permmission -> privileges
+                    'message'=>"You don't have privileges to access the URL on this server."), // permission -> privileges
                 404 => array('title'=>'Not Found',
-                    'message'=>"The requested URL was not availavle on this server."), // found -> available
+                    'message'=>"The requested URL was not available on this server."), // found -> available
                 405 => array('title'=>'Method Not Allowed',
                     'message'=>"The requested method GET is not allowed for the URL."),
                 406 => array('title'=>'Not Acceptable',
@@ -112,6 +114,7 @@ class Pinoco_FlowControlHttpError extends Pinoco_FlowControl
 
     /**
      * HTTP error response implementation.
+     *
      * @param Pinoco $pinoco
      * @return void
      */

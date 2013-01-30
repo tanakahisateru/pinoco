@@ -40,6 +40,8 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
     private $_env;
 
     /**
+     * Constructor
+     *
      * @param Pinoco $pinoco
      */
     public function __construct($pinoco)

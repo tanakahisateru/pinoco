@@ -17,6 +17,7 @@
 /**
  * PDO Statement wrapper overrides PDO statement object.
  * You can use also native functions.
+ *
  * @package Pinoco
  * @property-read string $queryString
  * @method bool bindColumn(mixed $column , mixed &$param, int $type, int $maxlen, mixed $driverdata)
@@ -41,6 +42,8 @@ class Pinoco_PDOStatementWrapper
     private $_stmt;
 
     /**
+     * Constructor
+     *
      * @param PDOStatement $stmt
      */
     public function __construct($stmt)
@@ -59,8 +62,8 @@ class Pinoco_PDOStatementWrapper
      *   No arguments:          no-params.
      *   Single argument:
      *     array or array like: expanded as params. (both of map and seq)
-     *     array incompatible:  applied as sigle argument.
-     *   Multiple arguments:    applied to params as is. (only sequencial)
+     *     array incompatible:  applied as single argument.
+     *   Multiple arguments:    applied to params as is. (only sequential)
      *
      * @param mixed $args...
      * @return int
@@ -90,7 +93,8 @@ class Pinoco_PDOStatementWrapper
     }
 
     /**
-     * Alias to execute
+     * Alias to execute.
+     *
      * @param mixed $args...
      * @return int
      */
@@ -101,7 +105,8 @@ class Pinoco_PDOStatementWrapper
     }
 
     /**
-     * Calls execute and returns self
+     * Calls execute and returns self.
+     *
      * @param mixed $args...
      * @return Pinoco_PDOStatementWrapper
      */
@@ -115,9 +120,10 @@ class Pinoco_PDOStatementWrapper
     /**
      * Fetches the next row in result set.
      * If false returned, you should close cursor using closeCursor().
+     *
      * @param int $orientation
      * @param int $offset
-     * @return Pinoco_Vars
+     * @return Pinoco_Vars|boolean
      */
     public function fetch($orientation=PDO::FETCH_ORI_NEXT, $offset=0)
     {
@@ -127,7 +133,8 @@ class Pinoco_PDOStatementWrapper
     }
 
     /**
-     * Fetches all results
+     * Fetches all results.
+     *
      * @return Pinoco_List
      */
     public function fetchAll()
@@ -142,7 +149,8 @@ class Pinoco_PDOStatementWrapper
     }
 
     /**
-     * Fetches single result
+     * Fetches single result.
+     *
      * @return Pinoco_Vars
      */
     public function fetchOne()

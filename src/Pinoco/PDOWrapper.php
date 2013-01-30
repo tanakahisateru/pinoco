@@ -17,6 +17,7 @@
 /**
  * PDOWrapper provides extra methods to PDO.
  * Of course you can use also PDO functions.
+ *
  * @package Pinoco
  * @property-read PDO $connection
  * @property mixed $afterConnection
@@ -43,7 +44,8 @@ class Pinoco_PDOWrapper
     private $_after_connection;
 
     /**
-     * Wrapped PDO factory
+     * Wrapped PDO factory.
+     *
      * @param string $dsn
      * @param string $un
      * @param string $pw
@@ -56,6 +58,8 @@ class Pinoco_PDOWrapper
     }
 
     /**
+     * Constructor
+     *
      * @param string $dsn
      * @param string $un
      * @param string $pw
@@ -88,6 +92,8 @@ class Pinoco_PDOWrapper
     }
 
     /**
+     * Returns the database connection as PDO.
+     *
      * @return PDO
      */
     public function getConnection()
@@ -114,6 +120,7 @@ class Pinoco_PDOWrapper
 
     /**
      * This method provides wrapped prepared statement.
+     *
      * @param string $sql
      * @param array $opts
      * @return Pinoco_PDOStatementWrapper
@@ -126,7 +133,8 @@ class Pinoco_PDOWrapper
     }
 
     /**
-     * Alias to exec
+     * Alias to exec().
+     *
      * @param mixed $args...
      * @return int
      */
@@ -138,6 +146,7 @@ class Pinoco_PDOWrapper
 
     /**
      * This method provides wrapped statement already query sent.
+     *
      * @param string $sql
      * @return Pinoco_PDOStatementWrapper
      */

@@ -75,13 +75,13 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
 
         $lf = new LazyFetcher($this->db);
         $cc = &$lf->cc;
-        $rs->map(array($lf, 'lazyBarFetcherforAll'));
+        $rs->map(array($lf, 'lazyBarFetcherForAll'));
 
         /*
         // smart! I love php5.3.
         $cc = 0;
         $rs->map(function($r) use($db, &$cc) {
-            $r->registerAsLazy('childlen', function($owner) use($db, &$cc) {
+            $r->registerAsLazy('children', function($owner) use($db, &$cc) {
                 $cc++;
                 return $db->prepare(
                     "select * from bar where foo_id=? order by value;"
@@ -91,17 +91,17 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         */
 
         $this->assertEquals(0, $cc);
-        $this->assertEquals(3, $rs[0]->childlen->count());
+        $this->assertEquals(3, $rs[0]->children->count());
         $this->assertEquals(1, $cc);
-        $this->assertEquals('a1', $rs[0]->childlen[0]->value);
+        $this->assertEquals('a1', $rs[0]->children[0]->value);
         $this->assertEquals(1, $cc);
-        $this->assertEquals('a2', $rs[0]->childlen[1]->value);
+        $this->assertEquals('a2', $rs[0]->children[1]->value);
         $this->assertEquals(1, $cc);
-        $this->assertEquals('a3', $rs[0]->childlen[2]->value);
+        $this->assertEquals('a3', $rs[0]->children[2]->value);
         $this->assertEquals(1, $cc);
-        $this->assertEquals(0, $rs[1]->childlen->count(), 0);
+        $this->assertEquals(0, $rs[1]->children->count(), 0);
         $this->assertEquals(2, $cc);
-        $this->assertEquals(0, $rs[2]->childlen->count(), 0);
+        $this->assertEquals(0, $rs[2]->children->count(), 0);
         $this->assertEquals(3, $cc);
     }
 }
@@ -136,8 +136,9 @@ class LazyFetcher {
      * @param Pinoco_Vars $r
      * @return Pinoco_Vars
      */
-    function lazyBarFetcherforAll($r) {
-        return $r->registerAsLazy('childlen', array($this, 'lazyBarFetcher'));
+    function lazyBarFetcherForAll($r) {
+        $r->registerAsLazy('children', array($this, 'lazyBarFetcher'));
+        return $r;
     }
 }
 

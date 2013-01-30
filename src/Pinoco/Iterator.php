@@ -16,6 +16,7 @@
 
 /**
  * Iterator for Pinoco Variables or List
+ *
  * @package Pinoco
  * @internal
  */

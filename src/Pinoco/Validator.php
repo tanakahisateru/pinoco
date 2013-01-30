@@ -15,7 +15,8 @@
  */
 
 /**
- * Procedual varidation utility.
+ * Procedural validation utility.
+ *
  * <code>
  * $validator = new Pinoco_Validator($data);
  * $validator->check('name')->is('not-empty')->is('max-length 255');
@@ -56,8 +57,9 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Constructor
+     *
      * @param string $target
-     * @param string $message
+     * @param array $messages
      */
     public function __construct($target, $messages=array())
     {
@@ -88,7 +90,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
         $this->defineValidityTest('empty', array($this, '_testEmptyComplex'),
             "Leave as empty.", true);
         $this->defineValidityTest('not-empty', array($this, '_testNotEmptyComplex'),
-            "Reqierd.", true);
+            "Required.", true);
         $this->defineValidityTest('max-length', array($this, '_testMaxLength'),
             "In {param} letters.");
         $this->defineValidityTest('min-length', array($this, '_testMinLength'),
@@ -138,7 +140,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
 
     /**
-     * Defines custom test
+     * Defines custom test.
+     *
      * @param string $testName
      * @param callable $callback
      * @param string $message
@@ -155,7 +158,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
 
     /**
-     * Defines custom filter
+     * Defines custom filter.
+     *
      * @param string $filterName
      * @param callable $callback
      * @param boolean $complex
@@ -170,7 +174,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
 
     /**
-     * Overrides error messages
+     * Overrides error messages.
+     *
      * @param array $messages
      * @return void
      */
@@ -183,6 +188,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Resolve error message by test name.
+     *
      * @param string $testName
      * @return string
      */
@@ -201,7 +207,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Check existence and fetch value at the same time.
-     * (called by self and varidation context)
+     * (called by self and validation context)
+     *
      * @param string $name
      * @return array
      */
@@ -296,7 +303,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Executes validation test.
-     * (called by varidation context)
+     * (called by validation context)
+     *
      * @param string $field
      * @param boolean $filtered
      * @param mixed $filteredValue
@@ -321,7 +329,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Executes validation test to array with logical AND.
-     * (called by varidation context)
+     * (called by validation context)
+     *
      * @param string $field
      * @param boolean $filtered
      * @param mixed $filteredValue
@@ -337,7 +346,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             return array(false, $value);
         }
         else {
-            foreach ($value as $k=>$v) {
+            foreach ($value as $v) {
                 $result = $this->callMethod($callback, $complex, $params, $exists, $v);
                 if (!$result) {
                     return array(false, $value);
@@ -349,7 +358,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Executes validation test to array with logical OR.
-     * (called by varidation context)
+     * (called by validation context)
+     *
      * @param string $field
      * @param boolean $filtered
      * @param mixed $filteredValue
@@ -365,7 +375,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             return array(false, $value);
         }
         else {
-            foreach ($value as $k=>$v) {
+            foreach ($value as $v) {
                 $result = $this->callMethod($callback, $complex, $params, $exists, $v);
                 if ($result) {
                     return array(true, $value);
@@ -377,7 +387,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Executes filter.
-     * (called by varidation context)
+     * (called by validation context)
+     *
      * @param string $field
      * @param boolean $filtered
      * @param mixed $filteredValue
@@ -402,7 +413,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Executes filter for each elements.
-     * (called by varidation context)
+     * (called by validation context)
+     *
      * @param string $field
      * @param boolean $filtered
      * @param mixed $filteredValue
@@ -420,13 +432,13 @@ class Pinoco_Validator extends Pinoco_DynamicVars
         else {
             if ($value instanceof Pinoco_List) {
                 $result = new Pinoco_List();
-                foreach ($value as $k=>$v) {
+                foreach ($value as $v) {
                     $result->push($this->callMethod($callback, $complex, $params, $exists, $v));
                 }
             }
             else {
                 $result = array();
-                foreach ($value as $k=>$v) {
+                foreach ($value as $v) {
                     $result[] = $this->callMethod($callback, $complex, $params, $exists, $v);
                 }
             }
@@ -436,6 +448,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Returns independent validation context.
+     *
      * @param string $name
      * @param string|bool $label
      * @return Pinoco_ValidatorContext
@@ -447,6 +460,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Starts named property check.
+     *
      * @param string $name
      * @param string|bool $label
      * @return Pinoco_ValidatorContext
@@ -462,7 +476,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
 
     /**
-     * Clears previsous result and restarts named property check.
+     * Clears previous result and restarts named property check.
+     *
      * @param string $name
      * @param string|bool $label
      * @return Pinoco_ValidatorContext
@@ -476,7 +491,8 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
 
     /**
-     * Clears previsous result.
+     * Clears previous result.
+     *
      * @param string $name
      * @return void
      */
@@ -491,6 +507,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Exports test all results.
+     *
      * @return Pinoco_Vars
      */
     public function get_result()
@@ -500,6 +517,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Exports test results only failed.
+     *
      * @return Pinoco_Vars
      */
     public function get_errors()
@@ -518,6 +536,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Exports test results only failed.
+     *
      * @return Pinoco_Vars
      */
     public function get_values()
@@ -534,6 +553,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Returns which all tests succeeded or not.
+     *
      * @return boolean
      */
     public function get_valid()
@@ -543,6 +563,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
 
     /**
      * Returns which validator has one or more failed tests.
+     *
      * @return boolean
      */
     public function get_invalid()
@@ -554,6 +575,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      * Returns all succeeded checking results to be used in form's initial state.
      * If you fetch a field not given by $values, you will get a passed checking
      * context instead.
+     *
      * @param array $values
      * @return Pinoco_Vars
      */

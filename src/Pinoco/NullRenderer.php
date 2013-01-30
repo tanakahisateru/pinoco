@@ -16,11 +16,14 @@
 
 /**
  * Null renderer.
+ *
  * @package Pinoco
  */
 class Pinoco_NullRenderer extends Pinoco_Renderer
 {
     /**
+     * Do nothing in rendering phase.
+     *
      * @param string $page
      * @param array $extravars
      * @return void

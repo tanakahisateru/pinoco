@@ -15,7 +15,8 @@
  */
 
 /**
- * Special Variable model as Nothing
+ * Special Variable model as Nothing object.
+ *
  * @package Pinoco
  */
 class Pinoco_NothingVars extends Pinoco_Vars
@@ -24,6 +25,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
 
     /**
      * Provides the unique Nothing instance.
+     *
      * @return Pinoco_NothingVars
      */
     public static function instance()
@@ -36,6 +38,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
 
     /**
      * Returns itself as globally unique NothingVars.
+     *
      * @param string $name
      * @return Pinoco_NothingVars
      */
@@ -46,6 +49,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
 
     /**
      * Nothing can respond to any names.
+     *
      * @param string $name
      * @return bool
      */
@@ -55,7 +59,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Every values pased to Nothing would be lost.
+     * Every values passed to Nothing would be lost.
+     *
      * @param string $name
      * @param mixed $value
      * @return void
@@ -65,7 +70,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Every values pased to Nothing would be lost.
+     * Every values passed to Nothing would be lost.
+     *
      * @param string $name
      * @param callable $callback
      * @return void
@@ -76,7 +82,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Every values pased to Nothing would be lost.
+     * Every values passed to Nothing would be lost.
+     *
      * @param string $name
      * @param callable $callback
      * @param array $context
@@ -87,7 +94,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Every values pased to Nothing would be lost.
+     * Every values passed to Nothing would be lost.
+     *
      * @param string $name
      * @param callable $callback
      * @param array $context
@@ -98,7 +106,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Every values pased to Nothing would be lost.
+     * Every values passed to Nothing would be lost.
+     *
      * @param mixed $src
      * @param bool $filter
      * @param null $default
@@ -110,7 +119,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Nothig as Array is empty array.
+     * Nothing as Array is empty array.
+     *
      * @param bool $filter
      * @param null $default
      * @param string $modifier
@@ -122,7 +132,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Nothig as Array is empty array.
+     * Nothing as Array is empty array.
+     *
      * @param bool $depth
      * @return array
      */
@@ -132,7 +143,8 @@ class Pinoco_NothingVars extends Pinoco_Vars
     }
 
     /**
-     * Nothig as String is empty string.
+     * Nothing as String is empty string.
+     *
      * @return string
      */
     public function __toString()

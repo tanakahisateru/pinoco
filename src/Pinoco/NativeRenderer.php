@@ -21,6 +21,8 @@
 class Pinoco_NativeRenderer extends Pinoco_Renderer
 {
     /**
+     * Renders the web page.
+     *
      * @param string $page
      * @param array $extravars
      * @return void

@@ -16,6 +16,7 @@
 
 /**
  * Testable Pinoco instance factory for unit test framework.
+ *
  * @package Pinoco
  */
 class Pinoco_TestEnvironment extends Pinoco_Vars
@@ -29,6 +30,7 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
 
     /**
      * Initialize testable Pinoco factory mainly by base directory and app directory.
+     *
      * @param string $sysdir
      * @param string $basedir
      * @param string $baseuri
@@ -45,6 +47,7 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
 
     /**
      * Use this to define Pinoco's instance initialize process.
+     *
      * @param callback $callable
      * @param mixed $context
      * @return Pinoco_TestEnvironment
@@ -57,6 +60,7 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
 
     /**
      * Provides an initialized Pinoco instance.
+     *
      * @param string $path
      * @return Pinoco
      */

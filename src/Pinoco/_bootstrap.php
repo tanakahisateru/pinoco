@@ -19,6 +19,7 @@
 if (!function_exists('__pinoco_autoload_impl')) {
     /**
      * SPL autoload implementation for Pinoco libs
+     *
      * @param string $class
      * @return void
      */
