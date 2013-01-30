@@ -26,6 +26,7 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
      *
      * @param string $page
      * @param array $extravars
+     * @throws RuntimeException
      * @return void
      */
     public function render($page, $extravars=array())
