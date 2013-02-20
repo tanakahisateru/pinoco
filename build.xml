@@ -2,7 +2,6 @@
 
 <!-- Phing build file -->
 <project name="Pinoco" default="dist">
-    <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2"/>
 
     <property name="product" value="Pinoco"/>
     <property name="version" value="0.7.0"/>
@@ -42,32 +41,60 @@
 
     <target name="package">
         <delete dir="./build/package" />
-        <copy todir="./build/package">
+        <copy todir="./build/package/${product}-${version}">
             <fileset dir="./src">
                 <include name="**/*.php"/>
             </fileset>
         </copy>
-        <copy file="./src/LICENSE" todir="./build/package/doc"/>
-        <d51pearpkg2 dir="./build/package" baseinstalldir="/">
-            <name>${product}</name>
-            <summary>${product} web site environment</summary>
-            <channel>__uri</channel>
-            <description>${product} makes existing static web site dynamic transparently.</description>
-            <notes>${product} ${version} released.</notes>
-            <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
-            <version release="${version}" api="${version}"/>
-            <stability release="${stability}" api="${stability}"/>
-            <lead user="${lead.user}" name="${lead.name}" email="${lead.email}"/>
-            <dependencies>
-                <php minimum_version="5.1.2"/>
-                <pear minimum_version="1.4.3"/>
-            </dependencies>
-            <dirroles key="doc" value="doc"/>
-            <release>
-                <install name="doc/LICENSE" as="LICENSE"/>
-            </release>
-        </d51pearpkg2>
-        <exec command="pear package package/package.xml" dir="./build" />
+        <copy file="./src/LICENSE" todir="./build/package/${product}-${version}"/>
+
+        <pearpkg2 name="${product}" dir="./build/package/${product}-${version}">
+            <option name="outputdirectory" value="./build/package"/>
+            <option name="packagefile" value="package.xml"/>
+            <option name="baseinstalldir" value="/"/>
+
+            <option name="channel" value="__uri"/>
+            <option name="packagetype" value="php"/>
+
+            <option name="notes">${product} web site environment</option>
+            <option name="summary">${product} web site environment</option>
+            <option name="description">${product} makes existing static web site dynamic transparently.</option>
+            <option name="license" value="MIT License"/>
+
+            <mapping name="maintainers">
+                <element>
+                    <element key="handle" value="${lead.user}"/>
+                    <element key="name" value="${lead.name}"/>
+                    <element key="email" value="${lead.email}"/>
+                    <element key="role" value="lead"/>
+                </element>
+            </mapping>
+
+            <option name="version" value="${version}"/>
+            <option name="state" value="${stability}"/>
+            <option name="apiversion" value="${version}"/>
+            <option name="apistability" value="${stability}"/>
+            <option name="releaseversion" value="${version}"/>
+            <option name="releasestability" value="${stability}"/>
+
+            <option name="phpdep" value="5.1.2"/>
+            <option name="pearinstallerdep" value="1.4.6"/>
+
+            <fileset dir="./build/package/${product}-${version}" />
+
+            <mapping name="exceptions">
+                <element key="LICENSE" value="doc"/>
+            </mapping>
+
+        </pearpkg2>
+
+        <tar destfile="build/${product}-${version}.tgz">
+            <fileset dir="./build/package">
+                <include name="${product}-${version}" />
+                <include name="package.xml" />
+            </fileset>
+        </tar>
+
     </target>
 
     <target name="empty-project">
