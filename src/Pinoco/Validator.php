@@ -194,14 +194,19 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function getMessageFor($testName)
     {
-        if (isset($this->_messages[$testName])) {
-            return $this->_messages[$testName];
-        }
-        elseif (isset($this->_tests[$testName])) {
-            return $this->_tests[$testName]['message'];
+        if (is_scalar($testName)) {
+            if (isset($this->_messages[$testName])) {
+                return $this->_messages[$testName];
+            }
+            elseif (isset($this->_tests[$testName])) {
+                return $this->_tests[$testName]['message'];
+            }
+            else {
+                return 'not registered';
+            }
         }
         else {
-            return 'not registered';
+            return 'invalid';
         }
     }
 
