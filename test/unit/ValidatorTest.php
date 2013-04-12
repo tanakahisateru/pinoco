@@ -254,6 +254,12 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($v->result->foo->valid);
         $v->recheck('foo')->is('array')->all('not-empty')->any('in abc,ghi');
         $this->assertTrue($v->result->foo->valid);
+        $v->recheck('foo')->all(
+            array($this, 'isAlphabetical')
+        )->any(
+            array($this, 'isIn_def_ghi')
+        );
+        $this->assertTrue($v->result->foo->valid);
 
         $v = new Pinoco_Validator(array('foo'=>Pinoco_List::fromArray(array("abc", "def"))));
         $v->check('foo')->is('array')->all('alpha')->any('in def,ghi');
@@ -291,5 +297,13 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function filterTrim($str) {
         return trim($str);
+    }
+
+    public function isAlphabetical($str) {
+        return preg_match('/^[A-Za-z_]*$/', $str) > 0;
+    }
+
+    public function isIn_def_ghi($str) {
+        return in_array($str, array('def', 'ghi'));
     }
 }
