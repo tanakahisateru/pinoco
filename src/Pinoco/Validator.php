@@ -242,7 +242,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     {
         $this->_errors = null;
         $this->_values = null;
-        if (isset($methods[$methodName])) {
+        if (is_scalar($methodName) && isset($methods[$methodName])) {
             return array(
                 $methods[$methodName]['callback'],
                 $methods[$methodName]['complex'],
@@ -280,7 +280,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
         }
     }
 
-    private function callMethod($callback, $complex, $params, $exists, $value)
+    private function callMethod($callback, $complex, $params, $exists, $value, $forFilter=false)
     {
         if ($complex) {
             // complex test: full information presented
@@ -288,10 +288,12 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             $args = array($exists, $value);
         }
         else {
-            // simple test: empty always success
-            if (!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false || $value === array())) {
-                // validation must be passed and value is as is.
-                return array(true, $value);
+            if (!$forFilter) {
+                // simple test: empty always success
+                if (!$exists || empty($value) && !($value === "0" || $value === 0 || $value === false || $value === array())) {
+                    // validation must be passed and value is as is.
+                    return array(true, $value);
+                }
             }
             $args = array($value);
         }
@@ -406,7 +408,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
         else {
             return array(
                 true,
-                $this->callMethod($callback, $complex, $params, $exists, $value)
+                $this->callMethod($callback, $complex, $params, $exists, $value, true)
             );
         }
     }
@@ -433,13 +435,13 @@ class Pinoco_Validator extends Pinoco_DynamicVars
             if ($value instanceof Pinoco_List) {
                 $result = new Pinoco_List();
                 foreach ($value as $v) {
-                    $result->push($this->callMethod($callback, $complex, $params, $exists, $v));
+                    $result->push($this->callMethod($callback, $complex, $params, $exists, $v, true));
                 }
             }
             else {
                 $result = array();
                 foreach ($value as $v) {
-                    $result[] = $this->callMethod($callback, $complex, $params, $exists, $v);
+                    $result[] = $this->callMethod($callback, $complex, $params, $exists, $v, true);
                 }
             }
             return array(true, $result);

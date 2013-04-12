@@ -212,6 +212,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("abc", $v->recheck('foo')->filter('trim')->value);
         $this->assertTrue($v->recheck('foo')->filter('trim')->is('max-length 3')->valid);
 
+        $this->assertEquals("abc", $v->recheck('foo')->filter(array($this, 'filterTrim'))->value);
+        $this->assertTrue($v->recheck('foo')->filter(array($this, 'filterTrim'))->is('max-length 3')->valid);
+
         $this->assertEquals("ABC", $v->recheck('foo')->filter('trim')->is('max-length 3')->filter('strtoupper')->value);
         $this->assertEquals(array('foo' => "ABC"), $v->values->toArray());
         $v->check('bar');
@@ -275,8 +278,18 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->recheck('foo')->map('trim');
         $this->assertEquals(array("abc","def"), $v->result->foo->value);
 
+        $v->recheck('foo')->map(array($this, 'filterTrim'));
+        $this->assertEquals(array("abc","def"), $v->result->foo->value);
+
         $v = new Pinoco_Validator(array('foo'=>Pinoco_List::fromArray(array(" abc ", " def "))));
         $v->recheck('foo')->map('trim');
         $this->assertEquals(Pinoco_List::fromArray(array("abc","def")), $v->result->foo->value);
+
+        $v->recheck('foo')->map(array($this, 'filterTrim'));
+        $this->assertEquals(Pinoco_List::fromArray(array("abc","def")), $v->result->foo->value);
+    }
+
+    public function filterTrim($str) {
+        return trim($str);
     }
 }
