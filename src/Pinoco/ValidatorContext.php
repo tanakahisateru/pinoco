@@ -133,12 +133,18 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         }
     }
 
-    private function splitExpression($expression)
+    private function parseExpression($expression)
     {
-        $param = explode(' ', trim($expression));
-        $name = array_shift($param);
-        $param = count($param) == 0 ? null : implode(' ', $param);
-        return array($name, $param);
+        if (is_string($expression) && !empty($expression)) {
+            $param = explode(' ', trim($expression));
+            $name = array_shift($param);
+            $param = count($param) == 0 ? null : implode(' ', $param);
+            return array($name, $param);
+        }
+        else {
+            // $expression is expected to be callable object
+            return array($expression, "");
+        }
     }
 
     /**
@@ -153,7 +159,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        list($testName, $param) = $this->splitExpression($test);
+        list($testName, $param) = $this->parseExpression($test);
         list($result, $value) = $this->_validator->execValidityTest(
             $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
         );
@@ -178,7 +184,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        list($testName, $param) = $this->splitExpression($test);
+        list($testName, $param) = $this->parseExpression($test);
         list($result, $value) = $this->_validator->execValidityTestAll(
             $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
         );
@@ -203,7 +209,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        list($testName, $param) = $this->splitExpression($test);
+        list($testName, $param) = $this->parseExpression($test);
         list($result, $value) = $this->_validator->execValidityTestAny(
             $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
         );
@@ -227,13 +233,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        if (is_scalar($filter)) {
-            list($filterName, $param) = $this->splitExpression($filter);
-        }
-        else {
-            list($filterName, $param) = array($filter, "");
-        }
-
+        list($filterName, $param) = $this->parseExpression($filter);
         list($filtered, $value) = $this->_validator->execFilter(
             $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
         );
@@ -255,12 +255,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         if (!$this->_valid) {
             return $this;
         }
-        if (is_scalar($filter)) {
-            list($filterName, $param) = $this->splitExpression($filter);
-        }
-        else {
-            list($filterName, $param) = array($filter, "");
-        }
+        list($filterName, $param) = $this->parseExpression($filter);
         list($filtered, $value) = $this->_validator->execFilterMap(
             $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
         );
