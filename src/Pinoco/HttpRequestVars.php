@@ -123,8 +123,13 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
                 $this->_pinoco->setcookie(session_name(), '0');
                 $this->_session = empty($_SESSION) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_SESSION);
             }
+            elseif (session_status() === PHP_SESSION_DISABLED) {
+                $this->_session = new Pinoco_Vars();
+            }
             else {
-                @session_start();
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                    session_start();
+                }
                 // fake cookie header
                 $this->_pinoco->sent_headers->push(
                     'Set-Cookie: ' . urlencode(session_name()) . '=' . urlencode(session_id())
