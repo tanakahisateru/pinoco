@@ -109,6 +109,35 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($handled);
     }
+
+    public function testIgnoreingPattern()
+    {
+        $p = $this->testenv->create('/a/b/c');
+
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->pass('/a/b/c', array($handler, 'abc'))
+            ->on('/a/b/d', array($handler, 'abd'))
+            ->wasMatched();
+
+        $this->assertTrue($handled);
+        $this->assertEquals(array(), $handler->callHistory);
+    }
+
+    public function testMultiRoutes()
+    {
+        $p = $this->testenv->create('/a/b/c');
+
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on(array('/a/{b}/b', '/a/{b}/c', '/a/{b}/d'), array($handler, 'a_c'))
+            ->wasMatched();
+
+        $this->assertTrue($handled);
+        $this->assertEquals(array('a_c'=>array('b')), $handler->callHistory);
+    }
 }
 
 class TestRouteHandler

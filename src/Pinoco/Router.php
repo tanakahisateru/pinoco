@@ -19,13 +19,8 @@
  */
 class Pinoco_Router
 {
-    //public $routes;
-
-    /** @var string */
-    protected $path;
-
     /** @var bool */
-    protected $handled;
+    protected $matched;
 
     private $_tmp_params;
 
@@ -33,31 +28,18 @@ class Pinoco_Router
      * Constructor
      *
      * @param Pinoco $pinoco
-     * @param string|null $path
      */
-    public function __construct($pinoco, $path=null)
+    public function __construct($pinoco)
     {
         $this->pinoco = $pinoco;
-
-        if (empty($path)) {
-            // Pinoco::subpath is set when running hook script.
-            // If not, it means taht current flow is out of hook, then
-            // Pinoco::path should be default.
-            $path = $this->pinoco->subpath;
-            if (empty($path)) {
-                $path = $this->pinoco->path;
-            }
-        }
-        $this->path = $path;
-        //$this->routes = array();
-
-        $this->handled = false;
+        $this->matched = false;
     }
 
     /**
      * Routing rules which binds URI path to any callable.
      *
      * '/index'  : Fixed route.
+     * 'index'  : Fixed route in relative path from current hook.
      * '/show/{id}'  : Parametrized one. Such path elements are passed to handler.
      * 'GET: /edit/{id}' or  'POST: /edit/{id}'  : Different HTTP methods can be different routes.
      * '*:*'  : Matches any patterns. Useful to be bound to Pinoco::notfound()  or forbidden().
@@ -65,51 +47,68 @@ class Pinoco_Router
      * Specified handler is called immediately if the route matches. Please note that
      * this method is not a definition but invoker.
      *
-     * @param string $route
+     * @param string|array $route
      * @param callable $handler
      * @return $this
      */
     public function on($route, $handler)
     {
-        if ($this->handled) {
+        if ($this->matched) {
             return $this;
         }
 
-        $delimpos = strpos($route, ':');
-        if ($delimpos !== false) {
-            $method = strtoupper(trim(substr($route, 0, $delimpos)));
-            $path = trim(substr($route, $delimpos + 1));
-        }
-        else {
-            $method = '*';
-            $path = $route;
-        }
-
-        if ($method != '*' && $method != $this->pinoco->request->method) {
+        if (is_array($route)) {
+            foreach ($route as $r) {
+                $this->on($r, $handler);
+            }
             return $this;
         }
 
-        $this->_tmp_params = array();
-        $pathregexp = $path;
-        $pathregexp = preg_replace('/\//', '\/', $pathregexp);
-        $pathregexp = preg_replace('/\+/', '\+', $pathregexp);
-        $pathregexp = preg_replace('/\*+/', '.+?', $pathregexp);
-        $pathregexp = preg_replace_callback('/\{(.*?)\}/', array($this, '__each_path_args'), $pathregexp);
+        list($method, $path) = $this->extractRoute($route);
 
-        if (preg_match('/^' . $pathregexp . '$/', $this->path, $matches)) {
-            array_shift($matches);
-            call_user_func_array($handler, $matches);
-            $this->handled = true;
+        if ($this->matchesWithMethod($method)) {
+            return $this;
+        }
+
+        $matchParams = $this->matchesWithPath($path);
+        if (!is_null($matchParams)) {
+            call_user_func_array($handler, $matchParams);
+            $this->matched = true;
         }
 
         return $this;
     }
 
-    public function __each_path_args($matches)
+    /**
+     * Specified route is ignored and delegated to the next script step.
+     * This method is useful to ignore matching patterns below. (e.g. 'z*:*')
+     *
+     * @param string|array $route
+     * @return $this
+     */
+    public function pass($route)
     {
-        $name = $matches[1];
-        $this->_tmp_params[] = $name;
-        return '([^\/]+?)';
+        if ($this->matched) {
+            return $this;
+        }
+
+        if (is_array($route)) {
+            array_map(array($this, 'pass'), $route);
+            return $this;
+        }
+
+        list($method, $path) = $this->extractRoute($route);
+
+        if ($this->matchesWithMethod($method)) {
+            return $this;
+        }
+
+        $matchParams = $this->matchesWithPath($path);
+        if (!is_null($matchParams)) {
+            $this->matched = true;
+        }
+
+        return $this;
     }
 
     /**
@@ -119,6 +118,71 @@ class Pinoco_Router
      */
     public function wasMatched()
     {
-        return $this->handled;
+        return $this->matched;
+    }
+
+    /**
+     * @param string $route
+     * @return array
+     */
+    private function extractRoute($route)
+    {
+        $delimpos = strpos($route, ':');
+        if ($delimpos !== false) {
+            $method = strtoupper(trim(substr($route, 0, $delimpos)));
+            $path = trim(substr($route, $delimpos + 1));
+            return array($method, $path);
+        } else {
+            $method = '*';
+            $path = trim($route);
+            return array($method, $path);
+        }
+    }
+
+    /**
+     * @param $path
+     * @return array|null
+     */
+    private function matchesWithPath($path)
+    {
+        if (preg_match('|^/|', $path)) {
+            $uri = $this->pinoco->path;
+        } else {
+            // Pinoco::subpath is set when running hook script.
+            // If not, it means taht current flow is out of hook, then
+            // Pinoco::path should be default instead.
+            $uri = !is_null($this->pinoco->subpath) ? $this->pinoco->subpath : $this->pinoco->path;
+        }
+
+        $this->_tmp_params = array();
+        $pathregexp = $path;
+        $pathregexp = preg_replace('/\|/', '\|', $pathregexp);
+        $pathregexp = preg_replace('/\+/', '\+', $pathregexp);
+        $pathregexp = preg_replace('/\*+/', '.+?', $pathregexp);
+        $pathregexp = preg_replace_callback('/\{(.*?)\}/', array($this, '__each_path_args'), $pathregexp);
+
+        if (preg_match('|^' . $pathregexp . '$|', $uri, $matches)) {
+            array_shift($matches);
+            return $matches;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public function __each_path_args($matches)
+    {
+        $name = $matches[1];
+        $this->_tmp_params[] = $name;
+        return '([^/]+?)';
+    }
+
+    /**
+     * @param $method
+     * @return bool
+     */
+    private function matchesWithMethod($method)
+    {
+        return $method != '*' && $method != $this->pinoco->request->method;
     }
 }
