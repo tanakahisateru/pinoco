@@ -22,14 +22,15 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $p = $this->testenv->create('/a/b/d');
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('/a/b/c', array($h, 'abc'))
-            ->on('/a/b/d', array($h, 'abd'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('/a/b/c', array($handler, 'abc'))
+            ->on('/a/b/d', array($handler, 'abd'))
+            ->isMatched();
 
-        $this->assertTrue($hadled);
-        $this->assertEquals(array('abd'=>array()), $h->callHistory);
+        $this->assertTrue($handled);
+        $this->assertEquals(array('abd'=>array()), $handler->callHistory);
     }
 
     public function testMethodRouting()
@@ -37,70 +38,76 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $p = $this->testenv->create('/a/b/c');
         $p->request->method = 'POST';
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('GET: /a/b/c', array($h, 'get_abc'))
-            ->on('POST:/a/b/c', array($h, 'post_abc'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('GET: /a/b/c', array($handler, 'get_abc'))
+            ->on('POST:/a/b/c', array($handler, 'post_abc'))
+            ->isMatched();
 
-        $this->assertTrue($hadled);
-        $this->assertEquals(array('post_abc'=>array()), $h->callHistory);
+        $this->assertTrue($handled);
+        $this->assertEquals(array('post_abc'=>array()), $handler->callHistory);
     }
 
     public function testWildCardRouting()
     {
         $p = $this->testenv->create('/a/b/c');
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('/a/b/d', array($h, 'abd'))
-            ->on('*', array($h, 'notfound'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('/a/b/d', array($handler, 'abd'))
+            ->on('*', array($handler, 'notfound'))
+            ->isMatched();
 
-        $this->assertTrue($hadled);
-        $this->assertEquals(array('notfound'=>array()), $h->callHistory);
+        $this->assertTrue($handled);
+        $this->assertEquals(array('notfound'=>array()), $handler->callHistory);
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('/a/b/*', array($h, 'ab_'))
-            ->on('*', array($h, 'notfound'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('/a/b/*', array($handler, 'ab_'))
+            ->on('*', array($handler, 'notfound'))
+            ->isMatched();
 
-        $this->assertTrue($hadled);
-        $this->assertEquals(array('ab_'=>array()), $h->callHistory);
+        $this->assertTrue($handled);
+        $this->assertEquals(array('ab_'=>array()), $handler->callHistory);
     }
 
     public function testPassingParameters()
     {
         $p = $this->testenv->create('/a/b/c');
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('/a/{b}/{c}', array($h, 'a'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('/a/{b}/{c}', array($handler, 'a'))
+            ->isMatched();
 
-        $this->assertTrue($hadled);
-        $this->assertEquals(array('a'=>array('b', 'c')), $h->callHistory);
+        $this->assertTrue($handled);
+        $this->assertEquals(array('a'=>array('b', 'c')), $handler->callHistory);
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('/a/{b}/c', array($h, 'a_c'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('/a/{b}/c', array($handler, 'a_c'))
+            ->isMatched();
 
-        $this->assertTrue($hadled);
-        $this->assertEquals(array('a_c'=>array('b')), $h->callHistory);
+        $this->assertTrue($handled);
+        $this->assertEquals(array('a_c'=>array('b')), $handler->callHistory);
     }
 
     public function testMissingRoute()
     {
         $p = $this->testenv->create('/a/b/d');
 
-        $h = new TestRouteHandler();
-        $r = (new Pinoco_Router($p))
-            ->on('/a/b/c', array($h, 'abc'));
-        $hadled = $r->isMatched();
+        $handler = new TestRouteHandler();
+        $router = new Pinoco_Router($p);
+        $handled = $router
+            ->on('/a/b/c', array($handler, 'abc'))
+            ->isMatched();
 
-        $this->assertFalse($hadled);
+        $this->assertFalse($handled);
     }
 }
 
