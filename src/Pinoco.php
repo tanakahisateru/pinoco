@@ -59,7 +59,7 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * @property-read string $script  Current hook script
  * @property-read Pinoco_List $activity  Activity history of hook scripts
  * @property-read Pinoco_List $sent_headers  Sent headers via Pinoco
- * @property-read string $subpath Sub path under current hook script
+ * @property-read string|null $subpath Sub path under current hook script
  * @property-read Pinoco_List $pathargs Path elements matches _default[.*] hooks
  * @property string $directory_index Space separated directory index files(like Apache)
  * @property string $page         Template file to be rendered
@@ -84,7 +84,7 @@ class Pinoco extends Pinoco_DynamicVars
     private $_script;    // R string
     private $_activity;  // R list
     private $_sent_headers; //R list
-    private $_subpath;   // R string
+    private $_subpath;   // R string or null
     private $_pathargs;  // R list
     private $_directory_index;  // R/W string
 
@@ -238,7 +238,7 @@ class Pinoco extends Pinoco_DynamicVars
         $this->_script = null;
         $this->_activity = self::newList();
         $this->_sent_headers = self::newList();
-        $this->_subpath = "";
+        $this->_subpath = null;
         $this->_pathargs = self::newList();
 
         $this->_renderers = self::newVars();
@@ -493,7 +493,7 @@ class Pinoco extends Pinoco_DynamicVars
     /**
      * Partial path under current script.
      *
-     * @return string
+     * @return string|null
      */
     public function get_subpath() { return $this->_subpath; }
 
@@ -1357,10 +1357,10 @@ class Pinoco extends Pinoco_DynamicVars
                 $this->subscript($script);
             }
             catch (Pinoco_FlowControl $ex) {
-                $this->_subpath = "";
+                $this->_subpath = null;
                 throw $ex;
             }
-            $this->_subpath = "";
+            $this->_subpath = null;
             return true;
         }
         else {
