@@ -754,6 +754,11 @@ class Pinoco extends Pinoco_DynamicVars
         $this->terminate();
     }
 
+    public function router()
+    {
+        return new Pinoco_Router($this);
+    }
+
     /**
      * Utility to get the parent path.
      *
