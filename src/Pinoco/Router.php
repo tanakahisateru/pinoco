@@ -117,7 +117,7 @@ class Pinoco_Router
      *
      * @return bool
      */
-    public function isMatched()
+    public function wasMatched()
     {
         return $this->handled;
     }

@@ -27,7 +27,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $handled = $router
             ->on('/a/b/c', array($handler, 'abc'))
             ->on('/a/b/d', array($handler, 'abd'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertTrue($handled);
         $this->assertEquals(array('abd'=>array()), $handler->callHistory);
@@ -43,7 +43,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $handled = $router
             ->on('GET: /a/b/c', array($handler, 'get_abc'))
             ->on('POST:/a/b/c', array($handler, 'post_abc'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertTrue($handled);
         $this->assertEquals(array('post_abc'=>array()), $handler->callHistory);
@@ -58,7 +58,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $handled = $router
             ->on('/a/b/d', array($handler, 'abd'))
             ->on('*', array($handler, 'notfound'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertTrue($handled);
         $this->assertEquals(array('notfound'=>array()), $handler->callHistory);
@@ -68,7 +68,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $handled = $router
             ->on('/a/b/*', array($handler, 'ab_'))
             ->on('*', array($handler, 'notfound'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertTrue($handled);
         $this->assertEquals(array('ab_'=>array()), $handler->callHistory);
@@ -82,7 +82,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $router = new Pinoco_Router($p);
         $handled = $router
             ->on('/a/{b}/{c}', array($handler, 'a'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertTrue($handled);
         $this->assertEquals(array('a'=>array('b', 'c')), $handler->callHistory);
@@ -91,7 +91,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $router = new Pinoco_Router($p);
         $handled = $router
             ->on('/a/{b}/c', array($handler, 'a_c'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertTrue($handled);
         $this->assertEquals(array('a_c'=>array('b')), $handler->callHistory);
@@ -105,7 +105,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $router = new Pinoco_Router($p);
         $handled = $router
             ->on('/a/b/c', array($handler, 'abc'))
-            ->isMatched();
+            ->wasMatched();
 
         $this->assertFalse($handled);
     }
