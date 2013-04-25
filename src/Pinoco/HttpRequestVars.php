@@ -158,6 +158,11 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         return $this->server->get('REQUEST_METHOD', null);
     }
 
+    public function set_method($method)
+    {
+        $this->server->set('REQUEST_METHOD', $method);
+    }
+
     public function isHead()
     {
         return $this->method == 'HEAD';
