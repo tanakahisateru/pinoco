@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html metal:define-macro="all">
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:define-macro="all">
 <head>
 <meta charset="utf-8" />
 <title>${title} - Pinoco Tutorial</title>
@@ -21,7 +22,7 @@
     <ul class="hnav">
         <li><a href="index.html" tal:attributes="href url:/">Home</a></li>
         <li><a href="sub/index.html" tal:attributes="href url:/sub/">Sub</a></li>
-        <li><a href="sibling/sibling.html" tal:attributes="href url:/sub/sibling.html">Sibling of Sub</a></li>
+        <li><a href="sub/sibling.html" tal:attributes="href url:/sub/sibling.html">Sibling of Sub</a></li>
     </ul>
     
     <div class="subpane"><tal:block metal:define-slot="subpane">
