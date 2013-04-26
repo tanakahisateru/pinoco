@@ -139,13 +139,12 @@ class Pinoco_PDOWrapper
     /**
      * Alias to exec().
      *
-     * @param mixed $args...
+     * @param mixed $args,...
      * @return int
      */
-    public function execute(/*[$args[, ...]]*/)
+    public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        $args = func_get_args();
-        return call_user_func_array(array($this, 'exec'), $args);
+        return call_user_func_array(array($this, 'exec'), func_get_args());
     }
 
     /**

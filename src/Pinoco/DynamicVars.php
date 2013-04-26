@@ -29,15 +29,14 @@ class Pinoco_DynamicVars extends Pinoco_Vars
      * @return mixed
      * @see src/Pinoco/Pinoco_Vars#get($name)
      */
-    public function get($name /*[, $default]*/)
+    public function get($name, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
         if (method_exists($this, 'get_' . $name)) {
             return call_user_func(array($this, 'get_' . $name));
         }
         else {
-            if (func_num_args() > 1) {
-                $a1 = func_get_arg(1);
-                return parent::get($name, $a1);
+            if (Pinoco_OptionalParam::isSpecifiedBy($default)) {
+                return parent::get($name, $default);
             }
             else {
                 return parent::get($name);

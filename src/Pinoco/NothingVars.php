@@ -40,9 +40,10 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * Returns itself as globally unique NothingVars.
      *
      * @param string $name
+     * @param mixed $default
      * @return Pinoco_NothingVars
      */
-    public function get($name)
+    public function get($name, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
         return $this;
     }

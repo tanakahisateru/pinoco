@@ -368,11 +368,11 @@ class Pinoco extends Pinoco_DynamicVars
      *
      * @deprecated
      * @param string $class
-     * @param mixed $args ,...
+     * @param mixed $args,...
      * @throws InvalidArgumentException
      * @return object
      */
-    public static function newObj($class /*[, $args[, ...]]*/)
+    public static function newObj($class, $args=Pinoco_OptionalParam::UNSPECIFIED)
     {
         $seppos = strrpos($class, '/');
         if ($seppos !== false) {

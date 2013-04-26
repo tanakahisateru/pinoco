@@ -72,7 +72,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed $default
      * @return mixed
      */
-    public function get($name /*[, $default]*/)
+    public function get($name, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
         if (array_key_exists($name, $this->_vars)) {
             $r = $this->_vars[$name];
@@ -82,7 +82,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
             return $r;
         }
         else {
-            return func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+            return Pinoco_OptionalParam::isSpecifiedBy($default) ? $default : $this->_default_val;
         }
     }
 
@@ -93,9 +93,9 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed $default
      * @return mixed
      */
-    public function rget($expression /*[, $default]*/)
+    public function rget($expression, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        $default = func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+        $default = Pinoco_OptionalParam::isSpecifiedBy($default) ? $default : $this->_default_val;
         $es = explode('/', $expression);
         $v = $this;
         while (count($es) > 0) {

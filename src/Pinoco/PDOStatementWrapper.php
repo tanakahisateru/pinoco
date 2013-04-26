@@ -65,24 +65,21 @@ class Pinoco_PDOStatementWrapper
      *     array incompatible:  applied as single argument.
      *   Multiple arguments:    applied to params as is. (only sequential)
      *
-     * @param mixed $args...
+     * @param mixed $args,...
      * @return int
      */
-    public function execute(/*[$args[, ...]]*/)
+    public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        if (func_num_args() == 0) {
+
+        if (!Pinoco_OptionalParam::isSpecifiedBy($args)) {
             $args = array();
         }
         elseif (func_num_args() == 1) {
-            $a = func_get_arg(0);
-            if ($a instanceof Pinoco_Vars || $a instanceof Pinoco_List) {
-                $args = $a->toArray();
+            if ($args instanceof Pinoco_Vars || $args instanceof Pinoco_List) {
+                $args = $args->toArray();
             }
-            elseif (is_array($a)) {
-                $args = $a;
-            }
-            else {
-                $args = array($a);
+            elseif (!is_array($args)) {
+                $args = array($args);
             }
         }
         else {
@@ -95,25 +92,23 @@ class Pinoco_PDOStatementWrapper
     /**
      * Alias to execute.
      *
-     * @param mixed $args...
+     * @param mixed $args,...
      * @return int
      */
-    public function exec(/*[$args[, ...]]*/)
+    public function exec($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        $args = func_get_args();
-        return call_user_func_array(array($this, 'execute'), $args);
+        return call_user_func_array(array($this, 'execute'), func_get_args());
     }
 
     /**
      * Calls execute and returns self.
      *
-     * @param mixed $args...
+     * @param mixed $args,...
      * @return Pinoco_PDOStatementWrapper
      */
-    public function query(/*[$args[, ...]]*/)
+    public function query($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        $args = func_get_args();
-        call_user_func_array(array($this, 'execute'), $args);
+        call_user_func_array(array($this, 'execute'), func_get_args());
         return $this;
     }
 

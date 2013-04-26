@@ -197,11 +197,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param int $length
      * @return Pinoco_List
      */
-    public function slice($offset /*[, $length]*/)
+    public function slice($offset, $length=null)
     {
-        if (func_num_args() >= 2) {
-            $a1 = func_get_arg(1);
-            return self::fromArray(array_slice($this->_arr, $offset, $a1));
+        if (!is_null($length)) {
+            return self::fromArray(array_slice($this->_arr, $offset, $length));
         }
         else {
             return self::fromArray(array_slice($this->_arr, $offset));
@@ -216,15 +215,9 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param array $replacement
      * @return Pinoco_List;
      */
-    public function splice($offset, $length /*[, $replacement]*/)
+    public function splice($offset, $length=null, $replacement=null)
     {
-        if (func_num_args() >= 3) {
-            $a2 = func_get_arg(2);
-            return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
-        }
-        else {
-            return self::fromArray(array_splice($this->_arr, $offset, $length));
-        }
+        return self::fromArray(array_splice($this->_arr, $offset, $length, $replacement));
     }
 
     /**
@@ -272,13 +265,13 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed $default
      * @return mixed
      */
-    public function get($idx /*[, $default]*/)
+    public function get($idx, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
         if (isset($this->_arr[$idx])) {
             return $this->_arr[$idx];
         }
         else {
-            return func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+            return Pinoco_OptionalParam::isSpecifiedBy($default) ? $default : $this->_default_val;
         }
     }
 
@@ -289,9 +282,9 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed $default
      * @return mixed
      */
-    public function rget($expression /*[, $default]*/)
+    public function rget($expression, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        $default = func_num_args() > 1 ? func_get_arg(1) : $this->_default_val;
+        $default = Pinoco_OptionalParam::isSpecifiedBy($default) ? $default : $this->_default_val;
         $es = explode('/', $expression);
         $v = $this;
         while (count($es) > 0) {
@@ -333,10 +326,11 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed $default
      * @return void
      */
-    public function set($idx, $value /*[, $default]*/)
+    public function set($idx, $value, $default=Pinoco_OptionalParam::UNSPECIFIED)
     {
+        $default = Pinoco_OptionalParam::isSpecifiedBy($default) ? $default : $this->_default_val;
         for ($i = count($this->_arr); $i < $idx; $i++) {
-            $this->_arr[$i] = func_num_args() > 2 ? func_get_arg(2) : $this->_default_val; //default??
+            $this->_arr[$i] = $default;
         }
         $this->_arr[$idx] = $value;
     }
