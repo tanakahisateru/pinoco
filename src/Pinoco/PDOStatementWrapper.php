@@ -70,20 +70,14 @@ class Pinoco_PDOStatementWrapper
      */
     public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-
-        if (!Pinoco_OptionalParam::isSpecifiedBy($args)) {
-            $args = array();
-        }
-        elseif (func_num_args() == 1) {
+        $args = Pinoco_OptionalParam::trim(func_get_args());
+        if (count($args) == 1) {
             if ($args instanceof Pinoco_Vars || $args instanceof Pinoco_List) {
                 $args = $args->toArray();
             }
             elseif (!is_array($args)) {
                 $args = array($args);
             }
-        }
-        else {
-            $args = func_get_args();
         }
         $this->_stmt->execute($args);
         return $this->rowCount();
@@ -97,7 +91,7 @@ class Pinoco_PDOStatementWrapper
      */
     public function exec($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        return call_user_func_array(array($this, 'execute'), func_get_args());
+        return call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim(func_get_args()));
     }
 
     /**
@@ -108,7 +102,7 @@ class Pinoco_PDOStatementWrapper
      */
     public function query($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        call_user_func_array(array($this, 'execute'), func_get_args());
+        call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim(func_get_args()));
         return $this;
     }
 

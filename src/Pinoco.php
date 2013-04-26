@@ -381,7 +381,7 @@ class Pinoco extends Pinoco_DynamicVars
             require_once $srcfile;
         }
         if (class_exists($class)) {
-            $argsvals = func_get_args();
+            $argsvals = Pinoco_OptionalParam::trim(func_get_args());
             array_shift($argsvals);
             $argsvars = array();
             for ($i = 0; $i < count($argsvals); $i++) {
