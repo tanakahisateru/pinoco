@@ -197,7 +197,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param int $length
      * @return Pinoco_List
      */
-    public function slice($offset /*[, $length]*/) {
+    public function slice($offset /*[, $length]*/)
+    {
         if (func_num_args() >= 2) {
             $a1 = func_get_arg(1);
             return self::fromArray(array_slice($this->_arr, $offset, $a1));
@@ -215,7 +216,8 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
      * @param array $replacement
      * @return Pinoco_List;
      */
-    public function splice($offset, $length /*[, $replacement]*/) { // $replacement
+    public function splice($offset, $length /*[, $replacement]*/)
+    {
         if (func_num_args() >= 3) {
             $a2 = func_get_arg(2);
             return self::fromArray(array_splice($this->_arr, $offset, $length, $a2));
