@@ -292,7 +292,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
             if ($name === "") {
                 continue;
             }
-            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars) {
+                $v = $v->get($name, $default);
+            }
+            elseif ($v instanceof Pinoco_List) {
                 $v = $v->get($name, $default);
             }
             elseif (is_object($v)) {
@@ -382,7 +385,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
         if ($depth !== false && $depth == 0) { return $this; }
         $arr = array();
         foreach ($this->_arr as $i=>$v) {
-            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars) {
+                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+            }
+            elseif ($v instanceof Pinoco_List) {
                 $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
             }
             $arr[$i] = $v;

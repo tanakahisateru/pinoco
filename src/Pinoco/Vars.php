@@ -103,7 +103,10 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
             if ($name === "") {
                 continue;
             }
-            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars) {
+                $v = $v->get($name, $default);
+            }
+            elseif ($v instanceof Pinoco_List) {
                 $v = $v->get($name, $default);
             }
             elseif (is_object($v)) {
@@ -372,7 +375,10 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
         $arr = array();
         foreach ($this->keys() as $k) {
             $v = $this->get($k);
-            if ($v instanceof Pinoco_Vars || $v instanceof Pinoco_List) {
+            if ($v instanceof Pinoco_Vars) {
+                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+            }
+            elseif ($v instanceof Pinoco_List) {
                 $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
             }
             $arr[$k] = $v;

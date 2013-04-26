@@ -243,10 +243,10 @@ class Pinoco extends Pinoco_DynamicVars
 
         $this->_renderers = self::newVars();
         $this->_renderers->setDefault(new Pinoco_NullRenderer($this));
-        $this->_renderers->html = new Pinoco_TALRenderer($this);
-        $this->_renderers->php  = new Pinoco_NativeRenderer($this);
+        $this->_renderers->set('html', new Pinoco_TALRenderer($this));
+        $this->_renderers->set('php', new Pinoco_NativeRenderer($this));
 
-        $this->_page = "<default>";  // To be resolved automatically
+        $this->_page = "<"."default>";  // To be resolved automatically
 
         $this->_autolocal = self::newVars();
 
@@ -1516,7 +1516,7 @@ class Pinoco extends Pinoco_DynamicVars
             //render
             if (!$this->_manually_rendered && $this->_page) {
                 /* @var $fename string */
-                if ($this->_page != "<default>") {
+                if ($this->_page != "<"."default>") {
                     $pagepath = $this->resolvePath($this->_page);
                     $page = $this->_page_from_path_with_directory_index($pagepath, $processed ? $fename : false);
                 }
@@ -1558,7 +1558,7 @@ class Pinoco extends Pinoco_DynamicVars
                         $this->notfound();
                     }
                 }
-                elseif ($this->_page != "<default>") {
+                elseif ($this->_page != "<"."default>") {
                     // page specified in hook-script but not found it
                     $this->error(500, "Internal Server Error", "File not found: " . $this->_page);
                 }
