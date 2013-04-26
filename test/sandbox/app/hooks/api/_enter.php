@@ -1,5 +1,5 @@
 <?php
-/** @var $this Pinoco */
+/* @var $this Pinoco */
 
 $self = $this;
 $data = array(

@@ -236,7 +236,9 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable
         if (array_key_exists($name, $this->_vars) &&
             $this->_vars[$name] instanceof Pinoco_ValueProxy
         ) {
-            $this->_vars[$name]->dirty();
+            /* @var $proxy Pinoco_ValueProxy */
+            $proxy = $this->_vars[$name];
+            $proxy->dirty();
         }
     }
 

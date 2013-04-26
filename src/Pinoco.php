@@ -393,6 +393,7 @@ class Pinoco extends Pinoco_DynamicVars
         }
         else {
             if ($seppos !== false) {
+                /* @var $srcfile string */
                 throw new InvalidArgumentException($class . " may not be defined on " . $srcfile . ".");
             }
             else {
@@ -1026,6 +1027,7 @@ class Pinoco extends Pinoco_DynamicVars
         $page = $this->resolvePath($page);
         $ext = pathinfo($page, PATHINFO_EXTENSION);
         if ($ext && is_file($this->_basedir . '/' . $page) && isset($this->_renderers[$ext])) {
+            /* @var $renderer Pinoco_Renderer */
             $renderer = $this->_renderers[$ext];
             $renderer->prepareAndRender($page);
         }
@@ -1342,7 +1344,10 @@ class Pinoco extends Pinoco_DynamicVars
         }
         catch (Pinoco_FlowControl $ex) {
             $this->_script = $prev_script;
-            throw $ex;
+            if ($ex instanceof Pinoco_FlowControl) { // Avoid IDE inspection warning of "unknown exception thrown".
+                throw $ex;
+            }
+            return null;
         }
     }
 
@@ -1363,7 +1368,9 @@ class Pinoco extends Pinoco_DynamicVars
             }
             catch (Pinoco_FlowControl $ex) {
                 $this->_subpath = null;
-                throw $ex;
+                if ($ex instanceof Pinoco_FlowControl) { // Avoid IDE inspection warning of "unknown exception thrown".
+                    throw $ex;
+                }
             }
             $this->_subpath = null;
             return true;
@@ -1508,7 +1515,7 @@ class Pinoco extends Pinoco_DynamicVars
 
             //render
             if (!$this->_manually_rendered && $this->_page) {
-
+                /* @var $fename string */
                 if ($this->_page != "<default>") {
                     $pagepath = $this->resolvePath($this->_page);
                     $page = $this->_page_from_path_with_directory_index($pagepath, $processed ? $fename : false);
@@ -1570,6 +1577,7 @@ class Pinoco extends Pinoco_DynamicVars
 
             // leave (All flow control exceptions work as skip exception)
             try {
+                /* @var $hookbase string */
                 $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
                 $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
             }
@@ -1595,6 +1603,7 @@ class Pinoco extends Pinoco_DynamicVars
         // DON'T CLEAR self::$_current_instance = null;
 
         if ($this->testing) {
+            /* @var $all_output_while_running string */
             return $all_output_while_running;
         }
 

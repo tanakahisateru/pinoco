@@ -32,6 +32,7 @@ class Pinoco_PAL_Attr extends PHPTAL_Php_Attribute_TAL_Attributes
         $codewriter->doSetVar('$ctx->attr', 'array()');
         $attrs = $this->phpelement->getAttributeNodes();
         foreach ($attrs as $attr) {
+            /* @var PHPTAL_Dom_Attr $attr */
             $qname = $attr->getQualifiedName();
             $default_attr = $attr->getValueEscaped();
             $codewriter->doSetVar('$ctx->attr[\'' . $qname . '\']', '\''. addcslashes($default_attr, "\\$\'\"\\\0\n\r\t") . '\'');

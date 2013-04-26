@@ -374,7 +374,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Exports properties to Array recursively.
      *
-     * @param int $depth
+     * @param int|bool $depth
      * @return array
      */
     public function toArrayRecurse($depth=false)
