@@ -144,7 +144,8 @@ class Pinoco_PDOWrapper
      */
     public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        return call_user_func_array(array($this, 'exec'), Pinoco_OptionalParam::trim(func_get_args()));
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'exec'), Pinoco_OptionalParam::trim($args));
     }
 
     /**

@@ -70,7 +70,8 @@ class Pinoco_PDOStatementWrapper
      */
     public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        $args = Pinoco_OptionalParam::trim(func_get_args());
+        $args = func_get_args();
+        $args = Pinoco_OptionalParam::trim($args);
         if (count($args) == 1) {
             if ($args instanceof Pinoco_Vars) {
                 $args = $args->toArray();
@@ -94,7 +95,8 @@ class Pinoco_PDOStatementWrapper
      */
     public function exec($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        return call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim(func_get_args()));
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim($args));
     }
 
     /**
@@ -105,7 +107,8 @@ class Pinoco_PDOStatementWrapper
      */
     public function query($args=Pinoco_OptionalParam::UNSPECIFIED)
     {
-        call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim(func_get_args()));
+        $args = func_get_args();
+        call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim($args));
         return $this;
     }
 
