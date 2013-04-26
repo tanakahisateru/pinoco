@@ -33,7 +33,7 @@ class Pinoco_PAL_ReplaceNl2br extends PHPTAL_Php_Attribute_TAL_Replace
                 $codewriter->pushCode('echo nl2br('.$codewriter->escapeCode($code).')');
             }
             else {
-                $codewriter->pushCode('echo nl2br('.$this->stringifyCode($this->interpolateHTML($code)).')');
+                $codewriter->pushCode('echo nl2br('.$codewriter->stringifyCode($codewriter->interpolateHTML($code)).')');
             }
         }
     }
