@@ -290,7 +290,7 @@ class Pinoco extends Pinoco_DynamicVars
                     break;
                 case 'php':
                     $source = require $file;
-                    if (!(is_array($source) || is_object($source) && ($source instanceof Pinoco_Vars || $source instanceof Pinoco_List))) {
+                    if (!(is_array($source) || is_object($source) && ($source instanceof Pinoco_ArrayConvertible))) {
                         throw new InvalidArgumentException('Can\'t load config file: ' . $source);
                     }
                     break;
