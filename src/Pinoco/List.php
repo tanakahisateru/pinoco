@@ -69,11 +69,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      * @param mixed $value,...
      * @return void
      */
-    public function push($value /*[, $value1[, ...]]*/)
+    public function push($value)
     {
-        $n = func_num_args();
-        for ($i = 0; $i < $n; $i++) {
-            $a = func_get_arg($i);
+        $args = func_get_args();
+        foreach ($args as $a) {
             array_push($this->_arr, $a);
         }
     }
@@ -94,11 +93,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      * @param mixed $value,...
      * @return void
      */
-    public function unshift($value /*[, $value1[, ...]]*/)
+    public function unshift($value)
     {
-        $n = func_num_args();
-        for ($i = 0; $i < $n; $i++) {
-            $a = func_get_arg($i);
+        $args = func_get_args();
+        foreach ($args as $a) {
             array_unshift($this->_arr, $a);
         }
     }
@@ -116,15 +114,14 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Concatenates another iterative object.
      *
-     * @param mixed $source
+     * @param mixed $source,...
      * @return void
      */
-    public function concat($source /*[, $source1[, ...]]*/)
+    public function concat($source)
     {
-        $n = func_num_args();
-        for ($i = 0; $i < $n; $i++) {
-            $arg = func_get_arg($i);
-            foreach ($arg as $e) {
+        $args = func_get_args();
+        foreach ($args as $a) {
+            foreach ($a as $e) {
                 array_push($this->_arr, $e);
             }
         }
@@ -224,10 +221,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      * Inserts another.
      *
      * @param int $offset
-     * @param mixed $value
+     * @param mixed $value,...
      * @return void
      */
-    public function insert($offset, $value /*[, $value1[, ...]]*/)
+    public function insert($offset, $value)
     {
         $args = func_get_args();
         array_shift($args);
