@@ -52,4 +52,22 @@ interface Pinoco_ArrayConvertible
      * @return array
      */
     public function toArrayRecurse($depth=false);
+
+    /**
+     * Returns value or default by key.
+     *
+     * @param mixed $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get($key, $default=Pinoco_OptionalParam::UNSPECIFIED);
+
+    /**
+     * Returns a value or default by tree expression.
+     *
+     * @param string $expression
+     * @param mixed $default
+     * @return mixed
+     */
+    public function rget($expression, $default=Pinoco_OptionalParam::UNSPECIFIED);
 }
