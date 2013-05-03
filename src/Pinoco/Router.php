@@ -144,7 +144,7 @@ class Pinoco_Router
 
     /**
      * @param $path
-     * @return array|null
+     * @return array
      */
     private function matchesWithPath($path)
     {

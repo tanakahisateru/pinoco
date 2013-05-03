@@ -59,7 +59,7 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  * @property-read string $script  Current hook script
  * @property-read Pinoco_List $activity  Activity history of hook scripts
  * @property-read Pinoco_List $sent_headers  Sent headers via Pinoco
- * @property-read string|null $subpath Sub path under current hook script
+ * @property-read string $subpath Sub-path under current hook script
  * @property-read Pinoco_List $pathargs Path elements matches _default[.*] hooks
  * @property string $directory_index Space separated directory index files(like Apache)
  * @property string $page         Template file to be rendered
@@ -494,7 +494,7 @@ class Pinoco extends Pinoco_DynamicVars
     /**
      * Partial path under current script.
      *
-     * @return string|null
+     * @return string
      */
     public function get_subpath() { return $this->_subpath; }
 
@@ -828,7 +828,7 @@ class Pinoco extends Pinoco_DynamicVars
      *
      * @param string $string
      * @param bool $replace
-     * @param int|null $http_response_code
+     * @param int $http_response_code
      * @return bool
      */
     public function header($string, $replace=true, $http_response_code=null)
@@ -874,10 +874,10 @@ class Pinoco extends Pinoco_DynamicVars
      * PHP's setcookie function wrapper.
      *
      * @param string $name
-     * @param string|null $value
+     * @param string $value
      * @param int $expire
-     * @param string|null $path
-     * @param string|null $domain
+     * @param string $path
+     * @param string $domain
      * @param bool $secure
      * @param bool $httponly
      * @return bool

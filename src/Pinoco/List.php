@@ -346,7 +346,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Exports elements to Array.
      *
-     * @param array|null $modifier
+     * @param array $modifier
      * @return array
      */
     public function toArray($modifier=null)
@@ -371,16 +371,16 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Exports properties to Array recursively.
      *
-     * @param int|bool $depth
+     * @param int $depth
      * @return array
      */
-    public function toArrayRecurse($depth=false)
+    public function toArrayRecurse($depth=null)
     {
-        if ($depth !== false && $depth == 0) { return $this; }
+        if ($depth !== null && $depth == 0) { return $this; }
         $arr = array();
         foreach ($this->_arr as $i=>$v) {
             if ($v instanceof Pinoco_ArrayConvertible) {
-                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+                $v = $v->toArrayRecurse($depth !== null ? $depth - 1 : null);
             }
             $arr[$i] = $v;
         }

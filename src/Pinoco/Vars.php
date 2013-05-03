@@ -342,12 +342,12 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Exports properties to Array.
      *
-     * @param array|boolean $filter
+     * @param array $filter
      * @param mixed $default
      * @param string $modifier
      * @return array
      */
-    public function toArray($filter=false, $default=null, $modifier="%s")
+    public function toArray($filter=null, $default=null, $modifier="%s")
     {
         $arr = array();
         $ks = $filter ? $filter : $this->keys();
@@ -363,17 +363,17 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Exports properties to Array recursively.
      *
-     * @param bool|int $depth
+     * @param int $depth
      * @return array
      */
-    public function toArrayRecurse($depth=false)
+    public function toArrayRecurse($depth=null)
     {
-        if ($depth !== false && $depth == 0) { return $this; }
+        if ($depth !== null && $depth == 0) { return $this; }
         $arr = array();
         foreach ($this->keys() as $k) {
             $v = $this->get($k);
             if ($v instanceof Pinoco_ArrayConvertible) {
-                $v = $v->toArrayRecurse($depth !== false ? $depth - 1 : false);
+                $v = $v->toArrayRecurse($depth !== null ? $depth - 1 : null);
             }
             $arr[$k] = $v;
         }

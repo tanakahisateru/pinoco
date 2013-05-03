@@ -40,7 +40,7 @@ interface Pinoco_ArrayConvertible
     /**
      * Exports elements to Array.
      *
-     * @param array|null $modifier
+     * @param array $modifier
      * @return array
      */
     public function toArray($modifier=null);
@@ -48,10 +48,10 @@ interface Pinoco_ArrayConvertible
     /**
      * Exports properties to Array recursively.
      *
-     * @param int|bool $depth
+     * @param int $depth
      * @return array
      */
-    public function toArrayRecurse($depth=false);
+    public function toArrayRecurse($depth=null);
 
     /**
      * Returns value or default by key.

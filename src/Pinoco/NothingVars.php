@@ -135,10 +135,10 @@ class Pinoco_NothingVars extends Pinoco_Vars
     /**
      * Nothing as Array is empty array.
      *
-     * @param bool $depth
+     * @param int $depth
      * @return array
      */
-    public function toArrayRecurse($depth=false)
+    public function toArrayRecurse($depth=null)
     {
         return array();
     }
