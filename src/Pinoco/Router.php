@@ -15,7 +15,10 @@
  */
 
 /**
- * Class Pinoco_Router
+ * Pattern matching router.
+ * This utility can be used on any phase of Pinoco runtime process.
+ *
+ * @package Pinoco
  */
 class Pinoco_Router
 {
