@@ -732,10 +732,10 @@ class Pinoco extends Pinoco_DynamicVars
      *
      * @param string $filename
      * @param int $lifetime
-     * @param bool|string $mime_type
+     * @param string $mime_type
      * @return void
      */
-    public function serveStatic($filename, $lifetime=86400, $mime_type=false)
+    public function serveStatic($filename, $lifetime=86400, $mime_type=null)
     {
         if (!is_file($filename)) {
             self::error(404);
