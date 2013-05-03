@@ -18,6 +18,33 @@
  * Pattern matching router.
  * This utility can be used on any phase of Pinoco runtime process.
  *
+ * <code>
+ * $router = Pinoco::instance()->route();
+ * $router->pass(array('', 'index.html',))
+ *     ->on('list', function() use($self, $data) {
+ *         // ...
+ *     })
+ *     ->on('show/{id}', function($id) use($self, $data) {
+ *         // ...
+ *     })
+ *     ->on('POST:post', function() use($self, $data) {
+ *         // ...
+ *     })
+ *     ->on('GET:post', array($this, 'forbidden'))
+ *     ->on('*', array($this, 'notfound'));
+ * </code>
+ *
+ * Pattern rules:
+ *
+ * <pre>
+ * '/index'            : Fixed route.
+ * 'index'             : Fixed route in relative path from current (_enter) hook.
+ * '/show/{id}'        : Parametrized one. Such path elements are passed to handler.
+ * 'GET: /edit/{id}' or
+ * 'POST: /edit/{id}'  : Different HTTP methods can be different routes.
+ * '*:*'               : Matches any patterns. Useful to be bound to Pinoco::notfound()  or forbidden().
+ * </pre>
+ *
  * @package Pinoco
  */
 class Pinoco_Router
@@ -40,12 +67,6 @@ class Pinoco_Router
 
     /**
      * Routing rules which binds URI path to any callable.
-     *
-     * '/index'  : Fixed route.
-     * 'index'  : Fixed route in relative path from current hook.
-     * '/show/{id}'  : Parametrized one. Such path elements are passed to handler.
-     * 'GET: /edit/{id}' or  'POST: /edit/{id}'  : Different HTTP methods can be different routes.
-     * '*:*'  : Matches any patterns. Useful to be bound to Pinoco::notfound()  or forbidden().
      *
      * Specified handler is called immediately if the route matches. Please note that
      * this method is not a definition but invoker.
@@ -84,7 +105,7 @@ class Pinoco_Router
 
     /**
      * Specified route is ignored and delegated to the next script step.
-     * This method is useful to ignore matching patterns below. (e.g. 'z*:*')
+     * This method is useful to ignore matching patterns below. (e.g. '*:*')
      *
      * @param string|array $route
      * @return $this
@@ -173,6 +194,11 @@ class Pinoco_Router
         }
     }
 
+    /**
+     * @param $matches
+     * @return string
+     * @internal
+     */
     public function __each_path_args($matches)
     {
         $name = $matches[1];
