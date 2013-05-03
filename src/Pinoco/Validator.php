@@ -143,15 +143,15 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      * Defines custom test.
      *
      * @param string $testName
-     * @param callable $callback
+     * @param callback $callable
      * @param string $message
      * @param boolean $complex
      * @return void
      */
-    public function defineValidityTest($testName, $callback, $message, $complex=false)
+    public function defineValidityTest($testName, $callable, $message, $complex=false)
     {
         $this->_tests[$testName] = array(
-            'callback' => $callback,
+            'callback' => $callable,
             'message' => $message,
             'complex' => $complex,
         );
@@ -161,14 +161,14 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      * Defines custom filter.
      *
      * @param string $filterName
-     * @param callable $callback
+     * @param callback $callable
      * @param boolean $complex
      * @return void
      */
-    public function defineFilter($filterName, $callback, $complex=false)
+    public function defineFilter($filterName, $callable, $complex=false)
     {
         $this->_filters[$filterName] = array(
-            'callback' => $callback,
+            'callback' => $callable,
             'complex' => $complex,
         );
     }
@@ -285,7 +285,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
         }
     }
 
-    private function callMethod($callback, $complex, $params, $exists, $value, $forFilter=false)
+    private function callMethod($callable, $complex, $params, $exists, $value, $forFilter=false)
     {
         if ($complex) {
             // complex test: full information presented
@@ -305,7 +305,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
         foreach ($params as $p) {
             $args[] = $p;
         }
-        return call_user_func_array($callback, $args);
+        return call_user_func_array($callable, $args);
     }
 
     /**
@@ -321,14 +321,14 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function execValidityTest($field, $filtered, $filteredValue, $testName, $param)
     {
-        list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
+        list($callable, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null) {
+        if ($callable == null) {
             return array(false, $value);
         }
         else {
             return array(
-                $this->callMethod($callback, $complex, $params, $exists, $value),
+                $this->callMethod($callable, $complex, $params, $exists, $value),
                 $value
             );
         }
@@ -347,14 +347,14 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function execValidityTestAll($field, $filtered, $filteredValue, $testName, $param)
     {
-        list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
+        list($callable, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null || !(is_array($value) || $value instanceof Traversable)) {
+        if ($callable == null || !(is_array($value) || $value instanceof Traversable)) {
             return array(false, $value);
         }
         else {
             foreach ($value as $v) {
-                $result = $this->callMethod($callback, $complex, $params, $exists, $v);
+                $result = $this->callMethod($callable, $complex, $params, $exists, $v);
                 if (!$result) {
                     return array(false, $value);
                 }
@@ -376,14 +376,14 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function execValidityTestAny($field, $filtered, $filteredValue, $testName, $param)
     {
-        list($callback, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
+        list($callable, $complex, $params) = $this->prepareCallback($this->_tests, $testName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null || !(is_array($value) || $value instanceof Traversable)) {
+        if ($callable == null || !(is_array($value) || $value instanceof Traversable)) {
             return array(false, $value);
         }
         else {
             foreach ($value as $v) {
-                $result = $this->callMethod($callback, $complex, $params, $exists, $v);
+                $result = $this->callMethod($callable, $complex, $params, $exists, $v);
                 if ($result) {
                     return array(true, $value);
                 }
@@ -405,15 +405,15 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function execFilter($field, $filtered, $filteredValue, $filterName, $param)
     {
-        list($callback, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
+        list($callable, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null) {
+        if ($callable == null) {
             return array(true, null);
         }
         else {
             return array(
                 true,
-                $this->callMethod($callback, $complex, $params, $exists, $value, true)
+                $this->callMethod($callable, $complex, $params, $exists, $value, true)
             );
         }
     }
@@ -431,22 +431,22 @@ class Pinoco_Validator extends Pinoco_DynamicVars
      */
     public function execFilterMap($field, $filtered, $filteredValue, $filterName, $param)
     {
-        list($callback, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
+        list($callable, $complex, $params) = $this->prepareCallback($this->_filters, $filterName, $param);
         list($exists, $value) = $this->prepareValue($field, $filtered, $filteredValue);
-        if ($callback == null || !(is_array($value) || $value instanceof Traversable)) {
+        if ($callable == null || !(is_array($value) || $value instanceof Traversable)) {
             return array(true, null);
         }
         else {
             if ($value instanceof Pinoco_List) {
                 $result = new Pinoco_List();
                 foreach ($value as $v) {
-                    $result->push($this->callMethod($callback, $complex, $params, $exists, $v, true));
+                    $result->push($this->callMethod($callable, $complex, $params, $exists, $v, true));
                 }
             }
             else {
                 $result = array();
                 foreach ($value as $v) {
-                    $result[] = $this->callMethod($callback, $complex, $params, $exists, $v, true);
+                    $result[] = $this->callMethod($callable, $complex, $params, $exists, $v, true);
                 }
             }
             return array(true, $result);

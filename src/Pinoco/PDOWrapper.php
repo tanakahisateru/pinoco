@@ -78,7 +78,7 @@ class Pinoco_PDOWrapper
     /**
      * Returns initialize process when connection would be created.
      *
-     * @return string|callable|null
+     * @return string|callback|null
      */
     public function getAfterConnection()
     {
@@ -88,7 +88,7 @@ class Pinoco_PDOWrapper
     /**
      * Sets initialize process when connection would be created.
      *
-     * @param string|callable|null $after_connection
+     * @param string|callback|null $after_connection
      */
     public function setAfterConnection($after_connection)
     {

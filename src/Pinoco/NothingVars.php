@@ -74,23 +74,23 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * Every values passed to Nothing would be lost.
      *
      * @param string $name
-     * @param callable $callback
+     * @param callback $callable
      * @return void
      */
-    public function registerAsMethod($name, $callback)
+    public function registerAsMethod($name, $callable)
     {
-        //$this->set[$name] = new Pinoco_MethodProxy($callback, $this);
+        //$this->set[$name] = new Pinoco_MethodProxy($callable, $this);
     }
 
     /**
      * Every values passed to Nothing would be lost.
      *
      * @param string $name
-     * @param callable $callback
+     * @param callback $callable
      * @param array $context
      * @return void
      */
-    public function registerAsDynamic($name, $callback, $context=array())
+    public function registerAsDynamic($name, $callable, $context=array())
     {
     }
 
@@ -98,11 +98,11 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * Every values passed to Nothing would be lost.
      *
      * @param string $name
-     * @param callable $callback
+     * @param callback $callable
      * @param array $context
      * @return void
      */
-    public function registerAsLazy($name, $callback, $context=array())
+    public function registerAsLazy($name, $callable, $context=array())
     {
     }
 

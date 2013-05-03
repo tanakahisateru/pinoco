@@ -51,7 +51,7 @@ class Pinoco_Router
      * this method is not a definition but invoker.
      *
      * @param string|array $route
-     * @param callable $handler
+     * @param callback $handler
      * @return $this
      */
     public function on($route, $handler)

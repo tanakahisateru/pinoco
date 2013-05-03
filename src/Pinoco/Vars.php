@@ -188,12 +188,12 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      * trailing arguments are filled as is, just like Python's OOP.
      *
      * @param string $name
-     * @param callable $callback
+     * @param callback $callable
      * @return void
      */
-    public function registerAsMethod($name, $callback)
+    public function registerAsMethod($name, $callable)
     {
-        $this->_vars[$name] = new Pinoco_MethodProxy($callback, $this);
+        $this->_vars[$name] = new Pinoco_MethodProxy($callable, $this);
     }
 
     /**
@@ -201,13 +201,13 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      * The callback evaluated every time when fetched.
      *
      * @param string $name
-     * @param callable $callback
+     * @param callback $callable
      * @param array $context
      * @return void
      */
-    public function registerAsDynamic($name, $callback, $context=array())
+    public function registerAsDynamic($name, $callable, $context=array())
     {
-        $this->_vars[$name] = new Pinoco_ValueProxy($callback, $this, false, $context);
+        $this->_vars[$name] = new Pinoco_ValueProxy($callable, $this, false, $context);
     }
 
     /**
@@ -215,13 +215,13 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      * The callback evaluated as one-shot.
      *
      * @param string $name
-     * @param callable $callback
+     * @param callback $callable
      * @param array $context
      * @return void
      */
-    public function registerAsLazy($name, $callback, $context=array())
+    public function registerAsLazy($name, $callable, $context=array())
     {
-        $this->_vars[$name] = new Pinoco_ValueProxy($callback, $this, true, $context);
+        $this->_vars[$name] = new Pinoco_ValueProxy($callable, $this, true, $context);
     }
 
     /**

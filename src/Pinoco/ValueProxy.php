@@ -22,7 +22,7 @@
  */
 class Pinoco_ValueProxy
 {
-    private $callback;
+    private $callable;
     private $owner;
     private $context;
     private $oneshot;
@@ -32,14 +32,14 @@ class Pinoco_ValueProxy
     /**
      * Constructor to make a value proxy.
      *
-     * @param callable $callback
+     * @param callback $callable
      * @param mixed $owner
      * @param boolean $oneshot
      * @param array $context
      */
-    public function __construct($callback, $owner, $oneshot=false, $context=array())
+    public function __construct($callable, $owner, $oneshot=false, $context=array())
     {
-        $this->callback = $callback;
+        $this->callable = $callable;
         $this->owner = $owner;
         $this->oneshot = $oneshot;
         $this->context = !empty($context) ? $context : array();
@@ -59,7 +59,7 @@ class Pinoco_ValueProxy
         }
         $args = $this->context;
         array_unshift($args, $this->owner);
-        $result = call_user_func_array($this->callback, $args);
+        $result = call_user_func_array($this->callable, $args);
         if ($this->oneshot) {
             $this->freeze = true;
             $this->value = $result;

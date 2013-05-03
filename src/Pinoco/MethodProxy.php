@@ -22,22 +22,22 @@
  */
 class Pinoco_MethodProxy
 {
-    private $callback;
+    private $callable;
     private $owner;
 
     /**
      * Constructor to make an lazy value proxy.
      *
-     * @param callable $callback
+     * @param callback $callable
      * @param mixed $owner
      */
-    public function __construct($callback, $owner)
+    public function __construct($callable, $owner)
     {
         // If closure, PHP 5.4 can bind $this with it.
-        // if (is_object($this->callback) && method_exists($this->callback, 'bindTo')) {
-        //     $callback = $this->callback->bindTo($this->owner);
+        // if (is_object($this->callable) && method_exists($this->callable, 'bindTo')) {
+        //     $callable = $this->callable->bindTo($this->owner);
         // }
-        $this->callback = $callback;
+        $this->callable = $callable;
         $this->owner = $owner;
     }
 
@@ -50,7 +50,7 @@ class Pinoco_MethodProxy
     public function call($args)
     {
         array_unshift($args, $this->owner);
-        return call_user_func_array($this->callback, $args);
+        return call_user_func_array($this->callable, $args);
     }
 
     /**

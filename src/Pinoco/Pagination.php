@@ -89,9 +89,9 @@
  */
 class Pinoco_Pagination extends Pinoco_DynamicVars
 {
-    private $totalCountCallback;
-    private $dataFetchCallback;
-    private $urlFormatCallback;
+    private $totalCountCallable;
+    private $dataFetchCallable;
+    private $urlFormatCallable;
     private $_currentPage;
     private $_elementsPerPage;
     private $_pagesAfterFirst;
@@ -104,17 +104,17 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     /**
      * Creates pagination object from user codes.
      *
-     * @param callable $totalCountCallback
-     * @param callable $dataFetchCallback
-     * @param callable $urlFormatCallback
+     * @param callback $totalCountCallable
+     * @param callback $dataFetchCallable
+     * @param callback $urlFormatCallable
      * @param array $options
      */
-    public function __construct($totalCountCallback, $dataFetchCallback,
-        $urlFormatCallback, $options=array())
+    public function __construct($totalCountCallable, $dataFetchCallable,
+        $urlFormatCallable, $options=array())
     {
-        $this->totalCountCallback = $totalCountCallback;;
-        $this->dataFetchCallback = $dataFetchCallback;
-        $this->urlFormatCallback = $urlFormatCallback;
+        $this->totalCountCallable = $totalCountCallable;;
+        $this->dataFetchCallable = $dataFetchCallable;
+        $this->urlFormatCallable = $urlFormatCallable;
         $this->_currentPage = 1;
         $this->_elementsPerPage = 10;
         $this->_pagesAfterFirst = 0;
@@ -203,7 +203,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     public function get_totalCount()
     {
         if (is_null($this->_totalCount)) {
-            $this->_totalCount = call_user_func($this->totalCountCallback, $this);
+            $this->_totalCount = call_user_func($this->totalCountCallable, $this);
         }
         return $this->_totalCount;
     }
@@ -218,7 +218,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     {
         if (is_null($this->_data)) {
             $this->_data = call_user_func(
-                $this->dataFetchCallback,
+                $this->dataFetchCallable,
                 $this,
                 ($this->page - 1) * $this->elementsPerPage, // offset
                 $this->elementsPerPage // limit
@@ -284,7 +284,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
             $pages->push(Pinoco::newVars(array(
                 'padding' => false,
                 'number'  => $i,
-                'href'    => call_user_func($this->urlFormatCallback, $this, $i),
+                'href'    => call_user_func($this->urlFormatCallable, $this, $i),
                 'current' => $i == $this->_currentPage,
             )));
         }
@@ -302,7 +302,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
             return Pinoco::newVars(array(
                 'enabled' => true,
                 'number'  => $this->_currentPage - 1,
-                'href'    => call_user_func($this->urlFormatCallback, $this, $this->_currentPage - 1),
+                'href'    => call_user_func($this->urlFormatCallable, $this, $this->_currentPage - 1),
             ));
         }
         else {
@@ -323,7 +323,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
             return Pinoco::newVars(array(
                 'enabled' => true,
                 'number'  => $this->_currentPage + 1,
-                'href'    => call_user_func($this->urlFormatCallback, $this, $this->_currentPage + 1),
+                'href'    => call_user_func($this->urlFormatCallable, $this, $this->_currentPage + 1),
             ));
         }
         else {
