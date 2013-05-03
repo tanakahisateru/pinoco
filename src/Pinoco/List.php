@@ -130,10 +130,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Sorts this list.
      *
-     * @param callback|bool $callable
+     * @param callback $callable
      * @return void
      */
-    public function sort($callable=false)
+    public function sort($callable=null)
     {
         if (!$callable) {
             sort($this->_arr);
@@ -146,10 +146,10 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     /**
      * Returns sorted list.
      *
-     * @param callback|bool $callable
+     * @param callback $callable
      * @return Pinoco_List
      */
-    public function sorted($callable=false)
+    public function sorted($callable=null)
     {
         $tmp = clone($this);
         $tmp->sort($callable);

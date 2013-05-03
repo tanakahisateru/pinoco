@@ -537,7 +537,7 @@ class Pinoco extends Pinoco_DynamicVars
     /**
      * Special filter for url conversion.
      *
-     * @return callback|null
+     * @return callback
      */
     public function get_url_modifier() { return $this->_url_modifier; }
 
@@ -577,7 +577,7 @@ class Pinoco extends Pinoco_DynamicVars
     /**
      * Special filter for url conversion.
      *
-     * @param callback|null $callable
+     * @param callback $callable
      * @return void
      */
     public function set_url_modifier($callable) { $this->_url_modifier = $callable; }
