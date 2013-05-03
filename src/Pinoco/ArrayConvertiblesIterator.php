@@ -20,7 +20,7 @@
  * @package Pinoco
  * @internal
  */
-class Pinoco_Iterator implements Iterator
+class Pinoco_ArrayConvertiblesIterator implements Iterator
 {
     private $_ref;
     private $_cur;

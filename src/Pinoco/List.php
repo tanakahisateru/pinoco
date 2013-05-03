@@ -462,7 +462,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
 
     public function getIterator()
     {
-        return new Pinoco_Iterator($this->_arr);
+        return new Pinoco_ArrayConvertiblesIterator($this->_arr);
     }
 
     public function __toString() { return __CLASS__; } // TODO: dump vars name/values

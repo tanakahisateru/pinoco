@@ -316,7 +316,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
 
     public function getIterator()
     {
-        return new Pinoco_Iterator($this->_vars);
+        return new Pinoco_ArrayConvertiblesIterator($this->_vars);
     }
 
     public function offsetSet($offset, $value)
