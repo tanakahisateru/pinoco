@@ -24,16 +24,17 @@
 
     <target name="doc">
         <delete file="./build/${product}-${version}-doc.tgz" />
-        <delete dir="./build/doc" />
-        <mkdir dir="./build/doc"/>
-        <phpdoc title="${product} ${version} Documentation"
-            destdir="./build/doc"
-            output="HTML:frames:default"
-            quiet="true">
-           <fileset dir="./src">
-              <include name="**/*.php" />
-           </fileset>
-        </phpdoc>
+        <apigen title="${product} ${version} Documentation"
+            source="./src"
+            destination="./build/doc"
+            deprecated="false"
+            todo="false"
+            php="false"
+            wipeout="true"
+            autocomplete="classes,constants,functions,methods,properties,classconstants"
+            groups="packages"
+        />
+        <copy file="./src/LICENSE" tofile="./build/doc/MIT" />
         <tar destfile="./build/${product}-${version}-doc.tgz" compression="gzip">
             <fileset dir="./build/doc" />
         </tar>
