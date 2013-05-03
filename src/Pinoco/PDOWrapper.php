@@ -25,14 +25,14 @@
  * @method bool commit()
  * @method mixed errorCode()
  * @method array errorInfo()
- * @method int exec(string $statement)
- * @method mixed getAttribute(int $attribute)
+ * @method int exec() int exec(string $statement)
+ * @method mixed getAttribute() mixed getAttribute(int $attribute)
  * @method array getAvailableDrivers()
  * @method bool inTransaction()
- * @method string lastInsertId(string $name = null)
- * @method string quote( string $string, int $parameter_type = PDO::PARAM_STR)
+ * @method string lastInsertId() string lastInsertId(string $name = null)
+ * @method string quote() string quote( string $string, int $parameter_type = PDO::PARAM_STR)
  * @method bool rollBack()
- * @method bool setAttribute( int $attribute , mixed $value )
+ * @method bool setAttribute() setAttribute(int $attribute , mixed $value)
  */
 class Pinoco_PDOWrapper
 {

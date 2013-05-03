@@ -20,16 +20,16 @@
  *
  * @package Pinoco
  * @property-read string $queryString
- * @method bool bindColumn(mixed $column , mixed &$param, int $type, int $maxlen, mixed $driverdata)
- * @method bool bindParam(mixed $parameter, mixed &$variable, int $data_type = PDO::PARAM_STR, int $length, mixed $driver_options)
- * @method bool bindValue(mixed $parameter, mixed $value, int $data_type = PDO::PARAM_STR)
+ * @method bool bindColumn() bool bindColumn(mixed $column , mixed &$param, int $type, int $maxlen, mixed $driverdata)
+ * @method bool bindParam() bool bindParam(mixed $parameter, mixed &$variable, int $data_type = PDO::PARAM_STR, int $length, mixed $driver_options)
+ * @method bool bindValue() bool bindValue(mixed $parameter, mixed $value, int $data_type = PDO::PARAM_STR)
  * @method bool closeCursor()
  * @method int columnCount()
  * @method bool debugDumpParams()
  * @method string errorCode()
  * @method array errorInfo()
- * @method string fetchColumn(int $column_number = 0)
- * @method mixed fetchObject(string $class_name = "stdClass", array $ctor_args)
+ * @method string fetchColumn() string fetchColumn(int $column_number = 0)
+ * @method mixed fetchObject() mixed fetchObject(string $class_name = "stdClass", array $ctor_args)
  * @method mixed getAttribute() getAttribute( int $attribute )
  * @method array getColumnMeta() getColumnMeta( int $column )
  * @method bool nextRowset()
