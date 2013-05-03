@@ -949,6 +949,7 @@ class Pinoco extends Pinoco_DynamicVars
      * @param string $path
      * @param string $last_pathelem
      * @return string|bool
+     * @internal
      */
     public function _page_from_path_with_directory_index($path, $last_pathelem=null)
     {
@@ -1292,6 +1293,7 @@ class Pinoco extends Pinoco_DynamicVars
      * @param string $script_abs_path must be absolute path for local file system.
      * @param array $localvars
      * @return mixed
+     * @internal
      */
     public function _includeWithThis($script_abs_path, $localvars=array())
     {
