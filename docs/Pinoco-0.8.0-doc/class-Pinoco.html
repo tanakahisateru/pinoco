@@ -1,0 +1,3046 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Pinoco | Pinoco 0.8.0 Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?2167084490"></script>
+	<script type="text/javascript" src="elementlist.js?2241898528"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-Pinoco.html">Pinoco<span></span></a>
+						<ul>
+				<li><a href="package-Pinoco.PAL.html">PAL</a>
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Pinoco.html">Pinoco</a></li>
+				<li><a href="class-Pinoco_Delegate.html">Pinoco_Delegate</a></li>
+				<li><a href="class-Pinoco_DynamicVars.html">Pinoco_DynamicVars</a></li>
+				<li><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></li>
+				<li><a href="class-Pinoco_List.html">Pinoco_List</a></li>
+				<li><a href="class-Pinoco_MIMEType.html">Pinoco_MIMEType</a></li>
+				<li><a href="class-Pinoco_NativeRenderer.html">Pinoco_NativeRenderer</a></li>
+				<li><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></li>
+				<li><a href="class-Pinoco_NullRenderer.html">Pinoco_NullRenderer</a></li>
+				<li><a href="class-Pinoco_OptionalParam.html">Pinoco_OptionalParam</a></li>
+				<li><a href="class-Pinoco_Pagination.html">Pinoco_Pagination</a></li>
+				<li><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></li>
+				<li><a href="class-Pinoco_PDOWrapper.html">Pinoco_PDOWrapper</a></li>
+				<li><a href="class-Pinoco_Renderer.html">Pinoco_Renderer</a></li>
+				<li><a href="class-Pinoco_Router.html">Pinoco_Router</a></li>
+				<li><a href="class-Pinoco_TALRenderer.html">Pinoco_TALRenderer</a></li>
+				<li><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></li>
+				<li><a href="class-Pinoco_Validator.html">Pinoco_Validator</a></li>
+				<li><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></li>
+				<li><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Pinoco_ArrayConvertible.html">Pinoco_ArrayConvertible</a></li>
+			</ul>
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-__pinoco_autoload_impl.html">__pinoco_autoload_impl</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-Pinoco.html" title="Summary of Pinoco"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Pinoco</h1>
+
+
+	<div class="description">
+	
+<p>Pinoco web site environment It makes existing static web site dynamic
+transparently.</p>
+
+<p>Install PHPTAL. Make your application directory anywhere.</p>
+
+<p>Put .htaccess in your site root.</p>
+
+<pre>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} \.(html|php)<span
+class="php-var">$</span> [<span
+class="php-keyword1">OR</span>]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !_gateway\.php<span
+class="php-var">$</span>
+RewriteRule ^(.*)<span
+class="php-var">$</span>   _gateway.php/<span
+class="php-var">$1</span> [L,QSA]
+<span
+class="php-comment">#...or RewriteRule ^(.*)$   _gateway.php?PATH_INFO=$1 [L,QSA]</span>
+</pre>
+
+<p>Put _gateway.php in your site root.</p>
+
+<pre>
+<span class="php-keyword1">require_once</span> <span
+class="php-quote">'Pinoco.php'</span>;
+Pinoco::create(<span
+class="php-quote">&quot;*** your_app_dir ***&quot;</span>, <span
+class="php-keyword1">array</span>(
+<span
+class="php-comment">//    'use_mod_rewrite'  =&gt; true,  // true or false default true</span>
+<span
+class="php-comment">//    'use_path_info'    =&gt; true,  // true or false default true</span>
+<span
+class="php-comment">//    'custom_path_info' =&gt; false, // false(auto) or string default false</span>
+<span
+class="php-comment">//    'directory_index'  =&gt; &quot;index.html index.php&quot;, // string like DirectoryIndex directive default &quot;index.html index.php&quot;</span>
+))-&gt;run();
+</pre>
+
+<p>Pinoco::create guesses HTTP request to create Pinoco instance. If this method
+can't work file in your environment, you can create Pinoco environment manually
+via "new" operator using your own parameters.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Pinoco_Vars.html"><span>Pinoco_Vars</span></a>
+			
+			 implements 
+<span>IteratorAggregate</span>, 
+			
+<span>ArrayAccess</span>, 
+			
+<span>Countable</span>, 
+			
+				<a href="class-Pinoco_ArrayConvertible.html"><span>Pinoco_ArrayConvertible</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Pinoco_DynamicVars.html"><span>Pinoco_DynamicVars</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Pinoco</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-Pinoco.html">Pinoco</a><br />
+
+				<b>Copyright:</b>
+				Copyright 2010-2012, Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+				<b>License:</b>
+				<a href="MIT">License (http://www.opensource.org/licenses/mit-license.php)</a><br />
+				<b>Author:</b>
+				Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Pinoco.html#19-1629" title="Go to source code">Pinoco.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="create" id="_create">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco.html">Pinoco</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_create">#</a>
+		<code><a href="source-class-Pinoco.html#107-180" title="Go to source code">create</a>( <span>string <var>$sysdir</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>It provides a suitable Pinoco instance in regular usage.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It provides a suitable Pinoco instance in regular usage.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sysdir</var></dt>
+					<dd><code>string</code><br>$sysdir</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco.html">Pinoco</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Pinoco.html#182-259" title="Go to source code">__construct</a>( <span>string <var>$baseuri</var></span>, <span>string <var>$dispatcher</var></span>, <span>string <var>$path</var></span>, <span>string <var>$basedir</var></span>, <span>string <var>$sysdir</var></span>, <span>boolean <var>$testing</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Pinoco constructor.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Pinoco constructor.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$baseuri</var></dt>
+					<dd><code>string</code><br>$baseuri</dd>
+					<dt><var>$dispatcher</var></dt>
+					<dd><code>string</code><br>$dispatcher</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path</dd>
+					<dt><var>$basedir</var></dt>
+					<dd><code>string</code><br>$basedir</dd>
+					<dt><var>$sysdir</var></dt>
+					<dd><code>string</code><br>$sysdir</dd>
+					<dt><var>$testing</var></dt>
+					<dd><code>boolean</code><br>$testing</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>InvalidArgumentException</code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						src/Pinoco#create($sysdir, $options)<br />
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Pinoco_Vars.html#___construct">Pinoco_Vars::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__toString" id="___toString">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___toString">#</a>
+		<code><a href="source-class-Pinoco.html#261" title="Go to source code">__toString</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Pinoco_Vars.html#___toString">Pinoco_Vars::__toString()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="config" id="_config">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco.html">Pinoco</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_config">#</a>
+		<code><a href="source-class-Pinoco.html#263-309" title="Go to source code">config</a>( <span>string <var>$name</var></span>, <span>string|array <var>$source</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Imports named attribute from file or array.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Imports named attribute from file or array.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name Attribute name of Pinoco instance.</dd>
+					<dt><var>$source</var></dt>
+					<dd><code>string|array</code><br>$source Config file path based on the app dir or array.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco.html">Pinoco</a></code></code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>InvalidArgumentException</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newVars" id="_newVars">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newVars">#</a>
+		<code><a href="source-class-Pinoco.html#312-321" title="Go to source code">newVars</a>( <span>mixed <var>$init</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>It provides a new Vars object (that can be filled with existing Array).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It provides a new Vars object (that can be filled with existing Array).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$init</var></dt>
+					<dd><code>mixed</code><br>$init</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newList" id="_newList">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newList">#</a>
+		<code><a href="source-class-Pinoco.html#323-332" title="Go to source code">newList</a>( <span>mixed <var>$init</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>It provides a new List object (that can be filled with existing Array).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It provides a new List object (that can be filled with existing Array).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$init</var></dt>
+					<dd><code>mixed</code><br>$init</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newNothing" id="_newNothing">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newNothing">#</a>
+		<code><a href="source-class-Pinoco.html#334-342" title="Go to source code">newNothing</a>( )</code>
+
+		<div class="description short">
+			
+<p>It provides the NothingVars object.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It provides the NothingVars object.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="wrapVars" id="_wrapVars">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_wrapVars">#</a>
+		<code><a href="source-class-Pinoco.html#344-353" title="Go to source code">wrapVars</a>( <span>array <var>&amp; $ref</var></span> )</code>
+
+		<div class="description short">
+			
+<p>It provides a Vars object as existing Array wrapper.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It provides a Vars object as existing Array wrapper.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$ref</var></dt>
+					<dd><code>array</code><br>&amp;$ref</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="wrapList" id="_wrapList">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_wrapList">#</a>
+		<code><a href="source-class-Pinoco.html#355-364" title="Go to source code">wrapList</a>( <span>array <var>&amp; $ref</var></span> )</code>
+
+		<div class="description short">
+			
+<p>It provides a List object as existing Array wrapper.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It provides a List object as existing Array wrapper.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$ref</var></dt>
+					<dd><code>array</code><br>&amp;$ref</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_baseuri" id="_get_baseuri">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_baseuri">#</a>
+		<code><a href="source-class-Pinoco.html#424-429" title="Go to source code">get_baseuri</a>( )</code>
+
+		<div class="description short">
+			
+<p>Web site root URI.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Web site root URI.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_basedir" id="_get_basedir">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_basedir">#</a>
+		<code><a href="source-class-Pinoco.html#431-436" title="Go to source code">get_basedir</a>( )</code>
+
+		<div class="description short">
+			
+<p>Web site root directory in local file system.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Web site root directory in local file system.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_sysdir" id="_get_sysdir">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_sysdir">#</a>
+		<code><a href="source-class-Pinoco.html#438-443" title="Go to source code">get_sysdir</a>( )</code>
+
+		<div class="description short">
+			
+<p>Application directory.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Application directory.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_testing" id="_get_testing">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_testing">#</a>
+		<code><a href="source-class-Pinoco.html#445-450" title="Go to source code">get_testing</a>( )</code>
+
+		<div class="description short">
+			
+<p>Test mode flag.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Test mode flag.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_incdir" id="_get_incdir">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_incdir">#</a>
+		<code><a href="source-class-Pinoco.html#452-457" title="Go to source code">get_incdir</a>( )</code>
+
+		<div class="description short">
+			
+<p>Include search directories.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Include search directories.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_request" id="_get_request">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_request">#</a>
+		<code><a href="source-class-Pinoco.html#459-464" title="Go to source code">get_request</a>( )</code>
+
+		<div class="description short">
+			
+<p>Request related global variables wrapper.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Request related global variables wrapper.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_path" id="_get_path">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_path">#</a>
+		<code><a href="source-class-Pinoco.html#466-471" title="Go to source code">get_path</a>( )</code>
+
+		<div class="description short">
+			
+<p>Local resource path under base URI.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Local resource path under base URI.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_script" id="_get_script">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_script">#</a>
+		<code><a href="source-class-Pinoco.html#473-478" title="Go to source code">get_script</a>( )</code>
+
+		<div class="description short">
+			
+<p>Current hook script if it running.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Current hook script if it running.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_activity" id="_get_activity">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_activity">#</a>
+		<code><a href="source-class-Pinoco.html#480-485" title="Go to source code">get_activity</a>( )</code>
+
+		<div class="description short">
+			
+<p>Hook scripts invocation log.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Hook scripts invocation log.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_sent_headers" id="_get_sent_headers">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_sent_headers">#</a>
+		<code><a href="source-class-Pinoco.html#487-492" title="Go to source code">get_sent_headers</a>( )</code>
+
+		<div class="description short">
+			
+<p>Sent headers via Pinoco's method.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sent headers via Pinoco's method.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_subpath" id="_get_subpath">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_subpath">#</a>
+		<code><a href="source-class-Pinoco.html#494-499" title="Go to source code">get_subpath</a>( )</code>
+
+		<div class="description short">
+			
+<p>Partial path under current script.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Partial path under current script.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_pathargs" id="_get_pathargs">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_pathargs">#</a>
+		<code><a href="source-class-Pinoco.html#501-506" title="Go to source code">get_pathargs</a>( )</code>
+
+		<div class="description short">
+			
+<p>Path elements resolved by _default folders or files.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Path elements resolved by _default folders or files.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_directory_index" id="_get_directory_index">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_directory_index">#</a>
+		<code><a href="source-class-Pinoco.html#508-513" title="Go to source code">get_directory_index</a>( )</code>
+
+		<div class="description short">
+			
+<p>Default files (separated by white space) for directory access.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Default files (separated by white space) for directory access.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_page" id="_get_page">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_page">#</a>
+		<code><a href="source-class-Pinoco.html#515-520" title="Go to source code">get_page</a>( )</code>
+
+		<div class="description short">
+			
+<p>File name to override view.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>File name to override view.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_renderers" id="_get_renderers">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_renderers">#</a>
+		<code><a href="source-class-Pinoco.html#522-528" title="Go to source code">get_renderers</a>( )</code>
+
+		<div class="description short">
+			
+<p>Page renderers repository. A renderer object is registered to file extension
+as dictionary key.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Page renderers repository. A renderer object is registered to file extension
+as dictionary key.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_autolocal" id="_get_autolocal">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_autolocal">#</a>
+		<code><a href="source-class-Pinoco.html#530-535" title="Go to source code">get_autolocal</a>( )</code>
+
+		<div class="description short">
+			
+<p>Automatically extracted variables for hooks and pages.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Automatically extracted variables for hooks and pages.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_url_modifier" id="_get_url_modifier">
+
+		<td class="attributes"><code>
+			 public 
+			callable
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_url_modifier">#</a>
+		<code><a href="source-class-Pinoco.html#537-542" title="Go to source code">get_url_modifier</a>( )</code>
+
+		<div class="description short">
+			
+<p>Special filter for url conversion.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Special filter for url conversion.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>callable</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_page_modifier" id="_get_page_modifier">
+
+		<td class="attributes"><code>
+			 public 
+			callable
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_page_modifier">#</a>
+		<code><a href="source-class-Pinoco.html#544-549" title="Go to source code">get_page_modifier</a>( )</code>
+
+		<div class="description short">
+			
+<p>Special filter for default view file.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Special filter for default view file.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>callable</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_incdir" id="_set_incdir">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_incdir">#</a>
+		<code><a href="source-class-Pinoco.html#551-557" title="Go to source code">set_incdir</a>( <span><code><a href="class-Pinoco_List.html">Pinoco_List</a></code> <var>$dirs</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Include search directories.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Include search directories.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dirs</var></dt>
+					<dd><code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br>$dirs</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_page" id="_set_page">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_page">#</a>
+		<code><a href="source-class-Pinoco.html#559-567" title="Go to source code">set_page</a>( <span>string <var>$page</var></span> )</code>
+
+		<div class="description short">
+			
+<p>File name to override view. Set false if you want an empty output. Set
+"&lt;default&gt;" if you want to reset to default view.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>File name to override view. Set false if you want an empty output. Set
+"&lt;default&gt;" if you want to reset to default view.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$page</var></dt>
+					<dd><code>string</code><br>$page</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_directory_index" id="_set_directory_index">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_directory_index">#</a>
+		<code><a href="source-class-Pinoco.html#569-575" title="Go to source code">set_directory_index</a>( <span>string <var>$files</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Default files (separated by white space) for directory access.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Default files (separated by white space) for directory access.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$files</var></dt>
+					<dd><code>string</code><br>$files</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_url_modifier" id="_set_url_modifier">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_url_modifier">#</a>
+		<code><a href="source-class-Pinoco.html#577-583" title="Go to source code">set_url_modifier</a>( <span>callable <var>$callable</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Special filter for url conversion.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Special filter for url conversion.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$callable</var></dt>
+					<dd><code>callable</code><br>$callable</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_page_modifier" id="_set_page_modifier">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_page_modifier">#</a>
+		<code><a href="source-class-Pinoco.html#585-591" title="Go to source code">set_page_modifier</a>( <span>callable <var>$callable</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Special filter for default view file.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Special filter for default view file.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$callable</var></dt>
+					<dd><code>callable</code><br>$callable</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="skip" id="_skip">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_skip">#</a>
+		<code><a href="source-class-Pinoco.html#594-603" title="Go to source code">skip</a>( )</code>
+
+		<div class="description short">
+			
+<p>Current hook process will be skipped and invoke the next hook script.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Current hook process will be skipped and invoke the next hook script.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControlSkip</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="terminate" id="_terminate">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_terminate">#</a>
+		<code><a href="source-class-Pinoco.html#605-614" title="Go to source code">terminate</a>( )</code>
+
+		<div class="description short">
+			
+<p>Whole hook stage before rendering is terminated and rendering phase is
+started immediately.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Whole hook stage before rendering is terminated and rendering phase is
+started immediately.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControlTerminate</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="error" id="_error">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_error">#</a>
+		<code><a href="source-class-Pinoco.html#616-628" title="Go to source code">error</a>( <span>integer <var>$code</var></span>, <span>string <var>$title</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$message</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>It cancels hooks and rendering and respond HTTP error to browser.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It cancels hooks and rendering and respond HTTP error to browser.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$code</var></dt>
+					<dd><code>integer</code><br>$code</dd>
+					<dt><var>$title</var></dt>
+					<dd><code>string</code><br>$title</dd>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControlHttpError</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="redirect" id="_redirect">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_redirect">#</a>
+		<code><a href="source-class-Pinoco.html#630-641" title="Go to source code">redirect</a>( <span>string <var>$url</var></span>, <span>boolean <var>$external</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Special error to let browser change the location to access.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Special error to let browser change the location to access.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url</dd>
+					<dt><var>$external</var></dt>
+					<dd><code>boolean</code><br>$external</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControlHttpRedirect</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="notfound" id="_notfound">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_notfound">#</a>
+		<code><a href="source-class-Pinoco.html#643-652" title="Go to source code">notfound</a>( )</code>
+
+		<div class="description short">
+			
+<p>Error for Not Found.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Error for Not Found.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControlHttpError</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="forbidden" id="_forbidden">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_forbidden">#</a>
+		<code><a href="source-class-Pinoco.html#654-663" title="Go to source code">forbidden</a>( )</code>
+
+		<div class="description short">
+			
+<p>Error for Forbidden.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Error for Forbidden.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControlHttpError</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="nocache" id="_nocache">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_nocache">#</a>
+		<code><a href="source-class-Pinoco.html#665-674" title="Go to source code">nocache</a>( )</code>
+
+		<div class="description short">
+			
+<p>This method sends headers not to be cached.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>This method sends headers not to be cached.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="abortIfNotModified" id="_abortIfNotModified">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_abortIfNotModified">#</a>
+		<code><a href="source-class-Pinoco.html#676-727" title="Go to source code">abortIfNotModified</a>( <span>integer <var>$timestamp</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$etag</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$lifetime</var> = <span class="php-num">86400</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Conditional flow control. Send cache hints and also might send "304 Not
+Modified" status if the content has not been changed from previously sent
+(detected by incoming request header).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Conditional flow control. Send cache hints and also might send "304 Not
+Modified" status if the content has not been changed from previously sent
+(detected by incoming request header).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$timestamp</var></dt>
+					<dd><code>integer</code><br>$timestamp</dd>
+					<dt><var>$etag</var></dt>
+					<dd><code>string</code><br>$etag</dd>
+					<dt><var>$lifetime</var></dt>
+					<dd><code>integer</code><br>$lifetime</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="serveStatic" id="_serveStatic">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_serveStatic">#</a>
+		<code><a href="source-class-Pinoco.html#729-756" title="Go to source code">serveStatic</a>( <span>string <var>$filename</var></span>, <span>integer <var>$lifetime</var> = <span class="php-num">86400</span></span>, <span>string <var>$mime_type</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Serves static file or send 304 no-modified response automatically. This
+method terminates hook script flow.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Serves static file or send 304 no-modified response automatically. This
+method terminates hook script flow.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filename</var></dt>
+					<dd><code>string</code><br>$filename</dd>
+					<dt><var>$lifetime</var></dt>
+					<dd><code>integer</code><br>$lifetime</dd>
+					<dt><var>$mime_type</var></dt>
+					<dd><code>string</code><br>$mime_type</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="router" id="_router">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_router">#</a>
+		<code><a href="source-class-Pinoco.html#758-761" title="Go to source code">router</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="parentPath" id="_parentPath">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_parentPath">#</a>
+		<code><a href="source-class-Pinoco.html#763-775" title="Go to source code">parentPath</a>( <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Utility to get the parent path.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Utility to get the parent path.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="resolvePath" id="_resolvePath">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_resolvePath">#</a>
+		<code><a href="source-class-Pinoco.html#777-808" title="Go to source code">resolvePath</a>( <span>string <var>$path</var></span>, <span>string|boolean <var>$base</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>It makes relative path absolute.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>It makes relative path absolute.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path</dd>
+					<dt><var>$base</var></dt>
+					<dd><code>string|boolean</code><br>$base</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isRenderablePath" id="_isRenderablePath">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isRenderablePath">#</a>
+		<code><a href="source-class-Pinoco.html#810-824" title="Go to source code">isRenderablePath</a>( <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns if the path can be rendered by registered renderers.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns if the path can be rendered by registered renderers.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="header" id="_header">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_header">#</a>
+		<code><a href="source-class-Pinoco.html#826-871" title="Go to source code">header</a>( <span>string <var>$string</var></span>, <span>boolean <var>$replace</var> = <span class="php-keyword1">true</span></span>, <span>integer <var>$http_response_code</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>PHP's header function wrapper.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>PHP's header function wrapper.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$string</var></dt>
+					<dd><code>string</code><br>$string</dd>
+					<dt><var>$replace</var></dt>
+					<dd><code>boolean</code><br>$replace</dd>
+					<dt><var>$http_response_code</var></dt>
+					<dd><code>integer</code><br>$http_response_code</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setcookie" id="_setcookie">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setcookie">#</a>
+		<code><a href="source-class-Pinoco.html#873-912" title="Go to source code">setcookie</a>( <span>string <var>$name</var></span>, <span>string <var>$value</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$expire</var> = <span class="php-num">0</span></span>, <span>string <var>$path</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$domain</var> = <span class="php-keyword1">null</span></span>, <span>boolean <var>$secure</var> = <span class="php-keyword1">false</span></span>, <span>boolean <var>$httponly</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>PHP's setcookie function wrapper.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>PHP's setcookie function wrapper.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value</dd>
+					<dt><var>$expire</var></dt>
+					<dd><code>integer</code><br>$expire</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path</dd>
+					<dt><var>$domain</var></dt>
+					<dd><code>string</code><br>$domain</dd>
+					<dt><var>$secure</var></dt>
+					<dd><code>boolean</code><br>$secure</dd>
+					<dt><var>$httponly</var></dt>
+					<dd><code>boolean</code><br>$httponly</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="url" id="_url">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_url">#</a>
+		<code><a href="source-class-Pinoco.html#914-944" title="Go to source code">url</a>( <span>string <var>$path</var> = <span class="php-quote">''</span></span>, <span>boolean <var>$pure</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns host based URI from site based or sub-path based relative one.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns host based URI from site based or sub-path based relative one.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path</dd>
+					<dt><var>$pure</var></dt>
+					<dd><code>boolean</code><br>$pure cancels to call user modifier if true</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="render" id="_render">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_render">#</a>
+		<code><a href="source-class-Pinoco.html#1013-1039" title="Go to source code">render</a>( <span>string <var>$page</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Invokes renderer with page file immediately. Default rendering will be
+canceled. Pass false if you want an empty response.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Invokes renderer with page file immediately. Default rendering will be
+canceled. Pass false if you want an empty response.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$page</var></dt>
+					<dd><code>string</code><br>$page</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>InvalidArgumentException</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mimeType" id="_mimeType">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mimeType">#</a>
+		<code><a href="source-class-Pinoco.html#1041-1071" title="Go to source code">mimeType</a>( <span>string <var>$filename</var></span> )</code>
+
+		<div class="description short">
+			
+<p>MIME type of file.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>MIME type of file.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filename</var></dt>
+					<dd><code>string</code><br>$filename</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="instance" id="_instance">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco.html">Pinoco</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_instance">#</a>
+		<code><a href="source-class-Pinoco.html#1073-1081" title="Go to source code">instance</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns currently running Pinoco instance.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns currently running Pinoco instance.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco.html">Pinoco</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__callStatic" id="___callStatic">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___callStatic">#</a>
+		<code><a href="source-class-Pinoco.html#1083-1096" title="Go to source code">__callStatic</a>( <span>mixed <var>$name</var></span>, <span>mixed <var>$arguments</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="creditIntoHeader" id="_creditIntoHeader">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_creditIntoHeader">#</a>
+		<code><a href="source-class-Pinoco.html#1099-1122" title="Go to source code">creditIntoHeader</a>( )</code>
+
+		<div class="description short">
+			
+<p>Writes Pinoco credit into HTTP header.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Writes Pinoco credit into HTTP header.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="updateIncdir" id="_updateIncdir">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_updateIncdir">#</a>
+		<code><a href="source-class-Pinoco.html#1148-1166" title="Go to source code">updateIncdir</a>( )</code>
+
+		<div class="description short">
+			
+<p>Updates 'include_path' in php.ini by this-&gt;incdir.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Updates 'include_path' in php.ini by this-&gt;incdir.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subscript" id="_subscript">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subscript">#</a>
+		<code><a href="source-class-Pinoco.html#1318-1354" title="Go to source code">subscript</a>( <span>string <var>$script</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Execute an external script in isolated variable scope.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Execute an external script in isolated variable scope.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$script</var></dt>
+					<dd><code>string</code><br>$script Script filename absolute path or relative based on current script.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>Pinoco_FlowControl</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="run" id="_run">
+
+		<td class="attributes"><code>
+			 public 
+			|string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_run">#</a>
+		<code><a href="source-class-Pinoco.html#1385-1613" title="Go to source code">run</a>( <span>boolean <var>$output_buffering</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Executes all process of Pinoco engine.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes all process of Pinoco engine.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$output_buffering</var></dt>
+					<dd><code>boolean</code><br>$output_buffering</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>|string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="testenv" id="_testenv">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_testenv">#</a>
+		<code><a href="source-class-Pinoco.html#1615-1627" title="Go to source code">testenv</a>( <span>string <var>$basedir</var></span>, <span>string <var>$sysdir</var></span>, <span>string <var>$baseuri</var> = <span class="php-quote">&quot;/&quot;</span></span>, <span>string <var>$dispatcher</var> = <span class="php-quote">&quot;&quot;</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Provides a testable Pinoco instance for unit test.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Provides a testable Pinoco instance for unit test.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$basedir</var></dt>
+					<dd><code>string</code><br>$sysdir</dd>
+					<dt><var>$sysdir</var></dt>
+					<dd><code>string</code><br>$basedir</dd>
+					<dt><var>$baseuri</var></dt>
+					<dd><code>string</code><br>$baseuri</dd>
+					<dt><var>$dispatcher</var></dt>
+					<dd><code>string</code><br>$dispatcher</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Pinoco_DynamicVars.html#methods">Pinoco_DynamicVars</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Pinoco_DynamicVars.html#_get">get()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_getIterator">getIterator()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_has">has()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_keys">keys()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_set">set()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Pinoco_Vars.html#methods">Pinoco_Vars</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Pinoco_Vars.html#___call">__call()</a>, 
+			<a href="class-Pinoco_Vars.html#___get">__get()</a>, 
+			<a href="class-Pinoco_Vars.html#___isset">__isset()</a>, 
+			<a href="class-Pinoco_Vars.html#___set">__set()</a>, 
+			<a href="class-Pinoco_Vars.html#___unset">__unset()</a>, 
+			<a href="class-Pinoco_Vars.html#_count">count()</a>, 
+			<a href="class-Pinoco_Vars.html#_fromArray">fromArray()</a>, 
+			<a href="class-Pinoco_Vars.html#_import">import()</a>, 
+			<a href="class-Pinoco_Vars.html#_markAsDirty">markAsDirty()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetExists">offsetExists()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetGet">offsetGet()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetSet">offsetSet()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetUnset">offsetUnset()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsDynamic">registerAsDynamic()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsLazy">registerAsLazy()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsMethod">registerAsMethod()</a>, 
+			<a href="class-Pinoco_Vars.html#_remove">remove()</a>, 
+			<a href="class-Pinoco_Vars.html#_rget">rget()</a>, 
+			<a href="class-Pinoco_Vars.html#_setDefault">setDefault()</a>, 
+			<a href="class-Pinoco_Vars.html#_setLoose">setLoose()</a>, 
+			<a href="class-Pinoco_Vars.html#_toArray">toArray()</a>, 
+			<a href="class-Pinoco_Vars.html#_toArrayRecurse">toArrayRecurse()</a>, 
+			<a href="class-Pinoco_Vars.html#_values">values()</a>, 
+			<a href="class-Pinoco_Vars.html#_wrap">wrap()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+	<table class="summary" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="VERSION" id="VERSION">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Pinoco.html#73" title="Go to source code"><b>VERSION</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">&quot;0.8.0&quot;</span></code></td>
+		<td class="description"><div>
+			<a href="#VERSION" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+	<table class="summary" id="magicProperties">
+	<caption>Magic properties summary</caption>
+	<tr data-order="incdir" id="m$incdir">
+		<td class="attributes"><code>
+			public  
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#56" title="Go to source code"><var>$incdir</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$incdir" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Include pathes</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Include pathes</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="directory_index" id="m$directory_index">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#64" title="Go to source code"><var>$directory_index</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$directory_index" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Space separated directory index files(like Apache)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Space separated directory index files(like Apache)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="page" id="m$page">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#65" title="Go to source code"><var>$page</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$page" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Template file to be rendered</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Template file to be rendered</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="url_modifier" id="m$url_modifier">
+		<td class="attributes"><code>
+			public  
+			callable
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#68" title="Go to source code"><var>$url_modifier</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$url_modifier" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>URL modification callback</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>URL modification callback</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="page_modifier" id="m$page_modifier">
+		<td class="attributes"><code>
+			public  
+			callable
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#69" title="Go to source code"><var>$page_modifier</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$page_modifier" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Template page base path modification callback</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Template page base path modification callback</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="baseuri" id="m$baseuri">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#52" title="Go to source code"><var>$baseuri</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$baseuri" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Base URI</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Base URI</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="basedir" id="m$basedir">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#53" title="Go to source code"><var>$basedir</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$basedir" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Base directory</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Base directory</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="sysdir" id="m$sysdir">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#54" title="Go to source code"><var>$sysdir</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$sysdir" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Application directory</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Application directory</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="testing" id="m$testing">
+		<td class="attributes"><code>
+			public  read-only
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#55" title="Go to source code"><var>$testing</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$testing" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Test mode flag</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Test mode flag</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="request" id="m$request">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#57" title="Go to source code"><var>$request</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$request" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Request related global variables wrapper</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Request related global variables wrapper</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="path" id="m$path">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#58" title="Go to source code"><var>$path</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$path" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Path under base URI</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Path under base URI</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="script" id="m$script">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#59" title="Go to source code"><var>$script</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$script" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Current hook script</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Current hook script</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="activity" id="m$activity">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#60" title="Go to source code"><var>$activity</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$activity" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Activity history of hook scripts</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Activity history of hook scripts</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="sent_headers" id="m$sent_headers">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#61" title="Go to source code"><var>$sent_headers</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$sent_headers" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Sent headers via Pinoco</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Sent headers via Pinoco</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="subpath" id="m$subpath">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#62" title="Go to source code"><var>$subpath</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$subpath" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Sub-path under current hook script</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Sub-path under current hook script</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="pathargs" id="m$pathargs">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#63" title="Go to source code"><var>$pathargs</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$pathargs" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Path elements matches _default[.*] hooks</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Path elements matches _default[.*] hooks</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="renderers" id="m$renderers">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#66" title="Go to source code"><var>$renderers</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$renderers" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>File extension to rendering module mappings</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>File extension to rendering module mappings</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="autolocal" id="m$autolocal">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco.html#67" title="Go to source code"><var>$autolocal</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$autolocal" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Auto extracted variables into local scope</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Auto extracted variables into local scope</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+</div>
+
+	<div id="footer">
+		Pinoco 0.8.0 Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

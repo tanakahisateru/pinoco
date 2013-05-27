@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Pinoco_PDOStatementWrapper | Pinoco 0.8.0 Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?2167084490"></script>
+	<script type="text/javascript" src="elementlist.js?2241898528"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-Pinoco.html">Pinoco<span></span></a>
+						<ul>
+				<li><a href="package-Pinoco.PAL.html">PAL</a>
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Pinoco.html">Pinoco</a></li>
+				<li><a href="class-Pinoco_Delegate.html">Pinoco_Delegate</a></li>
+				<li><a href="class-Pinoco_DynamicVars.html">Pinoco_DynamicVars</a></li>
+				<li><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></li>
+				<li><a href="class-Pinoco_List.html">Pinoco_List</a></li>
+				<li><a href="class-Pinoco_MIMEType.html">Pinoco_MIMEType</a></li>
+				<li><a href="class-Pinoco_NativeRenderer.html">Pinoco_NativeRenderer</a></li>
+				<li><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></li>
+				<li><a href="class-Pinoco_NullRenderer.html">Pinoco_NullRenderer</a></li>
+				<li><a href="class-Pinoco_OptionalParam.html">Pinoco_OptionalParam</a></li>
+				<li><a href="class-Pinoco_Pagination.html">Pinoco_Pagination</a></li>
+				<li class="active"><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></li>
+				<li><a href="class-Pinoco_PDOWrapper.html">Pinoco_PDOWrapper</a></li>
+				<li><a href="class-Pinoco_Renderer.html">Pinoco_Renderer</a></li>
+				<li><a href="class-Pinoco_Router.html">Pinoco_Router</a></li>
+				<li><a href="class-Pinoco_TALRenderer.html">Pinoco_TALRenderer</a></li>
+				<li><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></li>
+				<li><a href="class-Pinoco_Validator.html">Pinoco_Validator</a></li>
+				<li><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></li>
+				<li><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Pinoco_ArrayConvertible.html">Pinoco_ArrayConvertible</a></li>
+			</ul>
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-__pinoco_autoload_impl.html">__pinoco_autoload_impl</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-Pinoco.html" title="Summary of Pinoco"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Pinoco_PDOStatementWrapper</h1>
+
+
+	<div class="description">
+	
+<p>PDO Statement wrapper overrides PDO statement object. You can use also native
+functions.</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-Pinoco.html">Pinoco</a><br />
+
+				<b>Copyright:</b>
+				Copyright 2010-2012, Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+				<b>License:</b>
+				<a href="MIT">License (http://www.opensource.org/licenses/mit-license.php)</a><br />
+				<b>Author:</b>
+				Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Pinoco_PDOStatementWrapper.html#17-154" title="Go to source code">Pinoco/PDOStatementWrapper.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#44-53" title="Go to source code">__construct</a>( <span>PDOStatement <var>$stmt</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$stmt</var></dt>
+					<dd><code>PDOStatement</code><br>$stmt</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__call" id="___call">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___call">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#55-58" title="Go to source code">__call</a>( <span>mixed <var>$name</var></span>, <span>mixed <var>$args</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execute" id="_execute">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execute">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#60-85" title="Go to source code">execute</a>( <span>mixed <var>$args</var>,…</span> )</code>
+
+		<div class="description short">
+			
+<p>Executes prepared query with parameters.<br />
+No arguments: no-params.<br />
+Single argument:<br />
+array or array like: expanded as params. (both of map and seq)<br />
+array incompatible: applied as single argument.<br />
+Multiple arguments: applied to params as is. (only sequential)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes prepared query with parameters. No arguments: no-params. Single
+argument: array or array like: expanded as params. (both of map and seq) array
+incompatible: applied as single argument. Multiple arguments: applied to params
+as is. (only sequential)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$args</var>,…</dt>
+					<dd><code>mixed</code><br>$args,...</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="exec" id="_exec">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_exec">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#87-97" title="Go to source code">exec</a>( <span>mixed <var>$args</var>,…</span> )</code>
+
+		<div class="description short">
+			
+<p>Alias to execute.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Alias to execute.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$args</var>,…</dt>
+					<dd><code>mixed</code><br>$args,...</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="query" id="_query">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_query">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#99-110" title="Go to source code">query</a>( <span>mixed <var>$args</var>,…</span> )</code>
+
+		<div class="description short">
+			
+<p>Calls execute and returns self.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Calls execute and returns self.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$args</var>,…</dt>
+					<dd><code>mixed</code><br>$args,...</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetch" id="_fetch">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>|boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fetch">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#112-125" title="Go to source code">fetch</a>( <span>integer <var>$orientation</var> = PDO::FETCH_ORI_NEXT</span>, <span>integer <var>$offset</var> = <span class="php-num">0</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Fetches the next row in result set. If false returned, you should close
+cursor using closeCursor().</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches the next row in result set. If false returned, you should close
+cursor using closeCursor().</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$orientation</var></dt>
+					<dd><code>integer</code><br>$orientation</dd>
+					<dt><var>$offset</var></dt>
+					<dd><code>integer</code><br>$offset</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>|boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchAll" id="_fetchAll">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fetchAll">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#127-141" title="Go to source code">fetchAll</a>( )</code>
+
+		<div class="description short">
+			
+<p>Fetches all results.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches all results.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchOne" id="_fetchOne">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fetchOne">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#143-153" title="Go to source code">fetchOne</a>( )</code>
+
+		<div class="description short">
+			
+<p>Fetches single result.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches single result.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Magic methods summary</caption>
+	<tr data-order="bindColumn" id="m_bindColumn">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_bindColumn">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#23" title="Go to source code">bindColumn</a>( <span>mixed <var>&amp; $param</var> = </span>, <span>integer <var>$type</var> = </span>, <span>integer <var>$maxlen</var> = </span>, <span>mixed <var>$driverdata</var> = </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$param</var></dt>
+					<dd><code>integer</code><br>$type</dd>
+					<dt><var>$type</var></dt>
+					<dd><code>integer</code><br>$maxlen</dd>
+					<dt><var>$maxlen</var></dt>
+					<dd><code>mixed</code><br>$driverdata</dd>
+					<dt><var>$driverdata</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="bindParam" id="m_bindParam">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_bindParam">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#24" title="Go to source code">bindParam</a>( <span>mixed <var>&amp; $variable</var> = </span>, <span>integer <var>$data_type</var> = PDO::PARAM_STR</span>, <span>integer <var>$length</var> = </span>, <span>mixed <var>$driver_options</var> = </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$variable</var></dt>
+					<dd><code>integer</code><br>$data_type</dd>
+					<dt><var>$data_type</var></dt>
+					<dd><code>integer</code><br>$length</dd>
+					<dt><var>$length</var></dt>
+					<dd><code>mixed</code><br>$driver_options</dd>
+					<dt><var>$driver_options</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="bindValue" id="m_bindValue">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_bindValue">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#25" title="Go to source code">bindValue</a>( <span>mixed <var>$value</var> = </span>, <span>integer <var>$data_type</var> = PDO::PARAM_STR</span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$data_type</dd>
+					<dt><var>$data_type</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="closeCursor" id="m_closeCursor">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_closeCursor">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#26" title="Go to source code">closeCursor</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="columnCount" id="m_columnCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_columnCount">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#27" title="Go to source code">columnCount</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="debugDumpParams" id="m_debugDumpParams">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_debugDumpParams">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#28" title="Go to source code">debugDumpParams</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="errorCode" id="m_errorCode">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_errorCode">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#29" title="Go to source code">errorCode</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="errorInfo" id="m_errorInfo">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_errorInfo">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#30" title="Go to source code">errorInfo</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchColumn" id="m_fetchColumn">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_fetchColumn">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#31" title="Go to source code">fetchColumn</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchObject" id="m_fetchObject">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_fetchObject">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#32" title="Go to source code">fetchObject</a>( <span>array <var>$ctor_args</var> = </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$ctor_args</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAttribute" id="m_getAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_getAttribute">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#33" title="Go to source code">getAttribute</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getColumnMeta" id="m_getColumnMeta">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_getColumnMeta">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#34" title="Go to source code">getColumnMeta</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="nextRowset" id="m_nextRowset">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_nextRowset">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#35" title="Go to source code">nextRowset</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rowCount" id="m_rowCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_rowCount">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#36" title="Go to source code">rowCount</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setAttribute" id="m_setAttribute">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_setAttribute">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#37" title="Go to source code">setAttribute</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setFetchMode" id="m_setFetchMode">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_setFetchMode">#</a>
+		<code><a href="source-class-Pinoco_PDOStatementWrapper.html#38" title="Go to source code">setFetchMode</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="magicProperties">
+	<caption>Magic properties summary</caption>
+	<tr data-order="queryString" id="m$queryString">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_PDOStatementWrapper.html#22" title="Go to source code"><var>$queryString</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$queryString" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+</div>
+
+	<div id="footer">
+		Pinoco 0.8.0 Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

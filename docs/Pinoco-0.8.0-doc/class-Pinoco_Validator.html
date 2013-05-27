@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Pinoco_Validator | Pinoco 0.8.0 Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?2167084490"></script>
+	<script type="text/javascript" src="elementlist.js?2241898528"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-Pinoco.html">Pinoco<span></span></a>
+						<ul>
+				<li><a href="package-Pinoco.PAL.html">PAL</a>
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Pinoco.html">Pinoco</a></li>
+				<li><a href="class-Pinoco_Delegate.html">Pinoco_Delegate</a></li>
+				<li><a href="class-Pinoco_DynamicVars.html">Pinoco_DynamicVars</a></li>
+				<li><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></li>
+				<li><a href="class-Pinoco_List.html">Pinoco_List</a></li>
+				<li><a href="class-Pinoco_MIMEType.html">Pinoco_MIMEType</a></li>
+				<li><a href="class-Pinoco_NativeRenderer.html">Pinoco_NativeRenderer</a></li>
+				<li><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></li>
+				<li><a href="class-Pinoco_NullRenderer.html">Pinoco_NullRenderer</a></li>
+				<li><a href="class-Pinoco_OptionalParam.html">Pinoco_OptionalParam</a></li>
+				<li><a href="class-Pinoco_Pagination.html">Pinoco_Pagination</a></li>
+				<li><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></li>
+				<li><a href="class-Pinoco_PDOWrapper.html">Pinoco_PDOWrapper</a></li>
+				<li><a href="class-Pinoco_Renderer.html">Pinoco_Renderer</a></li>
+				<li><a href="class-Pinoco_Router.html">Pinoco_Router</a></li>
+				<li><a href="class-Pinoco_TALRenderer.html">Pinoco_TALRenderer</a></li>
+				<li><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></li>
+				<li class="active"><a href="class-Pinoco_Validator.html">Pinoco_Validator</a></li>
+				<li><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></li>
+				<li><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Pinoco_ArrayConvertible.html">Pinoco_ArrayConvertible</a></li>
+			</ul>
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-__pinoco_autoload_impl.html">__pinoco_autoload_impl</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-Pinoco.html" title="Summary of Pinoco"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Pinoco_Validator</h1>
+
+
+	<div class="description">
+	
+<p>Procedural validation utility.</p>
+
+<pre>
+<span class="php-var">$validator</span> = <span
+class="php-keyword1">new</span> Pinoco_Validator(<span
+class="php-var">$data</span>);
+<span
+class="php-var">$validator</span>-&gt;check(<span
+class="php-quote">'name'</span>)-&gt;is(<span
+class="php-quote">'not-empty'</span>)-&gt;is(<span
+class="php-quote">'max-length 255'</span>);
+<span
+class="php-var">$validator</span>-&gt;check(<span
+class="php-quote">'age'</span>)-&gt;is(<span
+class="php-quote">'not-empty'</span>)-&gt;is(<span
+class="php-quote">'integer'</span>)
+                        -&gt;is(<span
+class="php-quote">'&gt;= 21'</span>, <span
+class="php-quote">'Adult only.'</span>);
+<span
+class="php-keyword1">if</span> (<span
+class="php-var">$validator</span>-&gt;valid) {
+    <span
+class="php-keyword1">echo</span> <span
+class="php-quote">&quot;OK&quot;</span>;
+}
+<span
+class="php-keyword1">else</span> {
+    <span
+class="php-keyword1">foreach</span> (<span
+class="php-var">$validator</span>-&gt;errors <span
+class="php-keyword1">as</span> <span class="php-var">$field</span>=&gt;<span
+class="php-var">$context</span>) {
+        <span
+class="php-keyword1">echo</span> <span class="php-var">$field</span> . <span
+class="php-quote">&quot;:&quot;</span> . <span
+class="php-var">$context</span>-&gt;message . <span
+class="php-quote">&quot;\n&quot;</span>;
+    }
+}
+</pre>
+
+<p>Builtin tests: pass, fail, empty, not-empty, max-length, min-length, in
+a,b,c, not-in a,b,c, numeric, integer, alpha, alpha-numeric, == n, != n, &gt; n,
+&gt;= n, &lt; n, &lt;= n, match /regexp/, not-match /regexp/, email, url</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Pinoco_Vars.html"><span>Pinoco_Vars</span></a>
+			
+			 implements 
+<span>IteratorAggregate</span>, 
+			
+<span>ArrayAccess</span>, 
+			
+<span>Countable</span>, 
+			
+				<a href="class-Pinoco_ArrayConvertible.html"><span>Pinoco_ArrayConvertible</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Pinoco_DynamicVars.html"><span>Pinoco_DynamicVars</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Pinoco_Validator</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-Pinoco.html">Pinoco</a><br />
+
+				<b>Copyright:</b>
+				Copyright 2010-2012, Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+				<b>License:</b>
+				<a href="MIT">License (http://www.opensource.org/licenses/mit-license.php)</a><br />
+				<b>Author:</b>
+				Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Pinoco_Validator.html#17-719" title="Go to source code">Pinoco/Validator.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#58-81" title="Go to source code">__construct</a>( <span>string <var>$target</var></span>, <span>array <var>$messages</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$target</var></dt>
+					<dd><code>string</code><br>$target</dd>
+					<dt><var>$messages</var></dt>
+					<dd><code>array</code><br>$messages</dd>
+				</dl></div>
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Pinoco_Vars.html#___construct">Pinoco_Vars::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="defineValidityTest" id="_defineValidityTest">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_defineValidityTest">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#142-158" title="Go to source code">defineValidityTest</a>( <span>string <var>$testName</var></span>, <span>callable <var>$callable</var></span>, <span>string <var>$message</var></span>, <span>boolean <var>$complex</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Defines custom test.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Defines custom test.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$testName</var></dt>
+					<dd><code>string</code><br>$testName</dd>
+					<dt><var>$callable</var></dt>
+					<dd><code>callable</code><br>$callable</dd>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+					<dt><var>$complex</var></dt>
+					<dd><code>boolean</code><br>$complex</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="defineFilter" id="_defineFilter">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_defineFilter">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#160-174" title="Go to source code">defineFilter</a>( <span>string <var>$filterName</var></span>, <span>callable <var>$callable</var></span>, <span>boolean <var>$complex</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Defines custom filter.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Defines custom filter.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filterName</var></dt>
+					<dd><code>string</code><br>$filterName</dd>
+					<dt><var>$callable</var></dt>
+					<dd><code>callable</code><br>$callable</dd>
+					<dt><var>$complex</var></dt>
+					<dd><code>boolean</code><br>$complex</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="overrideErrorMessages" id="_overrideErrorMessages">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_overrideErrorMessages">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#176-187" title="Go to source code">overrideErrorMessages</a>( <span>array <var>$messages</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Overrides error messages.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Overrides error messages.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$messages</var></dt>
+					<dd><code>array</code><br>$messages</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMessageFor" id="_getMessageFor">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMessageFor">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#189-211" title="Go to source code">getMessageFor</a>( <span>string <var>$testName</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Resolve error message by test name.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Resolve error message by test name.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$testName</var></dt>
+					<dd><code>string</code><br>$testName</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchExistenceAndValue" id="_fetchExistenceAndValue">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fetchExistenceAndValue">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#213-244" title="Go to source code">fetchExistenceAndValue</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Check existence and fetch value at the same time. (called by self and
+validation context)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Check existence and fetch value at the same time. (called by self and
+validation context)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execValidityTest" id="_execValidityTest">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execValidityTest">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#311-335" title="Go to source code">execValidityTest</a>( <span>string <var>$field</var></span>, <span>boolean <var>$filtered</var></span>, <span>mixed <var>$filteredValue</var></span>, <span>string <var>$testName</var></span>, <span>string <var>$param</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Executes validation test. (called by validation context)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes validation test. (called by validation context)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd><code>string</code><br>$field</dd>
+					<dt><var>$filtered</var></dt>
+					<dd><code>boolean</code><br>$filtered</dd>
+					<dt><var>$filteredValue</var></dt>
+					<dd><code>mixed</code><br>$filteredValue</dd>
+					<dt><var>$testName</var></dt>
+					<dd><code>string</code><br>$testName</dd>
+					<dt><var>$param</var></dt>
+					<dd><code>string</code><br>$param</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execValidityTestAll" id="_execValidityTestAll">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execValidityTestAll">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#337-364" title="Go to source code">execValidityTestAll</a>( <span>string <var>$field</var></span>, <span>boolean <var>$filtered</var></span>, <span>mixed <var>$filteredValue</var></span>, <span>string <var>$testName</var></span>, <span>string <var>$param</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Executes validation test to array with logical AND. (called by validation
+context)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes validation test to array with logical AND. (called by validation
+context)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd><code>string</code><br>$field</dd>
+					<dt><var>$filtered</var></dt>
+					<dd><code>boolean</code><br>$filtered</dd>
+					<dt><var>$filteredValue</var></dt>
+					<dd><code>mixed</code><br>$filteredValue</dd>
+					<dt><var>$testName</var></dt>
+					<dd><code>string</code><br>$testName</dd>
+					<dt><var>$param</var></dt>
+					<dd><code>string</code><br>$param</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execValidityTestAny" id="_execValidityTestAny">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execValidityTestAny">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#366-393" title="Go to source code">execValidityTestAny</a>( <span>string <var>$field</var></span>, <span>boolean <var>$filtered</var></span>, <span>mixed <var>$filteredValue</var></span>, <span>string <var>$testName</var></span>, <span>string <var>$param</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Executes validation test to array with logical OR. (called by validation
+context)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes validation test to array with logical OR. (called by validation
+context)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd><code>string</code><br>$field</dd>
+					<dt><var>$filtered</var></dt>
+					<dd><code>boolean</code><br>$filtered</dd>
+					<dt><var>$filteredValue</var></dt>
+					<dd><code>mixed</code><br>$filteredValue</dd>
+					<dt><var>$testName</var></dt>
+					<dd><code>string</code><br>$testName</dd>
+					<dt><var>$param</var></dt>
+					<dd><code>string</code><br>$param</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execFilter" id="_execFilter">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execFilter">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#395-419" title="Go to source code">execFilter</a>( <span>string <var>$field</var></span>, <span>boolean <var>$filtered</var></span>, <span>mixed <var>$filteredValue</var></span>, <span>mixed <var>$filterName</var></span>, <span>string <var>$param</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Executes filter. (called by validation context)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes filter. (called by validation context)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd><code>string</code><br>$field</dd>
+					<dt><var>$filtered</var></dt>
+					<dd><code>boolean</code><br>$filtered</dd>
+					<dt><var>$filteredValue</var></dt>
+					<dd><code>mixed</code><br>$filteredValue</dd>
+					<dt><var>$filterName</var></dt>
+					<dd><code>mixed</code><br>$filterName</dd>
+					<dt><var>$param</var></dt>
+					<dd><code>string</code><br>$param</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execFilterMap" id="_execFilterMap">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execFilterMap">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#421-454" title="Go to source code">execFilterMap</a>( <span>string <var>$field</var></span>, <span>boolean <var>$filtered</var></span>, <span>mixed <var>$filteredValue</var></span>, <span>mixed <var>$filterName</var></span>, <span>string <var>$param</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Executes filter for each elements. (called by validation context)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Executes filter for each elements. (called by validation context)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd><code>string</code><br>$field</dd>
+					<dt><var>$filtered</var></dt>
+					<dd><code>boolean</code><br>$filtered</dd>
+					<dt><var>$filteredValue</var></dt>
+					<dd><code>mixed</code><br>$filteredValue</dd>
+					<dt><var>$filterName</var></dt>
+					<dd><code>mixed</code><br>$filterName</dd>
+					<dt><var>$param</var></dt>
+					<dd><code>string</code><br>$param</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="contextFor" id="_contextFor">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_contextFor">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#456-466" title="Go to source code">contextFor</a>( <span>string <var>$name</var></span>, <span>string|boolean <var>$label</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns independent validation context.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns independent validation context.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string|boolean</code><br>$label</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="check" id="_check">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_check">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#468-483" title="Go to source code">check</a>( <span>string <var>$name</var></span>, <span>string|boolean <var>$label</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Starts named property check.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Starts named property check.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string|boolean</code><br>$label</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="recheck" id="_recheck">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_recheck">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#485-498" title="Go to source code">recheck</a>( <span>string <var>$name</var></span>, <span>string|boolean <var>$label</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Clears previous result and restarts named property check.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Clears previous result and restarts named property check.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+					<dt><var>$label</var></dt>
+					<dd><code>string|boolean</code><br>$label</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="uncheck" id="_uncheck">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_uncheck">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#500-513" title="Go to source code">uncheck</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Clears previous result.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Clears previous result.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_result" id="_get_result">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_result">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#515-523" title="Go to source code">get_result</a>( )</code>
+
+		<div class="description short">
+			
+<p>Exports test all results.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Exports test all results.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_errors" id="_get_errors">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_errors">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#525-542" title="Go to source code">get_errors</a>( )</code>
+
+		<div class="description short">
+			
+<p>Exports test results only failed.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Exports test results only failed.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_values" id="_get_values">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_values">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#544-559" title="Go to source code">get_values</a>( )</code>
+
+		<div class="description short">
+			
+<p>Exports test results only failed.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Exports test results only failed.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_valid" id="_get_valid">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_valid">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#561-569" title="Go to source code">get_valid</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns which all tests succeeded or not.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns which all tests succeeded or not.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_invalid" id="_get_invalid">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_invalid">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#571-579" title="Go to source code">get_invalid</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns which validator has one or more failed tests.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns which validator has one or more failed tests.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="emptyResult" id="_emptyResult">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_emptyResult">#</a>
+		<code><a href="source-class-Pinoco_Validator.html#581-599" title="Go to source code">emptyResult</a>( <span>array <var>$values</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Returns all succeeded checking results to be used in form's initial state. If
+you fetch a field not given by $values, you will get a passed checking context
+instead.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns all succeeded checking results to be used in form's initial state. If
+you fetch a field not given by $values, you will get a passed checking context
+instead.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$values</var></dt>
+					<dd><code>array</code><br>$values</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Pinoco_DynamicVars.html#methods">Pinoco_DynamicVars</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Pinoco_DynamicVars.html#_get">get()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_getIterator">getIterator()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_has">has()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_keys">keys()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_set">set()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Pinoco_Vars.html#methods">Pinoco_Vars</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Pinoco_Vars.html#___call">__call()</a>, 
+			<a href="class-Pinoco_Vars.html#___get">__get()</a>, 
+			<a href="class-Pinoco_Vars.html#___isset">__isset()</a>, 
+			<a href="class-Pinoco_Vars.html#___set">__set()</a>, 
+			<a href="class-Pinoco_Vars.html#___toString">__toString()</a>, 
+			<a href="class-Pinoco_Vars.html#___unset">__unset()</a>, 
+			<a href="class-Pinoco_Vars.html#_count">count()</a>, 
+			<a href="class-Pinoco_Vars.html#_fromArray">fromArray()</a>, 
+			<a href="class-Pinoco_Vars.html#_import">import()</a>, 
+			<a href="class-Pinoco_Vars.html#_markAsDirty">markAsDirty()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetExists">offsetExists()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetGet">offsetGet()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetSet">offsetSet()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetUnset">offsetUnset()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsDynamic">registerAsDynamic()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsLazy">registerAsLazy()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsMethod">registerAsMethod()</a>, 
+			<a href="class-Pinoco_Vars.html#_remove">remove()</a>, 
+			<a href="class-Pinoco_Vars.html#_rget">rget()</a>, 
+			<a href="class-Pinoco_Vars.html#_setDefault">setDefault()</a>, 
+			<a href="class-Pinoco_Vars.html#_setLoose">setLoose()</a>, 
+			<a href="class-Pinoco_Vars.html#_toArray">toArray()</a>, 
+			<a href="class-Pinoco_Vars.html#_toArrayRecurse">toArrayRecurse()</a>, 
+			<a href="class-Pinoco_Vars.html#_values">values()</a>, 
+			<a href="class-Pinoco_Vars.html#_wrap">wrap()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="_tests" id="$_tests">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#49" title="Go to source code"><var>$_tests</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$_tests" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_filters" id="$_filters">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#50" title="Go to source code"><var>$_filters</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$_filters" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_messages" id="$_messages">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#51" title="Go to source code"><var>$_messages</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$_messages" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+	<table class="summary" id="magicProperties">
+	<caption>Magic properties summary</caption>
+	<tr data-order="result" id="m$result">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#41" title="Go to source code"><var>$result</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$result" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>All context objects.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>All context objects.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="errors" id="m$errors">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#42" title="Go to source code"><var>$errors</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$errors" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Invalid context objects only.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Invalid context objects only.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="values" id="m$values">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#43" title="Go to source code"><var>$values</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$values" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Validated values unwrapped.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Validated values unwrapped.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="valid" id="m$valid">
+		<td class="attributes"><code>
+			public  read-only
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#44" title="Go to source code"><var>$valid</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$valid" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Totally valid or not.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Totally valid or not.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="invalid" id="m$invalid">
+		<td class="attributes"><code>
+			public  read-only
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Validator.html#45" title="Go to source code"><var>$invalid</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$invalid" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Totally invalid or not.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Totally invalid or not.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+</div>
+
+	<div id="footer">
+		Pinoco 0.8.0 Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

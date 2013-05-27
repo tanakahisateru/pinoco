@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Pinoco_Pagination | Pinoco 0.8.0 Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?2167084490"></script>
+	<script type="text/javascript" src="elementlist.js?2241898528"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-Pinoco.html">Pinoco<span></span></a>
+						<ul>
+				<li><a href="package-Pinoco.PAL.html">PAL</a>
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Pinoco.html">Pinoco</a></li>
+				<li><a href="class-Pinoco_Delegate.html">Pinoco_Delegate</a></li>
+				<li><a href="class-Pinoco_DynamicVars.html">Pinoco_DynamicVars</a></li>
+				<li><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></li>
+				<li><a href="class-Pinoco_List.html">Pinoco_List</a></li>
+				<li><a href="class-Pinoco_MIMEType.html">Pinoco_MIMEType</a></li>
+				<li><a href="class-Pinoco_NativeRenderer.html">Pinoco_NativeRenderer</a></li>
+				<li><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></li>
+				<li><a href="class-Pinoco_NullRenderer.html">Pinoco_NullRenderer</a></li>
+				<li><a href="class-Pinoco_OptionalParam.html">Pinoco_OptionalParam</a></li>
+				<li class="active"><a href="class-Pinoco_Pagination.html">Pinoco_Pagination</a></li>
+				<li><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></li>
+				<li><a href="class-Pinoco_PDOWrapper.html">Pinoco_PDOWrapper</a></li>
+				<li><a href="class-Pinoco_Renderer.html">Pinoco_Renderer</a></li>
+				<li><a href="class-Pinoco_Router.html">Pinoco_Router</a></li>
+				<li><a href="class-Pinoco_TALRenderer.html">Pinoco_TALRenderer</a></li>
+				<li><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></li>
+				<li><a href="class-Pinoco_Validator.html">Pinoco_Validator</a></li>
+				<li><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></li>
+				<li><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Pinoco_ArrayConvertible.html">Pinoco_ArrayConvertible</a></li>
+			</ul>
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-__pinoco_autoload_impl.html">__pinoco_autoload_impl</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-Pinoco.html" title="Summary of Pinoco"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Pinoco_Pagination</h1>
+
+
+	<div class="description">
+	
+<p>Pagination object designed for PHPTAL. This object is independent from RDBMS.
+You can use it with any data source.</p>
+
+<pre>
+<span class="php-var">$pagination</span> = <span
+class="php-keyword1">new</span> Pinoco_Pagination(
+    <span
+class="php-comment">// How many elements?</span>
+    <span
+class="php-keyword1">function</span>(<span
+class="php-var">$pagination</span>) {
+        <span
+class="php-keyword1">return</span> <span
+class="php-var">$pagination</span>-&gt;db-&gt;prepare(
+            <span
+class="php-quote">&quot;SELECT count(id) as c FROM ...&quot;</span>
+        )-&gt;query()-&gt;fetchOne()-&gt;c;
+    },
+    <span
+class="php-comment">// What to be shown?</span>
+    <span
+class="php-keyword1">function</span>(<span
+class="php-var">$pagination</span>, <span class="php-var">$offset</span>, <span
+class="php-var">$limit</span>) {
+        <span
+class="php-keyword1">return</span> <span
+class="php-var">$pagination</span>-&gt;db-&gt;prepare(
+            <span
+class="php-quote">&quot;SELECT * FROM ... LIMIT </span><span
+class="php-var">$offset</span><span class="php-quote">, </span><span
+class="php-var">$limit</span><span
+class="php-quote">&quot;</span>
+        )-&gt;query()-&gt;fetchAll();
+    },
+    <span
+class="php-comment">// How the page number is formatted in navigation?</span>
+    <span
+class="php-keyword1">function</span>(<span
+class="php-var">$pagination</span>, <span
+class="php-var">$page</span>) {
+        <span
+class="php-keyword1">return</span> <span
+class="php-quote">'list'</span> . (<span class="php-var">$page</span> &gt; <span
+class="php-num">1</span> ? <span class="php-quote">'?page='</span> . <span
+class="php-var">$page</span> : <span
+class="php-quote">''</span>);
+    },
+    <span
+class="php-keyword1">array</span>(
+        <span
+class="php-quote">'elementsPerPage'</span> =&gt; <span
+class="php-num">20</span>,
+        <span
+class="php-quote">'db'</span> =&gt; <span class="php-var">$db</span>, <span
+class="php-comment">// you can pass any custom property to pagination.</span>
+    )
+);
+<span
+class="php-var">$pagination</span>-&gt;page = <span
+class="php-num">1</span>;
+<span class="php-keyword1">if</span> (!<span
+class="php-var">$pagination</span>-&gt;isValidPage) { <span
+class="php-var">$this</span>-&gt;notfound(); }
+</pre>
+
+<p>PHPTAL example</p>
+
+<pre>
+&lt;tal:block tal:repeat=<span
+class="php-quote">&quot;element pagination/data&quot;</span>&gt;
+   <span
+class="php-var">$</span>{element/prop}
+&lt;/tal:block&gt;
+&lt;div <span
+class="php-keyword1">class</span>=<span
+class="php-quote">&quot;pagination&quot;</span>
+    tal:<span
+class="php-keyword2">define</span>=<span
+class="php-quote">&quot;prev pagination/prev; pages pagination/pages; next pagination/next&quot;</span>&gt;
+    &lt;!--! <span
+class="php-keyword2">prev</span> button --&gt;
+    &lt;a href=<span
+class="php-quote">&quot;&quot;</span> tal:condition=<span
+class="php-quote">&quot;prev/enabled&quot;</span>
+       tal:attributes=<span
+class="php-quote">&quot;href url:</span><span class="php-var">$</span><span
+class="php-quote">{prev/href}&quot;</span>&gt;<span
+class="php-keyword2">PREV</span>&lt;/a&gt;
+    &lt;span <span
+class="php-keyword1">class</span>=<span
+class="php-quote">&quot;disabled&quot;</span> tal:condition=<span
+class="php-quote">&quot;not:prev/enabled&quot;</span>&gt;<span
+class="php-keyword2">PREV</span>&lt;/span&gt;
+    &lt;!--! page <span
+class="php-keyword2">link</span> buttons --&gt;
+    &lt;tal:block tal:repeat=<span
+class="php-quote">&quot;page pages&quot;</span>&gt;
+        &lt;tal:block tal:condition=<span
+class="php-quote">&quot;not:page/padding&quot;</span>&gt;
+            &lt;a href=<span
+class="php-quote">&quot;&quot;</span> tal:condition=<span
+class="php-quote">&quot;not:page/current&quot;</span>
+               tal:attributes=<span
+class="php-quote">&quot;href url:</span><span class="php-var">$</span><span
+class="php-quote">{page/href}&quot;</span>
+               tal:content=<span
+class="php-quote">&quot;page/number&quot;</span>&gt;<span
+class="php-num">1</span>&lt;/a&gt;
+            &lt;span <span
+class="php-keyword1">class</span>=<span
+class="php-quote">&quot;current&quot;</span> tal:condition=<span
+class="php-quote">&quot;page/current&quot;</span>
+               tal:content=<span
+class="php-quote">&quot;page/number&quot;</span>&gt;<span
+class="php-num">1</span>&lt;/span&gt;
+        &lt;/tal:block&gt;
+        &lt;span tal:condition=<span
+class="php-quote">&quot;page/padding&quot;</span>&gt;...&lt;/span&gt;
+    &lt;/tal:block&gt;
+    &lt;!--! <span
+class="php-keyword2">next</span> button --&gt;
+    &lt;a href=<span
+class="php-quote">&quot;&quot;</span> tal:condition=<span
+class="php-quote">&quot;next/enabled&quot;</span>
+       tal:attributes=<span
+class="php-quote">&quot;href url:</span><span class="php-var">$</span><span
+class="php-quote">{next/href}&quot;</span>&gt;<span
+class="php-keyword2">NEXT</span>&lt;/a&gt;
+    &lt;span <span
+class="php-keyword1">class</span>=<span
+class="php-quote">&quot;disabled&quot;</span> tal:condition=<span
+class="php-quote">&quot;not:next/enabled&quot;</span>&gt;<span
+class="php-keyword2">NEXT</span>&lt;/span&gt;
+&lt;/div&gt;
+</pre>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Pinoco_Vars.html"><span>Pinoco_Vars</span></a>
+			
+			 implements 
+<span>IteratorAggregate</span>, 
+			
+<span>ArrayAccess</span>, 
+			
+<span>Countable</span>, 
+			
+				<a href="class-Pinoco_ArrayConvertible.html"><span>Pinoco_ArrayConvertible</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Pinoco_DynamicVars.html"><span>Pinoco_DynamicVars</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Pinoco_Pagination</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-Pinoco.html">Pinoco</a><br />
+
+				<b>Copyright:</b>
+				Copyright 2010-2012, Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+				<b>License:</b>
+				<a href="MIT">License (http://www.opensource.org/licenses/mit-license.php)</a><br />
+				<b>Author:</b>
+				Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Pinoco_Pagination.html#17-335" title="Go to source code">Pinoco/Pagination.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#104-128" title="Go to source code">__construct</a>( <span>callable <var>$totalCountCallable</var></span>, <span>callable <var>$dataFetchCallable</var></span>, <span>callable <var>$urlFormatCallable</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Creates pagination object from user codes.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates pagination object from user codes.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$totalCountCallable</var></dt>
+					<dd><code>callable</code><br>$totalCountCallable</dd>
+					<dt><var>$dataFetchCallable</var></dt>
+					<dd><code>callable</code><br>$dataFetchCallable</dd>
+					<dt><var>$urlFormatCallable</var></dt>
+					<dd><code>callable</code><br>$urlFormatCallable</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options</dd>
+				</dl></div>
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Pinoco_Vars.html#___construct">Pinoco_Vars::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_page" id="_get_page">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_page">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#130-133" title="Go to source code">get_page</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_page" id="_set_page">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_page">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#134-143" title="Go to source code">set_page</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_isValidPage" id="_get_isValidPage">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_isValidPage">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#145-147" title="Go to source code">get_isValidPage</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_elementsPerPage" id="_get_elementsPerPage">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_elementsPerPage">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#149-152" title="Go to source code">get_elementsPerPage</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_elementsPerPage" id="_set_elementsPerPage">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_elementsPerPage">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#153-160" title="Go to source code">set_elementsPerPage</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_pagesAfterFirst" id="_get_pagesAfterFirst">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_pagesAfterFirst">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#162-165" title="Go to source code">get_pagesAfterFirst</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_pagesAfterFirst" id="_set_pagesAfterFirst">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_pagesAfterFirst">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#166-172" title="Go to source code">set_pagesAfterFirst</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_pagesAroundCurrent" id="_get_pagesAroundCurrent">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_pagesAroundCurrent">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#174-177" title="Go to source code">get_pagesAroundCurrent</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_pagesAroundCurrent" id="_set_pagesAroundCurrent">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_pagesAroundCurrent">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#178-184" title="Go to source code">set_pagesAroundCurrent</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_pagesBeforeLast" id="_get_pagesBeforeLast">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_pagesBeforeLast">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#186-189" title="Go to source code">get_pagesBeforeLast</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set_pagesBeforeLast" id="_set_pagesBeforeLast">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set_pagesBeforeLast">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#190-196" title="Go to source code">set_pagesBeforeLast</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_totalCount" id="_get_totalCount">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_totalCount">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#198-209" title="Go to source code">get_totalCount</a>( )</code>
+
+		<div class="description short">
+			
+<p>Total number of elements.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Total number of elements.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_data" id="_get_data">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_data">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#211-228" title="Go to source code">get_data</a>( )</code>
+
+		<div class="description short">
+			
+<p>Elements in paginated range. The fetched result is cached before changing
+current page.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Elements in paginated range. The fetched result is cached before changing
+current page.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reset" id="_reset">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reset">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#230-239" title="Go to source code">reset</a>( )</code>
+
+		<div class="description short">
+			
+<p>Force to clear cached data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Force to clear cached data.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_totalPages" id="_get_totalPages">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_totalPages">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#241-249" title="Go to source code">get_totalPages</a>( )</code>
+
+		<div class="description short">
+			
+<p>Total number of pages.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Total number of pages.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_pages" id="_get_pages">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_pages">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#251-292" title="Go to source code">get_pages</a>( )</code>
+
+		<div class="description short">
+			
+<p>Navigation information of each page buttons.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Navigation information of each page buttons.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_List.html">Pinoco_List</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_prev" id="_get_prev">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_prev">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#294-313" title="Go to source code">get_prev</a>( )</code>
+
+		<div class="description short">
+			
+<p>Navigation information of the prev button.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Navigation information of the prev button.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_next" id="_get_next">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_next">#</a>
+		<code><a href="source-class-Pinoco_Pagination.html#315-334" title="Go to source code">get_next</a>( )</code>
+
+		<div class="description short">
+			
+<p>Navigation information of the next button.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Navigation information of the next button.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Pinoco_DynamicVars.html#methods">Pinoco_DynamicVars</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Pinoco_DynamicVars.html#_get">get()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_getIterator">getIterator()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_has">has()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_keys">keys()</a>, 
+			<a href="class-Pinoco_DynamicVars.html#_set">set()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Pinoco_Vars.html#methods">Pinoco_Vars</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Pinoco_Vars.html#___call">__call()</a>, 
+			<a href="class-Pinoco_Vars.html#___get">__get()</a>, 
+			<a href="class-Pinoco_Vars.html#___isset">__isset()</a>, 
+			<a href="class-Pinoco_Vars.html#___set">__set()</a>, 
+			<a href="class-Pinoco_Vars.html#___toString">__toString()</a>, 
+			<a href="class-Pinoco_Vars.html#___unset">__unset()</a>, 
+			<a href="class-Pinoco_Vars.html#_count">count()</a>, 
+			<a href="class-Pinoco_Vars.html#_fromArray">fromArray()</a>, 
+			<a href="class-Pinoco_Vars.html#_import">import()</a>, 
+			<a href="class-Pinoco_Vars.html#_markAsDirty">markAsDirty()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetExists">offsetExists()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetGet">offsetGet()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetSet">offsetSet()</a>, 
+			<a href="class-Pinoco_Vars.html#_offsetUnset">offsetUnset()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsDynamic">registerAsDynamic()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsLazy">registerAsLazy()</a>, 
+			<a href="class-Pinoco_Vars.html#_registerAsMethod">registerAsMethod()</a>, 
+			<a href="class-Pinoco_Vars.html#_remove">remove()</a>, 
+			<a href="class-Pinoco_Vars.html#_rget">rget()</a>, 
+			<a href="class-Pinoco_Vars.html#_setDefault">setDefault()</a>, 
+			<a href="class-Pinoco_Vars.html#_setLoose">setLoose()</a>, 
+			<a href="class-Pinoco_Vars.html#_toArray">toArray()</a>, 
+			<a href="class-Pinoco_Vars.html#_toArrayRecurse">toArrayRecurse()</a>, 
+			<a href="class-Pinoco_Vars.html#_values">values()</a>, 
+			<a href="class-Pinoco_Vars.html#_wrap">wrap()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="magicProperties">
+	<caption>Magic properties summary</caption>
+	<tr data-order="page" id="m$page">
+		<td class="attributes"><code>
+			public  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#78" title="Go to source code"><var>$page</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$page" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The page number that starts with 1. (not 0!)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The page number that starts with 1. (not 0!)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="elementsPerPage" id="m$elementsPerPage">
+		<td class="attributes"><code>
+			public  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#79" title="Go to source code"><var>$elementsPerPage</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$elementsPerPage" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Amount of data shown in single page.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Amount of data shown in single page.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="pagesAfterFirst" id="m$pagesAfterFirst">
+		<td class="attributes"><code>
+			public  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#80" title="Go to source code"><var>$pagesAfterFirst</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$pagesAfterFirst" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>How many buttons after the first page. (-1: hides first page)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>How many buttons after the first page. (-1: hides first page)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="pagesAroundCurrent" id="m$pagesAroundCurrent">
+		<td class="attributes"><code>
+			public  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#81" title="Go to source code"><var>$pagesAroundCurrent</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$pagesAroundCurrent" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>How many buttons around current page. (-1: expand all pages)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>How many buttons around current page. (-1: expand all pages)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="pagesBeforeLast" id="m$pagesBeforeLast">
+		<td class="attributes"><code>
+			public  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#82" title="Go to source code"><var>$pagesBeforeLast</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$pagesBeforeLast" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>How many buttons before the last page. (-1: hides last page)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>How many buttons before the last page. (-1: hides last page)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="totalCount" id="m$totalCount">
+		<td class="attributes"><code>
+			public  read-only
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#83" title="Go to source code"><var>$totalCount</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$totalCount" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Total number of elements.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Total number of elements.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="totalPages" id="m$totalPages">
+		<td class="attributes"><code>
+			public  read-only
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#84" title="Go to source code"><var>$totalPages</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$totalPages" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Total number of pages.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Total number of pages.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="data" id="m$data">
+		<td class="attributes"><code>
+			public  read-only
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#85" title="Go to source code"><var>$data</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$data" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Elements in paginated range.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Elements in paginated range.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="pages" id="m$pages">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_List.html">Pinoco_List</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#86" title="Go to source code"><var>$pages</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$pages" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Navigation information of each page buttons.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Navigation information of each page buttons.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="prev" id="m$prev">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#87" title="Go to source code"><var>$prev</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$prev" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Navigation information of the prev button.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Navigation information of the prev button.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="next" id="m$next">
+		<td class="attributes"><code>
+			public  read-only
+			<code><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Pagination.html#88" title="Go to source code"><var>$next</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$next" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Navigation information of the prev button.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Navigation information of the prev button.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+</div>
+
+	<div id="footer">
+		Pinoco 0.8.0 Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

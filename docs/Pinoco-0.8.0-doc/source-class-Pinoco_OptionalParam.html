@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+	<meta name="robots" content="noindex" />
+
+	<title>File Pinoco/OptionalParam.php | Pinoco 0.8.0 Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?2167084490"></script>
+	<script type="text/javascript" src="elementlist.js?2241898528"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-Pinoco.html">Pinoco<span></span></a>
+						<ul>
+				<li><a href="package-Pinoco.PAL.html">PAL</a>
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Pinoco.html">Pinoco</a></li>
+				<li><a href="class-Pinoco_Delegate.html">Pinoco_Delegate</a></li>
+				<li><a href="class-Pinoco_DynamicVars.html">Pinoco_DynamicVars</a></li>
+				<li><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></li>
+				<li><a href="class-Pinoco_List.html">Pinoco_List</a></li>
+				<li><a href="class-Pinoco_MIMEType.html">Pinoco_MIMEType</a></li>
+				<li><a href="class-Pinoco_NativeRenderer.html">Pinoco_NativeRenderer</a></li>
+				<li><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></li>
+				<li><a href="class-Pinoco_NullRenderer.html">Pinoco_NullRenderer</a></li>
+				<li class="active"><a href="class-Pinoco_OptionalParam.html">Pinoco_OptionalParam</a></li>
+				<li><a href="class-Pinoco_Pagination.html">Pinoco_Pagination</a></li>
+				<li><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></li>
+				<li><a href="class-Pinoco_PDOWrapper.html">Pinoco_PDOWrapper</a></li>
+				<li><a href="class-Pinoco_Renderer.html">Pinoco_Renderer</a></li>
+				<li><a href="class-Pinoco_Router.html">Pinoco_Router</a></li>
+				<li><a href="class-Pinoco_TALRenderer.html">Pinoco_TALRenderer</a></li>
+				<li><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></li>
+				<li><a href="class-Pinoco_Validator.html">Pinoco_Validator</a></li>
+				<li><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></li>
+				<li><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Pinoco_ArrayConvertible.html">Pinoco_ArrayConvertible</a></li>
+			</ul>
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-__pinoco_autoload_impl.html">__pinoco_autoload_impl</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-Pinoco.html" title="Summary of Pinoco"><span>Package</span></a>
+			</li>
+			<li>
+				<a href="class-Pinoco_OptionalParam.html" title="Summary of Pinoco_OptionalParam"><span>Class</span></a>
+			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<pre><code><span id="1" class="l"><a class="l" href="#1"> 1: </a><span class="xlang">&lt;?php</span>
+</span><span id="2" class="l"><a class="l" href="#2"> 2: </a><span class="php-comment">/**
+</span></span><span id="3" class="l"><a class="l" href="#3"> 3: </a><span class="php-comment"> * Pinoco: makes existing static web site dynamic transparently.
+</span></span><span id="4" class="l"><a class="l" href="#4"> 4: </a><span class="php-comment"> * Copyright 2010-2012, Hisateru Tanaka &lt;tanakahisateru@gmail.com&gt;
+</span></span><span id="5" class="l"><a class="l" href="#5"> 5: </a><span class="php-comment"> *
+</span></span><span id="6" class="l"><a class="l" href="#6"> 6: </a><span class="php-comment"> * Licensed under The MIT License
+</span></span><span id="7" class="l"><a class="l" href="#7"> 7: </a><span class="php-comment"> * Redistributions of files must retain the above copyright notice.
+</span></span><span id="8" class="l"><a class="l" href="#8"> 8: </a><span class="php-comment"> *
+</span></span><span id="9" class="l"><a class="l" href="#9"> 9: </a><span class="php-comment"> * PHP Version 5
+</span></span><span id="10" class="l"><a class="l" href="#10">10: </a><span class="php-comment"> *
+</span></span><span id="11" class="l"><a class="l" href="#11">11: </a><span class="php-comment"> * @author     Hisateru Tanaka &lt;tanakahisateru@gmail.com&gt;
+</span></span><span id="12" class="l"><a class="l" href="#12">12: </a><span class="php-comment"> * @copyright  Copyright 2010-2012, Hisateru Tanaka &lt;tanakahisateru@gmail.com&gt;
+</span></span><span id="13" class="l"><a class="l" href="#13">13: </a><span class="php-comment"> * @license    MIT License (http://www.opensource.org/licenses/mit-license.php)
+</span></span><span id="14" class="l"><a class="l" href="#14">14: </a><span class="php-comment"> * @package    Pinoco
+</span></span><span id="15" class="l"><a class="l" href="#15">15: </a><span class="php-comment"> */</span>
+</span><span id="16" class="l"><a class="l" href="#16">16: </a>
+</span><span id="17" class="l"><a class="l" href="#17">17: </a><span class="php-comment">/**
+</span></span><span id="18" class="l"><a class="l" href="#18">18: </a><span class="php-comment"> * Optional parameter placeholder.
+</span></span><span id="19" class="l"><a class="l" href="#19">19: </a><span class="php-comment"> *
+</span></span><span id="20" class="l"><a class="l" href="#20">20: </a><span class="php-comment"> * @package Pinoco
+</span></span><span id="21" class="l"><a class="l" href="#21">21: </a><span class="php-comment"> */</span>
+</span><span id="22" class="l"><a class="l" href="#22">22: </a><span class="php-keyword1">class</span> <a id="Pinoco_OptionalParam" href="#Pinoco_OptionalParam">Pinoco_OptionalParam</a> {
+</span><span id="23" class="l"><a class="l" href="#23">23: </a>
+</span><span id="24" class="l"><a class="l" href="#24">24: </a>    <span class="php-keyword1">const</span> <a id="UNSPECIFIED" href="#UNSPECIFIED">UNSPECIFIED</a> = <span class="php-quote">'c62c4c3f7fa57c7acfcc93073527c490-OptionalParameterUnspecified-d5210620220db619214dd7421301cbf7'</span>;
+</span><span id="25" class="l"><a class="l" href="#25">25: </a>
+</span><span id="26" class="l"><a class="l" href="#26">26: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <span class="php-keyword2">trim</span>(<span class="php-var">$params</span>)
+</span><span id="27" class="l"><a class="l" href="#27">27: </a>    {
+</span><span id="28" class="l"><a class="l" href="#28">28: </a>        <span class="php-var">$params</span> = <span class="php-keyword2">array_reverse</span>(<span class="php-var">$params</span>);
+</span><span id="29" class="l"><a class="l" href="#29">29: </a>        <span class="php-keyword1">while</span>(!<span class="php-keyword1">empty</span>(<span class="php-var">$params</span>) &amp;&amp; <span class="php-var">$params</span>[<span class="php-num">0</span>] <span class="php-keyword1">instanceof</span> self) {
+</span><span id="30" class="l"><a class="l" href="#30">30: </a>            <span class="php-keyword2">array_shift</span>(<span class="php-var">$params</span>);
+</span><span id="31" class="l"><a class="l" href="#31">31: </a>        }
+</span><span id="32" class="l"><a class="l" href="#32">32: </a>        <span class="php-keyword1">return</span> <span class="php-keyword2">array_reverse</span>(<span class="php-var">$params</span>);
+</span><span id="33" class="l"><a class="l" href="#33">33: </a>    }
+</span><span id="34" class="l"><a class="l" href="#34">34: </a>
+</span><span id="35" class="l"><a class="l" href="#35">35: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> <a id="_isSpecifiedBy" href="#_isSpecifiedBy">isSpecifiedBy</a>(<span class="php-var">$value</span>)
+</span><span id="36" class="l"><a class="l" href="#36">36: </a>    {
+</span><span id="37" class="l"><a class="l" href="#37">37: </a>        <span class="php-keyword1">return</span> <span class="php-var">$value</span> !== self::UNSPECIFIED;
+</span><span id="38" class="l"><a class="l" href="#38">38: </a>    }
+</span><span id="39" class="l"><a class="l" href="#39">39: </a>
+</span><span id="40" class="l"><a class="l" href="#40">40: </a>}
+</span><span id="41" class="l"><a class="l" href="#41">41: </a></span></code></pre>
+
+	<div id="footer">
+		Pinoco 0.8.0 Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

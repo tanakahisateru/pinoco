@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Pinoco_Router | Pinoco 0.8.0 Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?2167084490"></script>
+	<script type="text/javascript" src="elementlist.js?2241898528"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Packages</h3>
+			<ul>
+				<li class="active"><a href="package-Pinoco.html">Pinoco<span></span></a>
+						<ul>
+				<li><a href="package-Pinoco.PAL.html">PAL</a>
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Pinoco.html">Pinoco</a></li>
+				<li><a href="class-Pinoco_Delegate.html">Pinoco_Delegate</a></li>
+				<li><a href="class-Pinoco_DynamicVars.html">Pinoco_DynamicVars</a></li>
+				<li><a href="class-Pinoco_HttpRequestVars.html">Pinoco_HttpRequestVars</a></li>
+				<li><a href="class-Pinoco_List.html">Pinoco_List</a></li>
+				<li><a href="class-Pinoco_MIMEType.html">Pinoco_MIMEType</a></li>
+				<li><a href="class-Pinoco_NativeRenderer.html">Pinoco_NativeRenderer</a></li>
+				<li><a href="class-Pinoco_NothingVars.html">Pinoco_NothingVars</a></li>
+				<li><a href="class-Pinoco_NullRenderer.html">Pinoco_NullRenderer</a></li>
+				<li><a href="class-Pinoco_OptionalParam.html">Pinoco_OptionalParam</a></li>
+				<li><a href="class-Pinoco_Pagination.html">Pinoco_Pagination</a></li>
+				<li><a href="class-Pinoco_PDOStatementWrapper.html">Pinoco_PDOStatementWrapper</a></li>
+				<li><a href="class-Pinoco_PDOWrapper.html">Pinoco_PDOWrapper</a></li>
+				<li><a href="class-Pinoco_Renderer.html">Pinoco_Renderer</a></li>
+				<li class="active"><a href="class-Pinoco_Router.html">Pinoco_Router</a></li>
+				<li><a href="class-Pinoco_TALRenderer.html">Pinoco_TALRenderer</a></li>
+				<li><a href="class-Pinoco_TestEnvironment.html">Pinoco_TestEnvironment</a></li>
+				<li><a href="class-Pinoco_Validator.html">Pinoco_Validator</a></li>
+				<li><a href="class-Pinoco_ValidatorContext.html">Pinoco_ValidatorContext</a></li>
+				<li><a href="class-Pinoco_Vars.html">Pinoco_Vars</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Pinoco_ArrayConvertible.html">Pinoco_ArrayConvertible</a></li>
+			</ul>
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-__pinoco_autoload_impl.html">__pinoco_autoload_impl</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-Pinoco.html" title="Summary of Pinoco"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Pinoco_Router</h1>
+
+
+	<div class="description">
+	
+<p>Pattern matching router. This utility can be used on any phase of Pinoco
+runtime process.</p>
+
+<pre>
+<span
+class="php-var">$router</span> = Pinoco::instance()-&gt;route();
+<span
+class="php-var">$router</span>-&gt;pass(<span
+class="php-keyword1">array</span>(<span class="php-quote">''</span>, <span
+class="php-quote">'index.html'</span>,))
+    -&gt;on(<span
+class="php-quote">'list'</span>, <span
+class="php-keyword1">function</span>() <span
+class="php-keyword1">use</span>(<span class="php-var">$self</span>, <span
+class="php-var">$data</span>) {
+        <span
+class="php-comment">// ...</span>
+    })
+    -&gt;on(<span
+class="php-quote">'show/{id}'</span>, <span
+class="php-keyword1">function</span>(<span class="php-var">$id</span>) <span
+class="php-keyword1">use</span>(<span class="php-var">$self</span>, <span
+class="php-var">$data</span>) {
+        <span
+class="php-comment">// ...</span>
+    })
+    -&gt;on(<span
+class="php-quote">'POST:post'</span>, <span
+class="php-keyword1">function</span>() <span
+class="php-keyword1">use</span>(<span class="php-var">$self</span>, <span
+class="php-var">$data</span>) {
+        <span
+class="php-comment">// ...</span>
+    })
+    -&gt;on(<span
+class="php-quote">'GET:post'</span>, <span
+class="php-keyword1">array</span>(<span class="php-var">$this</span>, <span
+class="php-quote">'forbidden'</span>))
+    -&gt;on(<span
+class="php-quote">'*'</span>, <span class="php-keyword1">array</span>(<span
+class="php-var">$this</span>, <span
+class="php-quote">'notfound'</span>));
+</pre>
+
+<p>Pattern rules:</p>
+
+<pre>
+'/index'            : Fixed route.
+'index'             : Fixed route in relative path from current (_enter) hook.
+'/show/{id}'        : Parametrized one. Such path elements are passed to handler.
+'GET: /edit/{id}' or
+'POST: /edit/{id}'  : Different HTTP methods can be different routes.
+'*:*'               : Matches any patterns. Useful to be bound to Pinoco::notfound()  or forbidden().
+</pre>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-Pinoco.html">Pinoco</a><br />
+
+				<b>Copyright:</b>
+				Copyright 2010-2012, Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+				<b>License:</b>
+				<a href="MIT">License (http://www.opensource.org/licenses/mit-license.php)</a><br />
+				<b>Author:</b>
+				Hisateru Tanaka &lt;<a
+href="mailto:tanakahisateru&#64;gmail.com">tanakahisateru&#64;<!---->gmail.com</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Pinoco_Router.html#17-217" title="Go to source code">Pinoco/Router.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Pinoco_Router.html#57-66" title="Go to source code">__construct</a>( <span><code><a href="class-Pinoco.html">Pinoco</a></code> <var>$pinoco</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$pinoco</var></dt>
+					<dd><code><code><a href="class-Pinoco.html">Pinoco</a></code></code><br>$pinoco</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="on" id="_on">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_on">#</a>
+		<code><a href="source-class-Pinoco_Router.html#68-104" title="Go to source code">on</a>( <span>string|array <var>$route</var></span>, <span>callable <var>$handler</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Routing rules which binds URI path to any callable.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Routing rules which binds URI path to any callable.</p>
+
+<p>Specified handler is called immediately if the route matches. Please note
+that this method is not a definition but invoker.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$route</var></dt>
+					<dd><code>string|array</code><br>$route</dd>
+					<dt><var>$handler</var></dt>
+					<dd><code>callable</code><br>$handler</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>$this<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="pass" id="_pass">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_pass">#</a>
+		<code><a href="source-class-Pinoco_Router.html#106-136" title="Go to source code">pass</a>( <span>string|array <var>$route</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Specified route is ignored and delegated to the next script step. This method
+is useful to ignore matching patterns below. (e.g. '<em>:</em>')</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Specified route is ignored and delegated to the next script step. This method
+is useful to ignore matching patterns below. (e.g. '<em>:</em>')</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$route</var></dt>
+					<dd><code>string|array</code><br>$route</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>$this<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="wasMatched" id="_wasMatched">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_wasMatched">#</a>
+		<code><a href="source-class-Pinoco_Router.html#138-146" title="Go to source code">wasMatched</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns which a matching router was found and handled or not.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns which a matching router was found and handled or not.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="matched" id="$matched">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Pinoco_Router.html#52-53" title="Go to source code"><var>$matched</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$matched" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Pinoco 0.8.0 Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
