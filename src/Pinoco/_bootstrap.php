@@ -29,7 +29,9 @@ if (!function_exists('__pinoco_autoload_impl')) {
             require_once dirname(dirname(__FILE__)) . '/Pinoco.php';
         }
         elseif (substr($class, 0, 7) === 'Pinoco_') {
-            require_once dirname(__FILE__) . '/' . strtr(substr($class, 7), "_", "/") . '.php';
+            $classFile = strtr(substr($class, 7), "_", "/") . '.php';
+            /** @noinspection PhpIncludeInspection */
+            require_once dirname(__FILE__) . '/' . $classFile;
         }
     }
     if (!@in_array('__pinoco_autoload_impl', spl_autoload_functions())) {

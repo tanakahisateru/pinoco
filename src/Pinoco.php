@@ -289,6 +289,7 @@ class Pinoco extends Pinoco_DynamicVars
                     }
                     break;
                 case 'php':
+                    /** @noinspection PhpIncludeInspection */
                     $source = require $file;
                     if (!(is_array($source) || is_object($source) && ($source instanceof Pinoco_ArrayConvertible))) {
                         throw new InvalidArgumentException('Can\'t load config file: ' . $source);
@@ -378,6 +379,7 @@ class Pinoco extends Pinoco_DynamicVars
         if ($seppos !== false) {
             $srcfile = substr($class, 0, $seppos);
             $class = substr($class, $seppos + 1);
+            /** @noinspection PhpIncludeInspection */
             require_once $srcfile;
         }
         if (class_exists($class)) {
@@ -1310,6 +1312,7 @@ class Pinoco extends Pinoco_DynamicVars
         unset($script_abs_path);
         extract($localvars);
         unset($localvars);
+        /** @noinspection PhpIncludeInspection */
         $retval = include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
         array_pop($this->_script_include_stack);
         return $retval;
@@ -1510,6 +1513,7 @@ class Pinoco extends Pinoco_DynamicVars
                         }
                     }
                 }
+                /** @noinspection PhpUnusedLocalVariableInspection */
                 $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
             }
             catch (Pinoco_FlowControlTerminate $ex) {
@@ -1565,6 +1569,7 @@ class Pinoco extends Pinoco_DynamicVars
                     $this->error(500, "Internal Server Error", "File not found: " . $this->_page);
                 }
             }
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
         }
         catch (Pinoco_FlowControlHttpError $ex) { // contains Redirect
@@ -1581,6 +1586,7 @@ class Pinoco extends Pinoco_DynamicVars
             try {
                 /* @var $hookbase string */
                 $this->_run_hook_if_exists($hookbase . $dpath . "/_leave.php", implode('/', $uris));
+                /** @noinspection PhpUnusedLocalVariableInspection */
                 $dummy = 1; // NEVER REMOVE THIS LINE FOR eAccelerator's BUG!!
             }
             catch (Pinoco_FlowControl $ex) { }
