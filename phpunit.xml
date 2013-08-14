@@ -1,0 +1,12 @@
+<phpunit colors="true" bootstrap="src/Pinoco/_bootstrap.php">
+    <testsuites>
+        <testsuite name="PinocoTestAll">
+            <directory>test/unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
