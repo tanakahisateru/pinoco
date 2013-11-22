@@ -39,12 +39,32 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
     public function testPrepareQuery()
     {
         $this->db->exec("insert into foo (value) values('aaa');");
-        $last_id = $this->db->lastInsertId();
+        $a_id = $this->db->lastInsertId();
         $this->db->exec("insert into foo (value) values('bbb');");
+        $b_id = $this->db->lastInsertId();
         $this->db->exec("insert into foo (value) values('ccc');");
-        $r = $this->db->prepare("select * from foo where id=?;")->query($last_id)->fetchOne();
-        $this->assertEquals($last_id, $r->id);
+
+        $r = $this->db->prepare(
+            "select * from foo where id=?;"
+        )->query($a_id)->fetchOne();
+        $this->assertEquals($a_id, $r->id);
         $this->assertEquals('aaa', $r->value);
+
+        $rs = $this->db->prepare(
+            "select * from foo where id=:aid OR id=:bid ORDER BY id;"
+        )->query(array('aid'=>$a_id, 'bid'=>$b_id))->fetchAll();
+        $this->assertEquals($a_id, $rs[0]->id);
+        $this->assertEquals('aaa', $rs[0]->value);
+        $this->assertEquals($b_id, $rs[1]->id);
+        $this->assertEquals('bbb', $rs[1]->value);
+
+        $rs = $this->db->prepare(
+            "select * from foo where id=? OR id=? ORDER BY id;"
+        )->query($a_id, $b_id)->fetchAll();
+        $this->assertEquals($a_id, $rs[0]->id);
+        $this->assertEquals('aaa', $rs[0]->value);
+        $this->assertEquals($b_id, $rs[1]->id);
+        $this->assertEquals('bbb', $rs[1]->value);
     }
 
     public function testStatement()

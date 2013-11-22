@@ -70,7 +70,7 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  */
 class Pinoco extends Pinoco_DynamicVars
 {
-    const VERSION = "0.8.0";
+    const VERSION = "0.8.1";
 
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
