@@ -65,6 +65,15 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('aaa', $rs[0]->value);
         $this->assertEquals($b_id, $rs[1]->id);
         $this->assertEquals('bbb', $rs[1]->value);
+
+        $s = $this->db->prepare("insert into foo (value) values(:d);");
+        $s->bindValue(':d', 'ddd');
+        $s->execute();
+        $d_id = $this->db->lastInsertId();
+        $r = $this->db->prepare(
+            "select * from foo where id=:id;"
+        )->query($d_id)->fetchOne();
+        $this->assertEquals($d_id, $r->get('id'));
     }
 
     public function testStatement()

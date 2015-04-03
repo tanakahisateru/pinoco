@@ -72,7 +72,10 @@ class Pinoco_PDOStatementWrapper
     {
         $args = func_get_args();
         $args = Pinoco_OptionalParam::trim($args);
-        if (count($args) == 1) {
+        if (count($args) == 0) {
+            $args = null;
+        }
+        elseif (count($args) == 1) {
             $args = $args[0];
             if ($args instanceof Pinoco_ArrayConvertible) {
                 $args = $args->toArray();
