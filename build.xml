@@ -4,7 +4,7 @@
 <project name="Pinoco" default="dist">
 
     <property name="product" value="Pinoco"/>
-    <property name="version" value="0.8.2"/>
+    <property name="version" value="0.8.3"/>
     <property name="stability" value="beta"/>
     <property name="lead.user" value="tanakahisateru"/>
     <property name="lead.name" value="Hisateru Tanaka"/>
