@@ -36,7 +36,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     public function testMethodRouting()
     {
         $p = $this->testenv->create('/a/b/c');
-        $p->request->method = 'POST';
+        $p->request->server->set('REQUEST_METHOD', 'POST');
 
         $handler = new TestRouteHandler();
         $router = new Pinoco_Router($p);
