@@ -1,5 +1,6 @@
 <?php
 echo "<pre>";
+/** @var Pinoco_PDOWrapper $db */
 $db = $this->db;
 
 try {
