@@ -39,7 +39,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($v->result->bar->valid);
     }
 
-    public function testEmptyTest()
+    public function testNotEmptyTest()
     {
         $testee = array(
             'foo' => "0",
@@ -51,6 +51,19 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $v->check('bar')->is('not-empty');
         $v->check('baz')->is('not-empty');
         $this->assertTrue($v->valid); // Zero is not empty
+    }
+
+    public function testEmptyTest()
+    {
+        $testee = array(
+            'foo' => ' ',
+            'bar' => '　',
+        );
+        $v = new Pinoco_Validator($testee);
+        $v->check('foo')->is('not-empty');
+        $v->check('bar')->is('not-empty');
+        $this->assertFalse($v->result->foo->valid);
+        $this->assertFalse($v->result->bar->valid);
     }
 
     public function testErrorMessage()
