@@ -610,6 +610,7 @@ class Pinoco_Validator extends Pinoco_DynamicVars
     }
     private function _testEmptyComplex($exists, $value)
     {
+        $value = trim(mb_convert_kana($value, "s", 'UTF-8'));
         if (!$exists || $value === null) { return true; }
         if ($value === "0" || $value === 0 || $value === false || $value === array()) {
             return false;
