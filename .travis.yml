@@ -8,4 +8,4 @@ php:
   - 7.1
   - 7.2
   - hhvm
-script: phpunit test/unit
+script: ./vendor/bin/phpunit
