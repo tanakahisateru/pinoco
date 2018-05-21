@@ -143,7 +143,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('a'=>1, 'b'=>2),    $v->toArray());
         $this->assertEquals(array('a'=>1, 'c'=>null), $v->toArray(array('a','c')));
         $this->assertEquals(array('a'=>1, 'c'=>-1),   $v->toArray(array('a','c'), -1));
-        $name_mod = create_function('$orig', 'return "m_" . $orig;');
+        $name_mod = @create_function('$orig', 'return "m_" . $orig;');
         $this->assertEquals(array('m_a'=>1, 'm_b'=>2), $v->toArray(false, null, 'm_'));
         $this->assertEquals(array('m_a'=>1, 'm_b'=>2), $v->toArray(false, null, 'm_%s'));
         $this->assertEquals(array('m_a'=>1, 'm_b'=>2), $v->toArray(false, null, $name_mod));
@@ -164,7 +164,7 @@ class VarsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(
             'a'=>1, 'b'=>2, 'c'=>3, 'e'=>5, 'g'=>7, 'h'=>-1, 'm_i'=>9
         ), $v->toArray());
-        $name_mod = create_function('$orig', 'return "m_" . $orig;');
+        $name_mod = @create_function('$orig', 'return "m_" . $orig;');
         $v->import(array('j'=>10), false, null, $name_mod);
         $this->assertEquals(array(
             'a'=>1, 'b'=>2, 'c'=>3, 'e'=>5, 'g'=>7, 'h'=>-1, 'm_i'=>9, 'm_j'=>10
