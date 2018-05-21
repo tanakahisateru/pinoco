@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tanakahisateru/pinoco.svg?branch=master)](https://travis-ci.org/tanakahisateru/pinoco)
+
 Pinoco is a web development framework using PHP and (mainly) PHPTAL.
 
 * Has various usages even in cases OOP based frameworks don't fit.
