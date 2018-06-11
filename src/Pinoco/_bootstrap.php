@@ -27,8 +27,7 @@ if (!function_exists('__pinoco_autoload_impl')) {
     {
         if ($class === 'Pinoco') {
             require_once dirname(dirname(__FILE__)) . '/Pinoco.php';
-        }
-        elseif (substr($class, 0, 7) === 'Pinoco_') {
+        } elseif (substr($class, 0, 7) === 'Pinoco_') {
             $classFile = strtr(substr($class, 7), "_", "/") . '.php';
             /** @noinspection PhpIncludeInspection */
             require_once dirname(__FILE__) . '/' . $classFile;
@@ -38,4 +37,3 @@ if (!function_exists('__pinoco_autoload_impl')) {
         spl_autoload_register('__pinoco_autoload_impl');
     }
 }
-

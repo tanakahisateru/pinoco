@@ -32,7 +32,7 @@ interface Pinoco_ArrayConvertible
     /**
      * Wraps an existing Array.
      *
-     * @param array &$srcref
+     * @param array $srcref
      * @return Pinoco_ArrayConvertible
      */
     public static function wrap(&$srcref);
@@ -43,7 +43,7 @@ interface Pinoco_ArrayConvertible
      * @param array $modifier
      * @return array
      */
-    public function toArray($modifier=null);
+    public function toArray($modifier = null);
 
     /**
      * Exports properties to Array recursively.
@@ -51,7 +51,7 @@ interface Pinoco_ArrayConvertible
      * @param int $depth
      * @return array
      */
-    public function toArrayRecurse($depth=null);
+    public function toArrayRecurse($depth = null);
 
     /**
      * Returns value or default by key.
@@ -60,7 +60,7 @@ interface Pinoco_ArrayConvertible
      * @param mixed $default
      * @return mixed
      */
-    public function get($key, $default=Pinoco_OptionalParam::UNSPECIFIED);
+    public function get($key, $default = Pinoco_OptionalParam::UNSPECIFIED);
 
     /**
      * Returns a value or default by tree expression.
@@ -69,5 +69,5 @@ interface Pinoco_ArrayConvertible
      * @param mixed $default
      * @return mixed
      */
-    public function rget($expression, $default=Pinoco_OptionalParam::UNSPECIFIED);
+    public function rget($expression, $default = Pinoco_OptionalParam::UNSPECIFIED);
 }

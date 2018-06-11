@@ -55,8 +55,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         if (!isset($this->_server)) {
             if ($this->_pinoco->testing) {
                 $this->_server = empty($_SERVER) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_SERVER);
-            }
-            else {
+            } else {
                 $this->_server = Pinoco_Vars::wrap($_SERVER);
             }
         }
@@ -68,8 +67,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         if (!isset($this->_get)) {
             if ($this->_pinoco->testing) {
                 $this->_get = empty($_GET) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_GET);
-            }
-            else {
+            } else {
                 $this->_get = Pinoco_Vars::wrap($_GET);
             }
         }
@@ -81,8 +79,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         if (!isset($this->_post)) {
             if ($this->_pinoco->testing) {
                 $this->_post = empty($_POST) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_POST);
-            }
-            else {
+            } else {
                 $this->_post = Pinoco_Vars::wrap($_POST);
             }
         }
@@ -94,8 +91,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         if (!isset($this->_cookie)) {
             if ($this->_pinoco->testing) {
                 $this->_cookie = empty($_COOKIE) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_COOKIE);
-            }
-            else {
+            } else {
                 $this->_cookie = Pinoco_Vars::wrap($_COOKIE);
             }
         }
@@ -107,8 +103,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         if (!isset($this->_files)) {
             if ($this->_pinoco->testing) {
                 $this->_files = empty($_FILES) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_FILES);
-            }
-            else {
+            } else {
                 $this->_files = Pinoco_Vars::wrap($_FILES);
             }
         }
@@ -122,11 +117,9 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
                 // fake cookie header
                 $this->_pinoco->setcookie(session_name(), '0');
                 $this->_session = empty($_SESSION) ? (new Pinoco_Vars()) : Pinoco_Vars::wrap($_SESSION);
-            }
-            elseif (session_status() === PHP_SESSION_DISABLED) {
+            } elseif (session_status() === PHP_SESSION_DISABLED) {
                 $this->_session = new Pinoco_Vars();
-            }
-            else {
+            } else {
                 if (session_status() !== PHP_SESSION_ACTIVE) {
                     session_start();
                 }
@@ -145,8 +138,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         if (!isset($this->_env)) {
             if ($this->_pinoco->testing) {
                 $this->_env = empty($_ENV) ? (new Pinoco_Vars()) : Pinoco_Vars::fromArray($_ENV);
-            }
-            else {
+            } else {
                 $this->_env = Pinoco_Vars::wrap($_ENV);
             }
         }
@@ -159,6 +151,7 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
     }
 
     /**
+     * @param string $method
      * @deprecated
      */
     public function set_method($method)
@@ -191,4 +184,3 @@ class Pinoco_HttpRequestVars extends Pinoco_DynamicVars
         return $this->method == 'DELETE';
     }
 }
-

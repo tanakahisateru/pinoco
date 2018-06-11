@@ -17,10 +17,8 @@ function inject_lang_to_url($url, $renderable)
     if ($renderable) {
         $sep = (strpos($url, "?") === false) ? "?" : "&";
         return $url . $sep . htmlspecialchars("SESSID=1234567890");
-    }
-    else {
+    } else {
         return $url;
     }
 }
 $this->url_modifier = 'inject_lang_to_url';
-

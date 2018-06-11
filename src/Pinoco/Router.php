@@ -49,6 +49,8 @@
  */
 class Pinoco_Router
 {
+    private $pinoco;
+
     /** @var bool */
     protected $matched;
 
@@ -72,7 +74,7 @@ class Pinoco_Router
      * this method is not a definition but invoker.
      *
      * @param string|array $route
-     * @param callback $handler
+     * @param callable $handler
      * @return $this
      */
     public function on($route, $handler)
@@ -164,8 +166,8 @@ class Pinoco_Router
     }
 
     /**
-     * @param $path
-     * @return array
+     * @param string $path
+     * @return array|null
      */
     private function matchesWithPath($path)
     {
@@ -188,14 +190,13 @@ class Pinoco_Router
         if (preg_match('|^' . $pathregexp . '$|', $uri, $matches)) {
             array_shift($matches);
             return $matches;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
     /**
-     * @param $matches
+     * @param array $matches
      * @return string
      * @internal
      */
@@ -207,7 +208,7 @@ class Pinoco_Router
     }
 
     /**
-     * @param $method
+     * @param string $method
      * @return bool
      */
     private function matchesWithMethod($method)

@@ -189,9 +189,9 @@ class ListTest extends PHPUnit_Framework_TestCase
     {
         $name_mod = @create_function('$orig', 'return sprintf("m_%03d", $orig);');
         $l = Pinoco_List::fromArray(array(1, 2, 3));
-        $this->assertEquals(array('m_0'=>1, 'm_1'=>2, 'm_2'=>3), $l->toArray('m_'));
-        $this->assertEquals(array('m_0'=>1, 'm_1'=>2, 'm_2'=>3), $l->toArray('m_%d'));
-        $this->assertEquals(array('m_000'=>1, 'm_001'=>2, 'm_002'=>3), $l->toArray($name_mod));
+        $this->assertEquals(array('m_0' => 1, 'm_1' => 2, 'm_2' => 3), $l->toArray('m_'));
+        $this->assertEquals(array('m_0' => 1, 'm_1' => 2, 'm_2' => 3), $l->toArray('m_%d'));
+        $this->assertEquals(array('m_000' => 1, 'm_001' => 2, 'm_002' => 3), $l->toArray($name_mod));
     }
 
     public function testReduce()
@@ -258,8 +258,8 @@ class ListTest extends PHPUnit_Framework_TestCase
         $v = Pinoco_List::fromArray(array(
             0,
             array(
-                'a'=>Pinoco_Vars::fromArray(array(
-                    'b'=>$obj,
+                'a' => Pinoco_Vars::fromArray(array(
+                    'b' => $obj,
                 )),
             ),
             2

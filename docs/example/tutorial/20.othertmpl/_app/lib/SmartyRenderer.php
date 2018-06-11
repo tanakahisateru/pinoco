@@ -4,7 +4,7 @@
  */
 class SmartyRenderer extends Pinoco_Renderer
 {
-    public function render($page, $extravars=array())
+    public function render($page, $extravars = array())
     {
 		if (!class_exists('Smarty')) {
 	        include_once 'Smarty/Smarty.class.php';
@@ -41,10 +41,10 @@ class SmartyRenderer extends Pinoco_Renderer
         }
 
         //extract vars
-        foreach ($this->_sysref->autolocal as $name=>$value) {
+        foreach ($this->_sysref->autolocal as $name => $value) {
             $smarty->assign($name, $value);
         }
-        foreach ($extravars as $name=>$value) {
+        foreach ($extravars as $name => $value) {
             $smarty->assign($name, $value);
         }
         $smarty->assign('this', $this->_sysref);

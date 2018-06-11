@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 class RouterTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var $testenv Pinoco_TestEnvironment
+     * @var Pinoco_TestEnvironment
      */
     public $testenv;
 
@@ -30,7 +30,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('abd'=>array()), $handler->callHistory);
+        $this->assertEquals(array('abd' => array()), $handler->callHistory);
     }
 
     public function testMethodRouting()
@@ -46,7 +46,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('post_abc'=>array()), $handler->callHistory);
+        $this->assertEquals(array('post_abc' => array()), $handler->callHistory);
     }
 
     public function testWildCardRouting()
@@ -61,7 +61,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('notfound'=>array()), $handler->callHistory);
+        $this->assertEquals(array('notfound' => array()), $handler->callHistory);
 
         $handler = new TestRouteHandler();
         $router = new Pinoco_Router($p);
@@ -71,7 +71,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('ab_'=>array()), $handler->callHistory);
+        $this->assertEquals(array('ab_' => array()), $handler->callHistory);
     }
 
     public function testPassingParameters()
@@ -85,7 +85,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('a'=>array('b', 'c')), $handler->callHistory);
+        $this->assertEquals(array('a' => array('b', 'c')), $handler->callHistory);
 
         $handler = new TestRouteHandler();
         $router = new Pinoco_Router($p);
@@ -94,7 +94,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('a_c'=>array('b')), $handler->callHistory);
+        $this->assertEquals(array('a_c' => array('b')), $handler->callHistory);
     }
 
     public function testMissingRoute()
@@ -117,7 +117,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $handler = new TestRouteHandler();
         $router = new Pinoco_Router($p);
         $handled = $router
-            ->pass('/a/b/c', array($handler, 'abc'))
+            ->pass('/a/b/c')
             ->on('/a/b/d', array($handler, 'abd'))
             ->wasMatched();
 
@@ -136,7 +136,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             ->wasMatched();
 
         $this->assertTrue($handled);
-        $this->assertEquals(array('a_c'=>array('b')), $handler->callHistory);
+        $this->assertEquals(array('a_c' => array('b')), $handler->callHistory);
     }
 }
 
@@ -144,12 +144,12 @@ class TestRouteHandler
 {
     public $callHistory;
 
-    function __construct()
+    public function __construct()
     {
         $this->callHistory = array();
     }
 
-    function __call($methodName, $args)
+    public function __call($methodName, $args)
     {
         $this->callHistory[$methodName] = $args;
     }

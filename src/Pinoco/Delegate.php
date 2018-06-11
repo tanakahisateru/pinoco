@@ -36,7 +36,7 @@ class Pinoco_Delegate
      *
      * @param object $delegatee;
      */
-    public function __construct($delegatee=null)
+    public function __construct($delegatee = null)
     {
         if (is_null($delegatee)) {
             $delegatee = Pinoco::instance();
@@ -64,4 +64,3 @@ class Pinoco_Delegate
         return call_user_func_array(array($this->__delegatee__, $name), $args);
     }
 }
-

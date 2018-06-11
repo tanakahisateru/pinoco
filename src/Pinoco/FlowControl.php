@@ -23,4 +23,3 @@
 class Pinoco_FlowControl extends Exception
 {
 }
-

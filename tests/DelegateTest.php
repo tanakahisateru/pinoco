@@ -5,7 +5,7 @@ class DelegateTest extends PHPUnit_Framework_TestCase
 {
     public function testPlainDelegator()
     {
-        $delegatee = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $delegatee = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $delegator = new Pinoco_Delegate($delegatee);
         $this->assertTrue($delegator->has('a'));
         $this->assertTrue(isset($delegator->a));
@@ -29,7 +29,7 @@ class DelegateTest extends PHPUnit_Framework_TestCase
 
     public function testInheritedDelegator()
     {
-        $delegatee = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $delegatee = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $delegator = new DelegateMock($delegatee);
         $this->assertEquals(100, $delegator->a);
         $this->assertEquals(100, $delegator->getA());
@@ -52,11 +52,13 @@ class DelegateMock extends Pinoco_Delegate
         parent::__construct($delegatee);
     }
 
-    public function getA() {
+    public function getA()
+    {
         return $this->a;
     }
 
-    public function getB() {
+    public function getB()
+    {
         return $this->b;
     }
 }

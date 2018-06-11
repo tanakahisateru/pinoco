@@ -5,7 +5,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var $testenv Pinoco_TestEnvironment
+     * @var Pinoco_TestEnvironment
      */
     public $testenv;
 
@@ -22,25 +22,25 @@ class PinocoTest extends PHPUnit_Framework_TestCase
     public function testUrl()
     {
         $p = $this->testenv->create('/page.html');
-        $this->assertEquals('/pub',                 $p->baseuri);
-        $this->assertEquals('/page.html',           $p->path);
-        $this->assertEquals('/pub/',                $p->url('/'));
-        $this->assertEquals('/pub/',                $p->url('./'));
-        $this->assertEquals('/pub/foo.html',        $p->url('/foo.html'));
-        $this->assertEquals('/pub/foo.html',        $p->url('foo.html'));
-        $this->assertEquals('/pub/foo.html',        $p->url('./foo.html'));
-        $this->assertEquals('/pub/foo/bar.html',    $p->url('/foo/bar.html'));
+        $this->assertEquals('/pub', $p->baseuri);
+        $this->assertEquals('/page.html', $p->path);
+        $this->assertEquals('/pub/', $p->url('/'));
+        $this->assertEquals('/pub/', $p->url('./'));
+        $this->assertEquals('/pub/foo.html', $p->url('/foo.html'));
+        $this->assertEquals('/pub/foo.html', $p->url('foo.html'));
+        $this->assertEquals('/pub/foo.html', $p->url('./foo.html'));
+        $this->assertEquals('/pub/foo/bar.html', $p->url('/foo/bar.html'));
         $this->assertEquals('/pub/foo/bar?a=1&b=2', $p->url('foo/bar?a=1&b=2'));
         $this->assertEquals('/pub/foo/bar?a=1&b=2', $p->url('./foo/bar?a=1&b=2'));
         $p = $this->testenv->create('/sub/page.html');
-        $this->assertEquals('/pub',              $p->baseuri);
-        $this->assertEquals('/sub/page.html',    $p->path);
-        $this->assertEquals('/pub/',             $p->url('/'));
-        $this->assertEquals('/pub/sub/',         $p->url('./'));
-        $this->assertEquals('/pub/',             $p->url('../'));
+        $this->assertEquals('/pub', $p->baseuri);
+        $this->assertEquals('/sub/page.html', $p->path);
+        $this->assertEquals('/pub/', $p->url('/'));
+        $this->assertEquals('/pub/sub/', $p->url('./'));
+        $this->assertEquals('/pub/', $p->url('../'));
         $this->assertEquals('/pub/sub/foo.html', $p->url('foo.html'));
         $this->assertEquals('/pub/sub/foo.html', $p->url('./foo.html'));
-        $this->assertEquals('/pub/foo.html',     $p->url('../foo.html'));
+        $this->assertEquals('/pub/foo.html', $p->url('../foo.html'));
     }
 
     public function testHeader()
@@ -94,7 +94,8 @@ class PinocoTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function _urlModifier($path, $renderable) {
+    public function _urlModifier($path, $renderable)
+    {
         return '/modified' . $path . ($renderable ? '/renderable' : '/binary');
     }
 
@@ -120,11 +121,12 @@ class PinocoTest extends PHPUnit_Framework_TestCase
         try {
             $p->redirect('view');
             $this->fail();
-        }
-        catch (Pinoco_FlowControlHttpRedirect $ex) {
+        } catch (Pinoco_FlowControlHttpRedirect $ex) {
             $ex->respond($p);
-            $this->assertEquals('Location: http://localhost:8080/pub/data/view',
-                $p->sent_headers->get(0));
+            $this->assertEquals(
+                'Location: http://localhost:8080/pub/data/view',
+                $p->sent_headers->get(0)
+            );
         }
         // no host header
         $p = $this->testenv->create('/data/post');
@@ -133,40 +135,51 @@ class PinocoTest extends PHPUnit_Framework_TestCase
         try {
             $p->redirect('view');
             $this->fail();
-        }
-        catch (Pinoco_FlowControlHttpRedirect $ex) {
+        } catch (Pinoco_FlowControlHttpRedirect $ex) {
             $ex->respond($p);
-            $this->assertEquals('Location: http://localhost:8080/pub/data/view',
-                $p->sent_headers->get(0));
+            $this->assertEquals(
+                'Location: http://localhost:8080/pub/data/view',
+                $p->sent_headers->get(0)
+            );
         }
         // vrious path
-        $this->assertEquals('Location: http://localhost:8080/pub/data/view',
-            $this->_redirectTestHelper('view'));
-        $this->assertEquals('Location: http://localhost:8080/pub/view',
-            $this->_redirectTestHelper('/view'));
-        $this->assertEquals('Location: http://localhost:8080/view',
-            $this->_redirectTestHelper('/view', true));
-        $this->assertEquals('Location: http://other-host/view',
-            $this->_redirectTestHelper('http://other-host/view'));
-        $this->assertEquals('Location: http://other-host/view',
-            $this->_redirectTestHelper('//other-host/view'));
+        $this->assertEquals(
+            'Location: http://localhost:8080/pub/data/view',
+            $this->_redirectTestHelper('view')
+        );
+        $this->assertEquals(
+            'Location: http://localhost:8080/pub/view',
+            $this->_redirectTestHelper('/view')
+        );
+        $this->assertEquals(
+            'Location: http://localhost:8080/view',
+            $this->_redirectTestHelper('/view', true)
+        );
+        $this->assertEquals(
+            'Location: http://other-host/view',
+            $this->_redirectTestHelper('http://other-host/view')
+        );
+        $this->assertEquals(
+            'Location: http://other-host/view',
+            $this->_redirectTestHelper('//other-host/view')
+        );
     }
 
-    private function _redirectTestHelper($to, $external=false)
+    private function _redirectTestHelper($to, $external = false)
     {
         $p = $this->testenv->create('/data/post');
         $p->request->server->set('HTTP_HOST', 'localhost:8080');
         try {
             $p->redirect($to, $external);
-        }
-        catch (Pinoco_FlowControlHttpRedirect $ex) {
+        } catch (Pinoco_FlowControlHttpRedirect $ex) {
             $ex->respond($p);
             return $p->sent_headers->get(0);
         }
         $this->fail();
     }
 
-    public function _urlModifier2($path, $renderable) {
+    public function _urlModifier2($path)
+    {
         return 'http://other-host' . $path;
     }
 
@@ -178,11 +191,12 @@ class PinocoTest extends PHPUnit_Framework_TestCase
         try {
             $p->redirect('view');
             $this->fail();
-        }
-        catch (Pinoco_FlowControlHttpRedirect $ex) {
+        } catch (Pinoco_FlowControlHttpRedirect $ex) {
             $ex->respond($p);
-            $this->assertEquals('Location: http://other-host/pub/data/view',
-                $p->sent_headers->get(0));
+            $this->assertEquals(
+                'Location: http://other-host/pub/data/view',
+                $p->sent_headers->get(0)
+            );
         }
     }
 }

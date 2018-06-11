@@ -23,4 +23,3 @@
 class Pinoco_FlowControlTerminate extends Pinoco_FlowControl
 {
 }
-

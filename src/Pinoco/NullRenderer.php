@@ -28,8 +28,7 @@ class Pinoco_NullRenderer extends Pinoco_Renderer
      * @param array $extravars
      * @return void
      */
-    public function render($page, $extravars=array())
+    public function render($page, $extravars = array())
     {
     }
 }
-

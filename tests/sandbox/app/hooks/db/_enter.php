@@ -16,4 +16,3 @@ foreach (explode(';', $schema) as $sql) {
         $this->db->exec($sql);
     }
 }
-

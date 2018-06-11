@@ -29,16 +29,14 @@ class Pinoco_DynamicVars extends Pinoco_Vars
      * @return mixed
      * @see src/Pinoco/Pinoco_Vars#get($name)
      */
-    public function get($name, $default=Pinoco_OptionalParam::UNSPECIFIED)
+    public function get($name, $default = Pinoco_OptionalParam::UNSPECIFIED)
     {
         if (method_exists($this, 'get_' . $name)) {
             return call_user_func(array($this, 'get_' . $name));
-        }
-        else {
+        } else {
             if (Pinoco_OptionalParam::isSpecifiedBy($default)) {
                 return parent::get($name, $default);
-            }
-            else {
+            } else {
                 return parent::get($name);
             }
         }
@@ -91,11 +89,9 @@ class Pinoco_DynamicVars extends Pinoco_Vars
     {
         if (method_exists($this, 'set_' . $name)) {
             call_user_func(array($this, 'set_' . $name), $value);
-        }
-        elseif (method_exists($this, 'get_' . $name)) {
+        } elseif (method_exists($this, 'get_' . $name)) {
             throw new InvalidArgumentException("Cannot reassign to ". $name . ".");
-        }
-        else {
+        } else {
             parent::set($name, $value);
         }
     }
@@ -107,4 +103,3 @@ class Pinoco_DynamicVars extends Pinoco_Vars
         return new Pinoco_ArrayConvertiblesIterator($arr);
     }
 }
-

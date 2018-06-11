@@ -129,8 +129,8 @@ Similarly, set up the variable used under `shop` directory. There are no problem
 <?php
 // Common data in shop directory
 $this->items = $this->newList();
-$this->items->push($this->newVars(array('name'=>'Item 1', 'price'=>100)));
-$this->items->push($this->newVars(array('name'=>'Item 2', 'price'=>200)));
+$this->items->push($this->newVars(array('name' => 'Item 1', 'price' => 100)));
+$this->items->push($this->newVars(array('name' => 'Item 2', 'price' => 200)));
 ```
 
 Completed! We put only these two files. We can be free about maintenance ever. If products or items are added, no more hooks are not needed.

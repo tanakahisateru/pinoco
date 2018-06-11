@@ -7,7 +7,7 @@
         
         <h2>Available variables of $this</h2>
         <ul>
-        <?php foreach($this as $name=>$value): ?>
+        <?php foreach ($this as $name => $value) : ?>
             <li>$this-&gt;<?php echo $name; ?> = <?php echo $value; ?></li>
         <?php endforeach; ?>
         </ul>

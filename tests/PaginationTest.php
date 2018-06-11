@@ -67,11 +67,13 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(100, $pn->data[0]);
     }
 
-    public function page2num($page) {
+    public function page2num($page)
+    {
         return $page->padding ? null : $page->number;
     }
 
-    public function currentNumber($lastval, $page) {
+    public function currentNumber($lastval, $page)
+    {
         return (!$page->padding && $page->current) ? $page->number : $lastval;
     }
 
@@ -292,8 +294,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         try {
             $pn->page = 0;
             $this->fail();
-        }
-        catch (InvalidArgumentException $ex) {
+        } catch (InvalidArgumentException $ex) {
             $this->assertRegExp('/^Invalid number of page/', $ex->getMessage());
         }
         $pn->page = 6;

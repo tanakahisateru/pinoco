@@ -31,8 +31,8 @@ You can create it from another array:
 
 ```php
 $localvars2 = Pinoco::newVars(array(
-    'foo'=>1,
-    'bar'=>2
+    'foo' => 1,
+    'bar' => 2
 ));
 ```
 

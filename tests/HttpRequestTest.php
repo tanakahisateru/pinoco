@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 class HttpRequestTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var $testenv Pinoco_TestEnvironment
+     * @var Pinoco_TestEnvironment
      */
     protected $testenv;
 

@@ -22,7 +22,7 @@
  */
 class Pinoco_MIMEType
 {
-    private static $EXT2TYPE = array (
+    private static $EXT2TYPE = array(
         'ez'        => 'application/andrew-inset',
         'atom'      => 'application/atom+xml',
         'jar'       => 'application/java-archive',
@@ -234,8 +234,7 @@ class Pinoco_MIMEType
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         if ($ext && isset(self::$EXT2TYPE[$ext])) {
             return self::$EXT2TYPE[$ext];
-        }
-        else {
+        } else {
             return 'application/octet-stream';
         }
     }

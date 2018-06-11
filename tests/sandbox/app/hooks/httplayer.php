@@ -8,4 +8,3 @@ $this->request->session->pinocotest = 'foobar' . rand();
 var_dump("after", $this->request->session->toArrayRecurse());
 
 var_dump($this->sent_headers->toArray());
-

@@ -42,7 +42,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
      * @param string $name
      * @param string|bool $label
      */
-    public function __construct($validator, $name, $label=false)
+    public function __construct($validator, $name, $label = false)
     {
         parent::__construct();
         $this->_validator = $validator;
@@ -66,8 +66,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     {
         if ($this->_filtered) {
             return $this->_filteredValue;
-        }
-        else {
+        } else {
             if (($r = $this->_validator->fetchExistenceAndValue($this->_name)) === null) {
                 return null;
             }
@@ -120,8 +119,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     {
         if (is_callable($template)) {
             return call_user_func($template, $param, $value, $label);
-        }
-        else {
+        } else {
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
@@ -140,8 +138,7 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
             $name = array_shift($param);
             $param = count($param) == 0 ? null : implode(' ', $param);
             return array($name, $param);
-        }
-        else {
+        } else {
             // $expression is expected to be callable object
             return array($expression, "");
         }
@@ -154,14 +151,18 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
      * @param string|bool $message
      * @return Pinoco_ValidatorContext
      */
-    public function is($test, $message=false)
+    public function is($test, $message = false)
     {
         if (!$this->_valid) {
             return $this;
         }
         list($testName, $param) = $this->parseExpression($test);
         list($result, $value) = $this->_validator->execValidityTest(
-            $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
+            $this->_name,
+            $this->_filtered,
+            $this->_filteredValue,
+            $testName,
+            $param
         );
         if (!$result) {
             $this->_test = $test;
@@ -175,18 +176,22 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     /**
      * Check if all elements pass specified test.
      *
-     * @param string $test
+     * @param string|callable $test
      * @param string|bool $message
      * @return Pinoco_ValidatorContext
      */
-    public function all($test, $message=false)
+    public function all($test, $message = false)
     {
         if (!$this->_valid) {
             return $this;
         }
         list($testName, $param) = $this->parseExpression($test);
         list($result, $value) = $this->_validator->execValidityTestAll(
-            $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
+            $this->_name,
+            $this->_filtered,
+            $this->_filteredValue,
+            $testName,
+            $param
         );
         if (!$result) {
             $this->_test = $test;
@@ -200,18 +205,22 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
     /**
      * Check if any element(s) pass(es) specified test.
      *
-     * @param string $test
+     * @param string|callable $test
      * @param string|bool $message
      * @return Pinoco_ValidatorContext
      */
-    public function any($test, $message=false)
+    public function any($test, $message = false)
     {
         if (!$this->_valid) {
             return $this;
         }
         list($testName, $param) = $this->parseExpression($test);
         list($result, $value) = $this->_validator->execValidityTestAny(
-            $this->_name, $this->_filtered, $this->_filteredValue, $testName, $param
+            $this->_name,
+            $this->_filtered,
+            $this->_filteredValue,
+            $testName,
+            $param
         );
         if (!$result) {
             $this->_test = $test;
@@ -235,7 +244,11 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         }
         list($filterName, $param) = $this->parseExpression($filter);
         list($filtered, $value) = $this->_validator->execFilter(
-            $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
+            $this->_name,
+            $this->_filtered,
+            $this->_filteredValue,
+            $filterName,
+            $param
         );
         if ($filtered) {
             $this->_filtered = $this->_filtered || true;
@@ -257,7 +270,11 @@ class Pinoco_ValidatorContext extends Pinoco_DynamicVars
         }
         list($filterName, $param) = $this->parseExpression($filter);
         list($filtered, $value) = $this->_validator->execFilterMap(
-            $this->_name, $this->_filtered, $this->_filteredValue, $filterName, $param
+            $this->_name,
+            $this->_filtered,
+            $this->_filteredValue,
+            $filterName,
+            $param
         );
         if ($filtered) {
             $this->_filtered = $this->_filtered || true;

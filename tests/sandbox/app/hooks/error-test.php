@@ -1,7 +1,6 @@
 <?php
 if ($this->request->get->has('err')) {
     $this->error($this->request->get->get('err'));
-}
-else {
+} else {
     echo "No errors";
 }

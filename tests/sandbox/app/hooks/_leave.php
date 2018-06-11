@@ -7,11 +7,10 @@ if (!preg_match('/\sFirePHP\//', $this->request->server->get('HTTP_USER_AGENT'))
 @include_once('FirePHPCore/FirePHP.class.php');
 if (class_exists('FirePHP')) {
     $firephp = FirePHP::getInstance(true);
-    $firephp->group('Pinoco activity', array('Collapsed'=>1));
+    $firephp->group('Pinoco activity', array('Collapsed' => 1));
     foreach ($this->activity as $act) {
         $firephp->log($act);
     }
     $firephp->log($this->script);
     $firephp->groupEnd();
 }
-

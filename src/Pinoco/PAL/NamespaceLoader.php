@@ -15,8 +15,12 @@
  * @subpackage PAL
  */
 
-if (!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
-if (!class_exists('PHPTAL_PreFilter')) { require_once 'PHPTAL/PreFilter.php'; }
+if (!class_exists('PHPTAL')) {
+    require_once 'PHPTAL.php';
+}
+if (!class_exists('PHPTAL_PreFilter')) {
+    require_once 'PHPTAL/PreFilter.php';
+}
 
 /**
  * @package Pinoco
@@ -24,9 +28,9 @@ if (!class_exists('PHPTAL_PreFilter')) { require_once 'PHPTAL/PreFilter.php'; }
  */
 class Pinoco_PAL_NamespaceLoader extends PHPTAL_PreFilter
 {
-    public function filter($data) {
+    public function filter($data)
+    {
         require_once dirname(__FILE__) . '/Namespace.php';
         return $data;
     }
 }
-

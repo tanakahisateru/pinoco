@@ -22,14 +22,19 @@
  */
 class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
 {
+    private $url;
+
+    private $external;
+
     /**
      * Constructor
      *
      * @param string $url
      * @param bool $external
      */
-    public function __construct($url, $external=false)
+    public function __construct($url, $external = false)
     {
+        parent::__construct(302, null, null);
         $this->url = $url;
         $this->external = $external;
     }
@@ -46,8 +51,7 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
         $protocol = $s->get('HTTPS') ? "https" : "http";
         if ($s->has('HTTP_HOST')) {
             $server_prefix = $protocol . '://' . $s->get('HTTP_HOST');
-        }
-        else {
+        } else {
             $server_prefix = $protocol . '://' . $s->get('SERVER_NAME');
             $port = $s->get('SERVER_PORT');
             if ($protocol == "http" && $port != "80") {
@@ -58,22 +62,17 @@ class Pinoco_FlowControlHttpRedirect extends Pinoco_FlowControlHttpError
         }
         if (preg_match('/^\w+:\/\/[^\/]/', $this->url)) {
             $fixedurl = $this->url;
-        }
-        elseif (preg_match('/^\/\/[^\/]/', $this->url)) {
+        } elseif (preg_match('/^\/\/[^\/]/', $this->url)) {
             $fixedurl = $protocol . ':' . $this->url;
-        }
-        elseif (preg_match('/^\/[^\/]?/', $this->url) && $this->external) {
+        } elseif (preg_match('/^\/[^\/]?/', $this->url) && $this->external) {
             $fixedurl = $server_prefix. $this->url;
-        }
-        else {
+        } else {
             $filteredurl = $pinoco->url($this->url);
             if (preg_match('/^\w+:\/\/[^\/]/', $filteredurl)) {
                 $fixedurl = $filteredurl;
-            }
-            elseif (preg_match('/^\/\/[^\/]/', $filteredurl)) {
+            } elseif (preg_match('/^\/\/[^\/]/', $filteredurl)) {
                 $fixedurl = $protocol . ':' . $filteredurl;
-            }
-            else {
+            } else {
                 $fixedurl = $server_prefix. $filteredurl;
             }
         }

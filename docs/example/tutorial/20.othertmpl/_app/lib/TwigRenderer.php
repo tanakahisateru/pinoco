@@ -4,7 +4,7 @@
  */
 class TwigRenderer extends Pinoco_Renderer
 {
-    public function render($page, $extravars=array())
+    public function render($page, $extravars = array())
     {
 		if (!class_exists('Twig_Autoloader')) {
 			include_once 'Twig/Autoloader.php';
@@ -41,7 +41,7 @@ class TwigRenderer extends Pinoco_Renderer
         $ctx = array_merge(
             $this->_sysref->autolocal->toArray(),
             $extravars,
-            array('this'=>$this->_sysref)
+            array('this' => $this->_sysref)
         );
 
         //exec

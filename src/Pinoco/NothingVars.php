@@ -43,7 +43,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * @param mixed $default
      * @return Pinoco_NothingVars
      */
-    public function get($name, $default=Pinoco_OptionalParam::UNSPECIFIED)
+    public function get($name, $default = Pinoco_OptionalParam::UNSPECIFIED)
     {
         return $this;
     }
@@ -74,7 +74,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * Every values passed to Nothing would be lost.
      *
      * @param string $name
-     * @param callback $callable
+     * @param callable $callable
      * @return void
      */
     public function registerAsMethod($name, $callable)
@@ -86,11 +86,11 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * Every values passed to Nothing would be lost.
      *
      * @param string $name
-     * @param callback $callable
+     * @param callable $callable
      * @param array $context
      * @return void
      */
-    public function registerAsDynamic($name, $callable, $context=array())
+    public function registerAsDynamic($name, $callable, $context = array())
     {
     }
 
@@ -98,11 +98,11 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * Every values passed to Nothing would be lost.
      *
      * @param string $name
-     * @param callback $callable
+     * @param callable $callable
      * @param array $context
      * @return void
      */
-    public function registerAsLazy($name, $callable, $context=array())
+    public function registerAsLazy($name, $callable, $context = array())
     {
     }
 
@@ -115,7 +115,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * @param string $modifier
      * @return void
      */
-    public function import($src, $filter=false, $default=null, $modifier="%s")
+    public function import($src, $filter = false, $default = null, $modifier = "%s")
     {
     }
 
@@ -127,7 +127,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * @param string $modifier
      * @return array
      */
-    public function toArray($filter=false, $default=null, $modifier="%s")
+    public function toArray($filter = false, $default = null, $modifier = "%s")
     {
         return array();
     }
@@ -138,7 +138,7 @@ class Pinoco_NothingVars extends Pinoco_Vars
      * @param int $depth
      * @return array
      */
-    public function toArrayRecurse($depth=null)
+    public function toArrayRecurse($depth = null)
     {
         return array();
     }

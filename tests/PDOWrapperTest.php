@@ -4,11 +4,12 @@ require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 class PDOWrapperTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var $db Pinoco_PDOWrapper
+     * @var Pinoco_PDOWrapper
      */
     protected $db;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->db = new Pinoco_PDOWrapper('sqlite::memory:');
         $this->db->exec("create table foo (
             id integer primary key autoincrement,
@@ -21,7 +22,8 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         )");
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->db->exec("drop table bar");
         $this->db->exec("drop table foo");
     }
@@ -52,7 +54,7 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
 
         $rs = $this->db->prepare(
             "select * from foo where id=:aid OR id=:bid ORDER BY id;"
-        )->query(array('aid'=>$a_id, 'bid'=>$b_id))->fetchAll();
+        )->query(array('aid' => $a_id, 'bid' => $b_id))->fetchAll();
         $this->assertEquals($a_id, $rs[0]->id);
         $this->assertEquals('aaa', $rs[0]->value);
         $this->assertEquals($b_id, $rs[1]->id);
@@ -82,9 +84,9 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         $this->db->exec("insert into foo (value) values('bbb');");
         $this->db->exec("insert into foo (value) values('ccc');");
         $stmt = $this->db->query("select * from foo;");
-        $this->assertEquals(array('id'=>'1', 'value'=>'aaa'), $stmt->fetch()->toArray());
-        $this->assertEquals(array('id'=>'2', 'value'=>'bbb'), $stmt->fetch()->toArray());
-        $this->assertEquals(array('id'=>'3', 'value'=>'ccc'), $stmt->fetch()->toArray());
+        $this->assertEquals(array('id' => '1', 'value' => 'aaa'), $stmt->fetch()->toArray());
+        $this->assertEquals(array('id' => '2', 'value' => 'bbb'), $stmt->fetch()->toArray());
+        $this->assertEquals(array('id' => '3', 'value' => 'ccc'), $stmt->fetch()->toArray());
         $this->assertFalse($stmt->fetch());
     }
 
@@ -128,24 +130,31 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $cc);
         $this->assertEquals('a3', $rs[0]->children[2]->value);
         $this->assertEquals(1, $cc);
-        $this->assertEquals(0, $rs[1]->children->count(), 0);
+        $this->assertEquals(0, $rs[1]->children->count());
         $this->assertEquals(2, $cc);
-        $this->assertEquals(0, $rs[2]->children->count(), 0);
+        $this->assertEquals(0, $rs[2]->children->count());
         $this->assertEquals(3, $cc);
     }
 }
 
 // ugly :( fuck php5.2
-class LazyFetcher {
+class LazyFetcher
+{
     /**
-     * @var $db Pinoco_PDOWrapper
+     * @var Pinoco_PDOWrapper
      */
     protected $db;
 
     /**
+     * @var int
+     */
+    public $cc;
+
+    /**
      * @param Pinoco_PDOWrapper $db
      */
-    function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db;
         $this->cc = 0;
     }
@@ -154,7 +163,8 @@ class LazyFetcher {
      * @param Pinoco_Vars $owner
      * @return Pinoco_List
      */
-    function lazyBarFetcher($owner) {
+    public function lazyBarFetcher($owner)
+    {
         $this->cc++;
         return $this->db->prepare(
             "select * from bar where foo_id=? order by value;"
@@ -165,9 +175,9 @@ class LazyFetcher {
      * @param Pinoco_Vars $r
      * @return Pinoco_Vars
      */
-    function lazyBarFetcherForAll($r) {
+    public function lazyBarFetcherForAll($r)
+    {
         $r->registerAsLazy('children', array($this, 'lazyBarFetcher'));
         return $r;
     }
 }
-

@@ -15,9 +15,11 @@ class MethodProxyTest extends PHPUnit_Framework_TestCase
 
     public function testBehindVarsClass()
     {
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $v->registerAsMethod('m', @create_function(
-            '$owner,$a,$b', 'return array($owner->a,$owner->b,$a,$b);'));
+            '$owner,$a,$b',
+            'return array($owner->a,$owner->b,$a,$b);'
+        ));
         $this->assertEquals(array(1, 2, 3, 4), $v->m(3, 4));
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             $m = $v->m;
@@ -28,31 +30,39 @@ class MethodProxyTest extends PHPUnit_Framework_TestCase
     public function testUndefinedMethod()
     {
         $this->setExpectedException(
-          'BadMethodCallException', 'The Vars object has no such method:'
+            'BadMethodCallException',
+            'The Vars object has no such method:'
         );
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $v->registerAsMethod('m', @create_function(
-            '$owner,$a,$b', 'return array($owner->a,$owner->b,$a,$b);'));
+            '$owner,$a,$b',
+            'return array($owner->a,$owner->b,$a,$b);'
+        ));
         $v->a();
     }
 
     public function testUndefinedMethod2()
     {
         $this->setExpectedException(
-          'BadMethodCallException', 'The Vars object has no such method:'
+            'BadMethodCallException',
+            'The Vars object has no such method:'
         );
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $v->registerAsMethod('m', @create_function(
-            '$owner,$a,$b', 'return array($owner->a,$owner->b,$a,$b);'));
+            '$owner,$a,$b',
+            'return array($owner->a,$owner->b,$a,$b);'
+        ));
         $v->undefinedField();
     }
 
     public function testNoProxy()
     {
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         // This way can't pass owner object to method.
         $v->m = @create_function(
-            '$owner,$a,$b', 'return array($owner,$a,$b);');
+            '$owner,$a,$b',
+            'return array($owner,$a,$b);'
+        );
         $this->assertEquals(array(0, 1, 2), $v->m(0, 1, 2));
     }
 }

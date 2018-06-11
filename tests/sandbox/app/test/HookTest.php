@@ -1,7 +1,9 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../src/Pinoco.php';
 
-if (function_exists('xdebug_disable')) { xdebug_disable(); }
+if (function_exists('xdebug_disable')) {
+    xdebug_disable();
+}
 
 /**
  * @property Pinoco_TestEnvironment testenv
@@ -24,7 +26,7 @@ class HookTest extends PHPUnit_Framework_TestCase
     {
         $pinoco->config('cfg', 'config/main.ini');
         $pinoco->config('cfg', 'config/override.php');
-        $pinoco->config('cfg', array('baz'=>300));
+        $pinoco->config('cfg', array('baz' => 300));
     }
     
     public function testSiteRootGet()

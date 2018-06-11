@@ -104,15 +104,19 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
     /**
      * Creates pagination object from user codes.
      *
-     * @param callback $totalCountCallable
-     * @param callback $dataFetchCallable
-     * @param callback $urlFormatCallable
+     * @param callable $totalCountCallable
+     * @param callable $dataFetchCallable
+     * @param callable $urlFormatCallable
      * @param array $options
      */
-    public function __construct($totalCountCallable, $dataFetchCallable,
-        $urlFormatCallable, $options=array())
-    {
-        $this->totalCountCallable = $totalCountCallable;;
+    public function __construct(
+        $totalCountCallable,
+        $dataFetchCallable,
+        $urlFormatCallable,
+        $options = array()
+    ) {
+        parent::__construct();
+        $this->totalCountCallable = $totalCountCallable;
         $this->dataFetchCallable = $dataFetchCallable;
         $this->urlFormatCallable = $urlFormatCallable;
         $this->_currentPage = 1;
@@ -122,7 +126,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
         $this->_pagesBeforeLast = 0;
         $this->_totalCount = null;
         $this->_data = null;
-        foreach ($options as $name=>$value) {
+        foreach ($options as $name => $value) {
             $this->set($name, $value);
         }
     }
@@ -142,7 +146,8 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
         $this->_currentPage = $value;
     }
 
-    public function get_isValidPage() {
+    public function get_isValidPage()
+    {
         return $this->page <= $this->totalPages;
     }
 
@@ -304,8 +309,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
                 'number'  => $this->_currentPage - 1,
                 'href'    => call_user_func($this->urlFormatCallable, $this, $this->_currentPage - 1),
             ));
-        }
-        else {
+        } else {
             return Pinoco::newVars(array(
                 'enabled' => false,
             ));
@@ -325,8 +329,7 @@ class Pinoco_Pagination extends Pinoco_DynamicVars
                 'number'  => $this->_currentPage + 1,
                 'href'    => call_user_func($this->urlFormatCallable, $this, $this->_currentPage + 1),
             ));
-        }
-        else {
+        } else {
             return Pinoco::newVars(array(
                 'enabled' => false,
             ));

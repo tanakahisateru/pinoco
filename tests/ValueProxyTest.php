@@ -28,7 +28,7 @@ class ValueProxyTest extends PHPUnit_Framework_TestCase
 
     public function testOwnerReference()
     {
-        $o = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $o = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $fetcher = @create_function('$owner', 'return $owner->a;');
         $p = new Pinoco_ValueProxy($fetcher, $o);
         $this->assertEquals(1, $p->fetch());
@@ -36,7 +36,7 @@ class ValueProxyTest extends PHPUnit_Framework_TestCase
 
     public function testOwnerReferenceWithContext()
     {
-        $o = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $o = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $fetcher = @create_function('$owner,$a1,$a2', 'return $owner->b+$a1+$a2;');
         $p = new Pinoco_ValueProxy($fetcher, $o, false, array(3, 4));
         $this->assertEquals(9, $p->fetch());
@@ -44,7 +44,7 @@ class ValueProxyTest extends PHPUnit_Framework_TestCase
 
     public function testWithHostObject()
     {
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $fetcher = @create_function('$owner', 'return $owner->a;');
         $v->lazyprop = new Pinoco_ValueProxy($fetcher, $v);
         $this->assertEquals(3, $v->keys()->count());
@@ -54,18 +54,18 @@ class ValueProxyTest extends PHPUnit_Framework_TestCase
 
     public function testBehindVarsClass()
     {
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $v->registerAsDynamic('c', @create_function('$owner', 'return $owner->b;'));
         $v->registerAsLazy('d', @create_function('$owner', 'global $ccc3; return ++$ccc3;'));
         $this->assertEquals(2, $v->c);
         $this->assertEquals(1, $v->d);
         $this->assertEquals(1, $v->d);
-        $this->assertEquals(array('a'=>1, 'b'=>2, 'c'=>2, 'd'=>1), $v->toArray());
+        $this->assertEquals(array('a' => 1, 'b' => 2, 'c' => 2, 'd' => 1), $v->toArray());
     }
 
     public function testMarkAsDirty()
     {
-        $v = Pinoco_Vars::fromArray(array('a'=>1, 'b'=>2));
+        $v = Pinoco_Vars::fromArray(array('a' => 1, 'b' => 2));
         $v->registerAsLazy('d', @create_function('$owner', 'global $ccc3; return ++$ccc3;'));
         $this->assertEquals(1, $v->d);
         $this->assertEquals(1, $v->d);

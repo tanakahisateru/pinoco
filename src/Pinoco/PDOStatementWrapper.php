@@ -21,7 +21,7 @@
  * @package Pinoco
  * @property-read string $queryString
  * @method bool bindColumn(mixed $column , mixed &$param, int $type, int $maxlen, mixed $driverdata)
- * @method bool bindParam(mixed $parameter, mixed &$variable, int $data_type = PDO::PARAM_STR, int $length, mixed $driver_options)
+ * @method bool bindParam(mixed $parameter, mixed &$variable, int $type = PDO::PARAM_STR, int $length, mixed $options)
  * @method bool bindValue(mixed $parameter, mixed $value, int $data_type = PDO::PARAM_STR)
  * @method bool closeCursor()
  * @method int columnCount()
@@ -68,19 +68,17 @@ class Pinoco_PDOStatementWrapper
      * @param mixed $args,...
      * @return int
      */
-    public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
+    public function execute($args = Pinoco_OptionalParam::UNSPECIFIED)
     {
         $args = func_get_args();
         $args = Pinoco_OptionalParam::trim($args);
         if (count($args) == 0) {
             $args = null;
-        }
-        elseif (count($args) == 1) {
+        } elseif (count($args) == 1) {
             $args = $args[0];
             if ($args instanceof Pinoco_ArrayConvertible) {
                 $args = $args->toArray();
-            }
-            elseif (!is_array($args)) {
+            } elseif (!is_array($args)) {
                 $args = array($args);
             }
         }
@@ -94,7 +92,7 @@ class Pinoco_PDOStatementWrapper
      * @param mixed $args,...
      * @return int
      */
-    public function exec($args=Pinoco_OptionalParam::UNSPECIFIED)
+    public function exec($args = Pinoco_OptionalParam::UNSPECIFIED)
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim($args));
@@ -106,7 +104,7 @@ class Pinoco_PDOStatementWrapper
      * @param mixed $args,...
      * @return Pinoco_PDOStatementWrapper
      */
-    public function query($args=Pinoco_OptionalParam::UNSPECIFIED)
+    public function query($args = Pinoco_OptionalParam::UNSPECIFIED)
     {
         $args = func_get_args();
         call_user_func_array(array($this, 'execute'), Pinoco_OptionalParam::trim($args));
@@ -119,9 +117,9 @@ class Pinoco_PDOStatementWrapper
      *
      * @param int $orientation
      * @param int $offset
-     * @return Pinoco_Vars|boolean
+     * @return Pinoco_Vars|false
      */
-    public function fetch($orientation=PDO::FETCH_ORI_NEXT, $offset=0)
+    public function fetch($orientation = PDO::FETCH_ORI_NEXT, $offset = 0)
     {
         //return $this->_stmt->fetch(PDO::FETCH_CLASS, $orientation, $offset);
         $r = $this->_stmt->fetch(PDO::FETCH_ASSOC, $orientation, $offset);
@@ -147,13 +145,15 @@ class Pinoco_PDOStatementWrapper
     /**
      * Fetches single result.
      *
-     * @return Pinoco_Vars
+     * @return Pinoco_Vars|false
      */
     public function fetchOne()
     {
         $r = $this->fetch();
-        try { $this->closeCursor(); } catch (PDOException $ex) { }
+        try {
+            $this->closeCursor();
+        } catch (PDOException $ex) {
+        }
         return $r;
     }
 }
-

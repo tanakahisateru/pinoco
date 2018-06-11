@@ -34,7 +34,7 @@ abstract class Pinoco_Renderer
     protected $_cfg;
 
     /**
-     * @var callable
+     * @var callable|null
      */
     protected $_before_rendering;
 
@@ -50,7 +50,10 @@ abstract class Pinoco_Renderer
         $this->_before_rendering = null;
     }
 
-    public function __toString() { return __CLASS__; }
+    public function __toString()
+    {
+        return __CLASS__;
+    }
 
     /**
      * Properties reader.
@@ -60,8 +63,12 @@ abstract class Pinoco_Renderer
      */
     public function __get($name)
     {
-        if ($name == 'cfg') { return $this->_cfg; }
-        if ($name == 'before_rendering') { return $this->_before_rendering; }
+        if ($name == 'cfg') {
+            return $this->_cfg;
+        }
+        if ($name == 'before_rendering') {
+            return $this->_before_rendering;
+        }
         return null;
     }
 
@@ -71,11 +78,13 @@ abstract class Pinoco_Renderer
      *
      * @param string $name
      * @param mixed $value
-     * @return mixed
+     * @return void
      */
     public function __set($name, $value)
     {
-        if ($name == 'before_rendering') { $this->_before_rendering = $value; }
+        if ($name == 'before_rendering') {
+            $this->_before_rendering = $value;
+        }
     }
 
     /**
@@ -85,9 +94,10 @@ abstract class Pinoco_Renderer
      * @param array $extravars
      * @return void
      */
-     protected function render($page, $extravars=array()) {
-         // implement rendering process
-     }
+    protected function render($page, $extravars = array())
+    {
+        // implement rendering process
+    }
 
     /**
      * Executes rendering with calling before_rendering handler.
@@ -96,11 +106,11 @@ abstract class Pinoco_Renderer
      * @param array $extravars
      * @return void
      */
-     public function prepareAndRender($page, $extravars=array()) {
-         if ($this->_before_rendering) {
-             call_user_func($this->_before_rendering, $this);
-         }
-         $this->render($page, $extravars);
-     }
+    public function prepareAndRender($page, $extravars = array())
+    {
+        if ($this->_before_rendering) {
+            call_user_func($this->_before_rendering, $this);
+        }
+        $this->render($page, $extravars);
+    }
 }
-

@@ -52,7 +52,7 @@ class Pinoco_PDOWrapper
      * @param array $opts
      * @return Pinoco_PDOWrapper
      */
-    public static function newInstance($dsn, $un="", $pw="", $opts=array())
+    public static function newInstance($dsn, $un = "", $pw = "", $opts = array())
     {
         return new Pinoco_PDOWrapper($dsn, $un, $pw, $opts);
     }
@@ -65,7 +65,7 @@ class Pinoco_PDOWrapper
      * @param string $pw
      * @param array $opts
      */
-    public function __construct($dsn, $un="", $pw="", $opts=array())
+    public function __construct($dsn, $un = "", $pw = "", $opts = array())
     {
         $this->_dsn = $dsn;
         $this->_un = $un;
@@ -78,7 +78,7 @@ class Pinoco_PDOWrapper
     /**
      * Returns initialize process when connection would be created.
      *
-     * @return string|callback|null
+     * @return string|callable|null
      */
     public function getAfterConnection()
     {
@@ -88,7 +88,7 @@ class Pinoco_PDOWrapper
     /**
      * Sets initialize process when connection would be created.
      *
-     * @param string|callback|null $after_connection
+     * @param string|callable|null $after_connection
      */
     public function setAfterConnection($after_connection)
     {
@@ -108,8 +108,7 @@ class Pinoco_PDOWrapper
             if ($this->_after_connection) {
                 if (is_callable($this->_after_connection)) {
                     call_user_func($this->_after_connection, $this);
-                }
-                else {
+                } else {
                     $this->execute($this->_after_connection);
                 }
             }
@@ -129,7 +128,7 @@ class Pinoco_PDOWrapper
      * @param array $opts
      * @return Pinoco_PDOStatementWrapper
      */
-    public function prepare($sql, $opts=array())
+    public function prepare($sql, $opts = array())
     {
         return new Pinoco_PDOStatementWrapper(
             $this->getConnection()->prepare($sql, $opts)
@@ -142,7 +141,7 @@ class Pinoco_PDOWrapper
      * @param mixed $args,...
      * @return int
      */
-    public function execute($args=Pinoco_OptionalParam::UNSPECIFIED)
+    public function execute($args = Pinoco_OptionalParam::UNSPECIFIED)
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'exec'), Pinoco_OptionalParam::trim($args));
@@ -161,4 +160,3 @@ class Pinoco_PDOWrapper
         );
     }
 }
-

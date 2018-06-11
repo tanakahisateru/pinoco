@@ -15,7 +15,7 @@ try {
     
     printf("insert ddd affected %d rows\n", $db->prepare("insert into foo (value) values(?)")->execute("ddd"));
     
-    foreach ($db->prepare('select * from foo where id<:maxid;')->query(array('maxid'=>10))->fetchAll() as $foo) {
+    foreach ($db->prepare('select * from foo where id<:maxid;')->query(array('maxid' => 10))->fetchAll() as $foo) {
         printf("foo:%d has %s.\n", $foo->id, $foo->value);
     }
     
@@ -29,8 +29,7 @@ try {
     $db->execute("select * from non_existence"); // throws error absolutely
     
     $db->commit(); // never executed
-}
-catch (PDOException $ex) {
+} catch (PDOException $ex) {
     $db->rollBack();
     echo $ex->getMessage() . "\n";
 }

@@ -28,8 +28,9 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
      * @param array $extravars
      * @throws RuntimeException
      * @return void
+     * @throws PHPTAL_ConfigurationException
      */
-    public function render($page, $extravars=array())
+    public function render($page, $extravars = array())
     {
         if (!class_exists('PHPTAL')) {
             include_once 'PHPTAL.php';
@@ -63,10 +64,10 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
         }
 
         //extract vars
-        foreach ($this->_sysref->autolocal as $name=>$value) {
+        foreach ($this->_sysref->autolocal as $name => $value) {
             $template->set($name, $value);
         }
-        foreach ($extravars as $name=>$value) {
+        foreach ($extravars as $name => $value) {
             $template->set($name, $value);
         }
         $template->set('this', $this->_sysref);
@@ -77,5 +78,3 @@ class Pinoco_TALRenderer extends Pinoco_Renderer
         //ob_end_flush();
     }
 }
-
-

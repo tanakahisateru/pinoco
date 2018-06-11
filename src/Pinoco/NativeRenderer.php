@@ -27,10 +27,10 @@ class Pinoco_NativeRenderer extends Pinoco_Renderer
      * @param array $extravars
      * @return void
      */
-    public function render($page, $extravars=array())
+    public function render($page, $extravars = array())
     {
         $vars = $this->_sysref->autolocal->toArray();
-        foreach ($extravars as $k=>$v) {
+        foreach ($extravars as $k => $v) {
             $vars[$k] = $v;
         }
         $orig_dir  = getcwd();
@@ -40,4 +40,3 @@ class Pinoco_NativeRenderer extends Pinoco_Renderer
         chdir($orig_dir);
     }
 }
-

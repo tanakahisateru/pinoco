@@ -15,9 +15,15 @@
  * @subpackage PAL
  */
 
-if (!class_exists('PHPTAL')) { require_once 'PHPTAL.php'; }
-if (!class_exists('PHPTAL_Namespace')) { require_once 'PHPTAL/Namespace.php'; }
-if (!class_exists('PHPTAL_Php_Attribute_TAL_Replace')) { require_once 'PHPTAL/Php/Attribute/TAL/Replace.php'; }
+if (!class_exists('PHPTAL')) {
+    require_once 'PHPTAL.php';
+}
+if (!class_exists('PHPTAL_Namespace')) {
+    require_once 'PHPTAL/Namespace.php';
+}
+if (!class_exists('PHPTAL_Php_Attribute_TAL_Replace')) {
+    require_once 'PHPTAL/Php/Attribute/TAL/Replace.php';
+}
 
 /**
  * @package Pinoco
@@ -30,13 +36,14 @@ class Pinoco_PAL_ReplaceNl2br extends PHPTAL_Php_Attribute_TAL_Replace
         if ($code !== "''") {
             if ($this->_echoType === self::ECHO_TEXT) {
                 $codewriter->flush();
-                $codewriter->pushCode('echo nl2br('.$codewriter->escapeCode($code).')');
-            }
-            else {
-                $codewriter->pushCode('echo nl2br('.$codewriter->stringifyCode($codewriter->interpolateHTML($code)).')');
+                $codewriter->pushCode(
+                    'echo nl2br(' . $codewriter->escapeCode($code) . ')'
+                );
+            } else {
+                $codewriter->pushCode(
+                    'echo nl2br(' . $codewriter->stringifyCode($codewriter->interpolateHTML($code)) . ')'
+                );
             }
         }
     }
 }
-
-

@@ -36,8 +36,9 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
      * @param string $baseuri
      * @param string $dispatcher
      */
-    public function __construct($basedir, $sysdir, $baseuri="/", $dispatcher="")
+    public function __construct($basedir, $sysdir, $baseuri = "/", $dispatcher = "")
     {
+        parent::__construct();
         $this->_basedir = $basedir;
         $this->_sysdir = $sysdir;
         $this->_baseuri = $baseuri;
@@ -48,11 +49,11 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
     /**
      * Use this to define Pinoco's instance initialize process.
      *
-     * @param callback $callable
+     * @param callable $callable
      * @param mixed $context
      * @return Pinoco_TestEnvironment
      */
-    public function initBy($callable, $context=null)
+    public function initBy($callable, $context = null)
     {
         $this->_preprocess = array($callable, $context);
         return $this;
@@ -67,8 +68,12 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
     public function create($path)
     {
         $pinoco = new Pinoco(
-            $this->_baseuri, $this->_dispatcher, $path,
-            $this->_basedir, $this->_sysdir, true
+            $this->_baseuri,
+            $this->_dispatcher,
+            $path,
+            $this->_basedir,
+            $this->_sysdir,
+            true
         );
         if ($this->_preprocess) {
             call_user_func($this->_preprocess[0], $pinoco, $this->_preprocess[1]);
@@ -76,4 +81,3 @@ class Pinoco_TestEnvironment extends Pinoco_Vars
         return $pinoco;
     }
 }
-

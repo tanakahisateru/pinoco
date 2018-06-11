@@ -19,14 +19,15 @@
  *
  * @package Pinoco
  */
-class Pinoco_OptionalParam {
-
-    const UNSPECIFIED = 'c62c4c3f7fa57c7acfcc93073527c490-OptionalParameterUnspecified-d5210620220db619214dd7421301cbf7';
+class Pinoco_OptionalParam
+{
+    const UNSPECIFIED =
+        'c62c4c3f7fa57c7acfcc93073527c490-OptionalParameterUnspecified-d5210620220db619214dd7421301cbf7';
 
     public static function trim($params)
     {
         $params = array_reverse($params);
-        while(!empty($params) && $params[0] instanceof self) {
+        while (!empty($params) && $params[0] instanceof self) {
             array_shift($params);
         }
         return array_reverse($params);
@@ -36,5 +37,4 @@ class Pinoco_OptionalParam {
     {
         return $value !== self::UNSPECIFIED;
     }
-
 }

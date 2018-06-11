@@ -23,4 +23,3 @@
 class Pinoco_FlowControlSkip extends Pinoco_FlowControl
 {
 }
-

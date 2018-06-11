@@ -9,7 +9,7 @@ This example is Smarty renderer for Pinoco:
  * Custom renderer example for Pinoco implemented by Smarty
  */
 class SmartyRenderer extends Pinoco_Renderer {
-    public function render($page, $extravars=array())
+    public function render($page, $extravars = array())
     {
         include_once 'Smarty/Smarty.class.php';
         if(!class_exists('Smarty')){
@@ -45,10 +45,10 @@ class SmartyRenderer extends Pinoco_Renderer {
         }
         
         //extract vars
-        foreach($this->_sysref->autolocal as $name=>$value) {
+        foreach($this->_sysref->autolocal as $name => $value) {
             $smarty->assign($name, $value);
         }
-        foreach($extravars as $name=>$value) {
+        foreach($extravars as $name => $value) {
             $smarty->assign($name, $value);
         }
         $smarty->assign('this', $this->_sysref);

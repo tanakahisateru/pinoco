@@ -41,7 +41,7 @@ In hook script execution phase, you can inspect the status.
 ### _app/hooks/index.html.php
 ```php
 <?php
-foreach($this as $key=>$value) {
+foreach($this as $key => $value) {
     echo "$key = $value";
 }
 ```
