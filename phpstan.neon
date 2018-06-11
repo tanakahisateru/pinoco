@@ -1,0 +1,6 @@
+parameters:
+    excludes_analyse:
+        - docs/example
+        - src/Pinoco/_bootstrap.php
+        - src/Pinoco/TALRenderer.php
+        - tests/sandbox

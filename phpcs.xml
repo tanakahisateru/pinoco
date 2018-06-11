@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Partial PSR2">
+    <exclude-pattern>docs/example/*</exclude-pattern>
+    <!--<exclude-pattern>tests/sandbox/app/tmp/*</exclude-pattern>-->
+    <exclude-pattern>tests/sandbox/*</exclude-pattern>
+    <rule ref="PSR2">
+        <exclude name="PSR1.Classes.ClassDeclaration"/>
+        <exclude name="PSR1.Files.SideEffects"/>
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration"/>
+        <exclude name="PSR2.Methods.MethodDeclaration"/>
+        <exclude name="Squiz.Classes.ValidClassName"/>
+    </rule>
+</ruleset>
