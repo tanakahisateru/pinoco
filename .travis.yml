@@ -19,7 +19,8 @@ cache:
 before_script:
   - composer self-update
   - composer update
+  - - if [[ $TRAVIS_PHP_VERSION = '7.1' ]]; then composer require --dev phpstan/phpstan-shim squizlabs/php_codesniffer; fi
 script:
   - ./vendor/bin/phpunit
   - if [[ $TRAVIS_PHP_VERSION = '7.1' ]]; then ./vendor/bin/phpcs --standard=phpcs.xml src tests; fi
-  - if [[ $TRAVIS_PHP_VERSION = '7.1' ]]; then ./vendor/bin/phpstan analyse -l max -c phpstan.neon src tests --no-progress --no-interaction; fi
+  - if [[ $TRAVIS_PHP_VERSION = '7.1' ]]; then ./vendor/bin/phpstan analyse -l max -c phpstan.neon src --no-progress --no-interaction; fi
