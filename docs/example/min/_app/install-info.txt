@@ -1,0 +1,8 @@
+NOTE: Installing PHPTAL and Pinoco
+If you still not install PHPTAL and Pinoco, you can put them to _app/lib dir.
+
+
+ALTERNATIVE INSTALL:
+If PHP5.3 or above you can use Composer to install PHPTAL and Pinoco.
+  $ cd _app
+  $ composer require phptal/phptal pinoco/pinoco

@@ -1,8 +1,13 @@
 <?php
-require_once dirname(dirname(dirname(__FILE__))) . '/../../src/Pinoco.php';
+require dirname(__FILE__) . '/../bootstrap.php';
 
 class SiteHookTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Pinoco_TestEnvironment
+     */
+    private $testenv;
+
     public function setUp()
     {
         $basedir = dirname(dirname(dirname(__FILE__)));
@@ -12,6 +17,9 @@ class SiteHookTest extends PHPUnit_Framework_TestCase
         )->initBy(array($this, 'init'));
     }
 
+    /**
+     * @param Pinoco $pinoco
+     */
     public function init($pinoco)
     {
         $pinoco->config('config', 'config.ini');

@@ -1,7 +1,5 @@
 <?php
-require_once '../../src/Pinoco.php';
-if (file_exists('_app/vendor/autoload.php')) { require '_app/vendor/autoload.php'; }
-if (!class_exists('Pinoco')) { require_once '_app/lib/Pinoco.php'; }
+require dirname(__FILE__) . '/_app/bootstrap.php';
 
 Pinoco::creditIntoHeader();
 Pinoco::create("_app", array(
@@ -10,4 +8,3 @@ Pinoco::create("_app", array(
 //    'custom_path_info' => false, // false(auto) or string default false
 //    'directory_index'  => "index.html index.php", // string like DirectoryIndex directive default "index.html index.php"
 ))->config('config', 'config.ini')->run();
-

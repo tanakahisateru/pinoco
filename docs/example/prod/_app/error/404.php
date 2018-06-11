@@ -1,4 +1,6 @@
 <?php
+/** @var $title string */
+/** @var $message string */
 $this->header("Content-Type: text/html; charset=iso-8859-1");
 ?>
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">

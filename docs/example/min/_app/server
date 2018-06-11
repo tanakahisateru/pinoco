@@ -1,7 +1,0 @@
-#!/bin/sh
-host="localhost:8801"
-if [ $# -ge 1 ]; then
-  host=$1
-fi
-php -S ${host} -t ../ `dirname $0`/server.php
-

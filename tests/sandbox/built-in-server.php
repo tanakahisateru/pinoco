@@ -13,6 +13,12 @@ if (preg_match('/(\.html?|\.php)$/', $reqfile) || !is_file($reqfile)) {
     $_SERVER['PHP_SELF'] = '/_gateway.php' . $path;
     chdir($_SERVER['DOCUMENT_ROOT']);
     require $_SERVER['DOCUMENT_ROOT'] . '/_gateway.php';
+    // To display log in CLI use stderr
+    $stderr = fopen('php://stderr', 'w');
+    fprintf($stderr, "[%s] %s:%d [???]: %s\n",
+        @strftime('%c'), $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
+        $_SERVER['REQUEST_URI']
+    );
 }
 else {
     return false;

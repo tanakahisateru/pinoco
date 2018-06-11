@@ -7,4 +7,3 @@ if (1) {
 }
 
 $this->testvar1 = "changed in _enter";
-
