@@ -9,3 +9,4 @@
 /.settings/
 /nbproject/
 
+.php_cs.cache

@@ -28,5 +28,14 @@
         "psr-0": {
             "Pinoco": "src/"
         }
+    },
+    "scripts" :{
+        "test": ["./vendor/bin/phpunit"],
+        "tests": ["@cs", "@phmd", "@phpstan", "@test"],
+        "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
+        "cs": ["php-cs-fixer fix ./ -v --dry-run --rules=@PSR2"],
+        "cs-fix": ["php-cs-fixer fix ./ -v"],
+        "phpmd":  "phpmd src,test text ./phpmd.xml",
+        "phpstan": "phpstan analyse -l max -c phpstan.neon src test --no-progress --no-interaction"
     }
 }
