@@ -1,7 +1,8 @@
 <phpunit colors="true" bootstrap="src/Pinoco/_bootstrap.php">
     <testsuites>
         <testsuite name="PinocoTestAll">
-            <directory>test/unit</directory>
+            <directory>tests</directory>
+            <exclude>tests/sandbox</exclude>
         </testsuite>
     </testsuites>
     <filter>
