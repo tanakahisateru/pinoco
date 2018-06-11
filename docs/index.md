@@ -107,6 +107,5 @@ You can learn the basic way of how to make static contents "transparently" dynam
 
 ## See Also
 
-* [How To Build](misc/HowToBuild.md)
 * [PHPTAL FAQ](PHPTAL-FAQ.md)
 * [How to use with Nginx](How-to-use-with-Nginx.md)

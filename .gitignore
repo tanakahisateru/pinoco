@@ -1,5 +1,3 @@
-/build/
-/.htaccess
 /composer.lock
 /vendor/
 
