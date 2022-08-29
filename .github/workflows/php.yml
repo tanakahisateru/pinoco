@@ -13,25 +13,20 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ["7.2", "7.3", "7.4", "8.0", "8.1"]
-        composer-versions: ["lowest", "highest"]
+        php: ["7.2", "7.3", "7.4", "8.0", "8.1"]
+        dependencies: ["lowest", "highest"]
 
     steps:
-    - uses: "shivammathur/setup-php@v2"
-      with:
-        php-version: ${{ matrix.php-versions }}
+      - uses: "actions/checkout@v3"
 
-    - uses: "actions/cache@v2"
-      id: composer-cache
-      with:
-        path: vendor
-        key: ${{ runner.os }}-composer-${{ matrix.composer-versions }}-${{ hashFiles('**/composer.lock') }}
-        restore-keys: ${{ runner.os }}-composer-${{ matrix.composer-versions }}-
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: ${{ matrix.php }}
 
-    - uses: "ramsey/composer-install@v2"
-      with:
-        dependency-versions: ${{ matrix.composer-versions }}
-        composer-options: --prefer-dist --no-progress
+      - uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: "--prefer-dist --no-progress"
 
-    - name: Run test suite
-      run: vendor/bin/phpunit
+      - name: Run test suite
+        run: vendor/bin/phpunit
