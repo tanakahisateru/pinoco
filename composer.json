@@ -32,11 +32,5 @@
         "psr-0": {
             "": "tests/"
         }
-    },
-    "scripts": {
-        "test": "./vendor/bin/phpunit",
-        "cs": "phpcs --standard=phpcs.xml src tests",
-        "stan": "phpstan analyse -l max -c phpstan.neon src --no-progress --no-interaction",
-        "tests": ["@test", "@cs", "@stan"]
     }
 }
