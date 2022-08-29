@@ -1,7 +1,10 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 
-class ListTest extends PHPUnit_Framework_TestCase
+class ListTest extends TestCase
 {
     public function testBasicIO()
     {
@@ -121,7 +124,9 @@ class ListTest extends PHPUnit_Framework_TestCase
         $l->sort();
         $this->assertEquals(array(1, 2, 3), $l->toArray());
 
-        $sorter = @create_function('$a,$b', 'return ($a > $b ? -1 : ($a < $b ? 1 : 0));'); // inv sort
+        $sorter = function ($a, $b) {
+            return ($a > $b ? -1 : ($a < $b ? 1 : 0));
+        }; // inv sort
         $l = Pinoco_List::fromArray(array(2, 1, 3));
         $this->assertEquals(array(3, 2, 1), $l->sorted($sorter)->toArray());
         $this->assertEquals(array(2, 1, 3), $l->toArray());
@@ -187,7 +192,9 @@ class ListTest extends PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $name_mod = @create_function('$orig', 'return sprintf("m_%03d", $orig);');
+        $name_mod = function($orig) {
+            return sprintf("m_%03d", $orig);
+        };
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(array('m_0' => 1, 'm_1' => 2, 'm_2' => 3), $l->toArray('m_'));
         $this->assertEquals(array('m_0' => 1, 'm_1' => 2, 'm_2' => 3), $l->toArray('m_%d'));
@@ -196,7 +203,9 @@ class ListTest extends PHPUnit_Framework_TestCase
 
     public function testReduce()
     {
-        $reducer = @create_function('$a,$b', 'return $a + $b;');
+        $reducer = function ($a,$b) {
+            return $a + $b;
+        };
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(6, $l->reduce($reducer));
         $this->assertEquals(10, $l->reduce($reducer, 4));
@@ -204,14 +213,18 @@ class ListTest extends PHPUnit_Framework_TestCase
 
     public function testMap()
     {
-        $mapper = @create_function('$a', 'return $a + 1;');
+        $mapper = function ($a) {
+            return $a + 1;
+        };
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(array(2, 3, 4), $l->map($mapper)->toArray());
     }
 
     public function testFilter()
     {
-        $filter = @create_function('$a', 'return $a >= 2;');
+        $filter = function ($a) {
+            return $a >= 2;
+        };
         $l = Pinoco_List::fromArray(array(1, 2, 3));
         $this->assertEquals(array(2, 3), $l->filter($filter)->toArray());
     }

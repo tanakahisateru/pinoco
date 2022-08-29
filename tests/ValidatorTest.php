@@ -1,7 +1,10 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     public function testValidateArray()
     {
@@ -171,7 +174,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testExtendingTests()
     {
-        $next_number = @create_function('$v,$p', 'return $v == $p+1;');
+        $next_number = function ($v,$p) {
+            return $v == $p+1;
+        };
         $v = new Pinoco_Validator(array('foo' => 2));
         $v->defineValidityTest('next-number', $next_number, 'xxx');
         $v->check('foo')->is('next-number 1');
@@ -180,7 +185,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testExtendingMessage()
     {
-        $next_number = @create_function('$v,$p', 'return $v == $p+1;');
+        $next_number = function ($v,$p) {
+            return $v == $p+1;
+        };
         $v = new Pinoco_Validator(array('foo' => 2));
         $v->defineValidityTest('next-number', $next_number, 'xxx');
         $v->check('foo')->is('next-number 1');
@@ -196,10 +203,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             $v->result->foo->message
         );
 
-        $func_msg_tmpl = @create_function(
-            '$param,$value,$label',
-            'return $param.$value.$label;'
-        );
+        $func_msg_tmpl = function ($param,$value,$label) {
+            return $param.$value.$label;
+        };
         $v->recheck('foo', 'FOO_FIELD')->is('next-number 3', $func_msg_tmpl);
         $this->assertFalse($v->valid);
         $this->assertEquals('32FOO_FIELD', $v->result->foo->message);
@@ -229,7 +235,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testExtendingNamedFilter()
     {
-        $add_filter = @create_function('$v,$p', 'return $v + $p;');
+        $add_filter = function ($v,$p) {
+            return $v + $p;
+        };
         $testee = array(
             'foo' => 2,
         );

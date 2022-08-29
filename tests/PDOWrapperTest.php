@@ -1,14 +1,17 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 
-class PDOWrapperTest extends PHPUnit_Framework_TestCase
+class PDOWrapperTest extends TestCase
 {
     /**
      * @var Pinoco_PDOWrapper
      */
     protected $db;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->db = new Pinoco_PDOWrapper('sqlite::memory:');
         $this->db->exec("create table foo (
@@ -22,7 +25,7 @@ class PDOWrapperTest extends PHPUnit_Framework_TestCase
         )");
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->db->exec("drop table bar");
         $this->db->exec("drop table foo");

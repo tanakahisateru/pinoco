@@ -302,31 +302,32 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_vars);
     }
 
-    public function getIterator()
+    public function getIterator(): Iterator
     {
-        return new Pinoco_ArrayConvertiblesIterator($this->_vars);
+        return new ArrayIterator($this->_vars);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->remove($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -345,7 +346,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
         $arr = array();
         $ks = $filter ? $filter : $this->keys();
         foreach ($ks as $k) {
-            $name = (strpos($modifier, "%") !== false) ? sprintf($modifier, $k) : (
+            $name = (is_string($modifier) && strpos($modifier, "%") !== false) ? sprintf($modifier, $k) : (
                 is_callable($modifier) ? call_user_func($modifier, $k) : ($modifier . $k)
             );
             $arr[$name] = $this->get($k, $default);
@@ -401,7 +402,7 @@ class Pinoco_Vars implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
         }
         $ks = $filter ? $filter : array_keys($srcarr);
         foreach ($ks as $k) {
-            $name = (strpos($modifier, "%") !== false) ? sprintf($modifier, $k) : (
+            $name = (is_string($modifier) && strpos($modifier, "%") !== false) ? sprintf($modifier, $k) : (
                 is_callable($modifier) ? call_user_func($modifier, $k) : ($modifier . $k)
             );
             $this->set($name, array_key_exists($k, $srcarr) ? $srcarr[$k] : $default);

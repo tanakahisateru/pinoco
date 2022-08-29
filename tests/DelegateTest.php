@@ -1,7 +1,10 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 
-class DelegateTest extends PHPUnit_Framework_TestCase
+class DelegateTest extends TestCase
 {
     public function testPlainDelegator()
     {

@@ -70,7 +70,7 @@ require_once(dirname(__FILE__) . '/Pinoco/_bootstrap.php');
  */
 class Pinoco extends Pinoco_DynamicVars
 {
-    const VERSION = "0.8.4";
+    const VERSION = "0.9.0";
 
     private $_baseuri;   // R gateway index.php location on internet
     private $_basedir;   // R gateway index.php location on file system
@@ -288,7 +288,6 @@ class Pinoco extends Pinoco_DynamicVars
                     }
                     break;
                 case 'php':
-                    /** @noinspection PhpIncludeInspection */
                     $source = require $file;
                     if (!(is_array($source) || is_object($source) && ($source instanceof Pinoco_ArrayConvertible))) {
                         throw new InvalidArgumentException('Can\'t load config file: ' . $source);
@@ -377,7 +376,6 @@ class Pinoco extends Pinoco_DynamicVars
         if ($seppos !== false) {
             $srcfile = substr($class, 0, $seppos);
             $class = substr($class, $seppos + 1);
-            /** @noinspection PhpIncludeInspection */
             require_once $srcfile;
         } else {
             $srcfile = '';
@@ -1408,7 +1406,6 @@ class Pinoco extends Pinoco_DynamicVars
         unset($script_abs_path);
         extract($localvars);
         unset($localvars);
-        /** @noinspection PhpIncludeInspection */
         $retval = include($this->_script_include_stack[count($this->_script_include_stack) - 1]);
         array_pop($this->_script_include_stack);
         return $retval;

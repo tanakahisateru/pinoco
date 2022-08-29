@@ -160,7 +160,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_arr);
     }
@@ -346,7 +346,7 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
         $arr = array();
         if ($modifier) {
             foreach ($this->_arr as $i => $v) {
-                $name = (strpos($modifier, "%") !== false) ? sprintf($modifier, $i) : (
+                $name = (is_string($modifier) && strpos($modifier, "%") !== false) ? sprintf($modifier, $i) : (
                     is_callable($modifier) ? call_user_func($modifier, $i) : ($modifier . $i)
                 );
                 $arr[$name] = $v;
@@ -436,26 +436,27 @@ class Pinoco_List implements IteratorAggregate, ArrayAccess, Countable, Pinoco_A
     }
     */
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
     }
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $offset < count($this->_arr);
     }
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         array_splice($this->_arr, $offset, 1);
     }
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
     }
 
-    public function getIterator()
+    public function getIterator(): Iterator
     {
-        return new Pinoco_ArrayConvertiblesIterator($this->_arr);
+        return new ArrayIterator($this->_arr);
     }
 
     public function __toString()

@@ -1,7 +1,10 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 
-class PinocoTest extends PHPUnit_Framework_TestCase
+class PinocoTest extends TestCase
 {
 
     /**
@@ -9,7 +12,7 @@ class PinocoTest extends PHPUnit_Framework_TestCase
      */
     public $testenv;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $tests = dirname(__FILE__);
         $this->testenv = Pinoco::testenv(

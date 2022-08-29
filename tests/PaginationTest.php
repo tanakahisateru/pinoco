@@ -1,7 +1,10 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require_once dirname(__FILE__) . '/../src/Pinoco/_bootstrap.php';
 
-class PaginationTest extends PHPUnit_Framework_TestCase
+class PaginationTest extends TestCase
 {
     private $total;
 
@@ -20,7 +23,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         return $pagination->baseuri . (strpos($pagination->baseuri, '?') === false ? '?' : '&') . 'page=' . $page;
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->total = 0;
     }

@@ -96,10 +96,10 @@ class Pinoco_DynamicVars extends Pinoco_Vars
         }
     }
 
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         // to include reserved special vars
         $arr = $this->toArray();
-        return new Pinoco_ArrayConvertiblesIterator($arr);
+        return new ArrayIterator($arr);
     }
 }
